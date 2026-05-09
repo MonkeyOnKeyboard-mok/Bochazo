@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://c1rtj3odsfnn2"]
+
+[ext_resource type="PackedScene" uid="uid://bqmvwo3hl8oyt" path="res://Cancha/cancha_posta.tscn" id="1_s87nx"]
+[ext_resource type="PackedScene" uid="uid://d06em422bftb7" path="res://BochaBase/bocha_base.tscn" id="3_aa16h"]
+[ext_resource type="PackedScene" uid="uid://c1mrvb8qnud4t" path="res://Camera/camera.tscn" id="3_bibos"]
+[ext_resource type="Script" uid="uid://gbgfq1egr8m4" path="res://Camera/camera.gd" id="4_s87nx"]
+
+[node name="Test" type="Node3D" unique_id=1690715140]
+
+[node name="Cancha" parent="." unique_id=1254177911 instance=ExtResource("1_s87nx")]
+
+[node name="BochaBase" parent="." unique_id=1173345595 instance=ExtResource("3_aa16h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.670622, 1.2285378, 0)
+
+[node name="CameraPivot" parent="." unique_id=1744960144 instance=ExtResource("3_bibos")]
+transform = Transform3D(-4.371139e-08, -0.40992305, 0.9121201, 0, 0.9121201, 0.40992305, -1, 1.7918305e-08, -3.9870034e-08, 35, 6.195, 0)
+script = ExtResource("4_s87nx")
+
+[node name="Camera" parent="CameraPivot" index="0" unique_id=2009877200]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[editable path="CameraPivot"]
