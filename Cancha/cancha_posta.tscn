@@ -9,7 +9,16 @@ shader = ExtResource("2_8nnev")
 shader_parameter/top_color = Color(0.21076313, 0.0073981537, 0.2349132, 1)
 shader_parameter/bottom_color = Color(0.20784314, 1, 1, 1)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_sju1p"]
+size = Vector3(62.689697, 0.41031176, 10.046143)
+
 [node name="Cancha" type="Node3D" unique_id=1254177911]
 
 [node name="CanchaMesh" parent="." unique_id=127404517 instance=ExtResource("1_sju1p")]
 material_override = SubResource("ShaderMaterial_bibos")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1934368048]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1080970821]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07287598, 0.01194033, -0.032104492)
+shape = SubResource("BoxShape3D_sju1p")

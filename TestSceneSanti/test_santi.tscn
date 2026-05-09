@@ -5,6 +5,17 @@
 [ext_resource type="PackedScene" uid="uid://c1mrvb8qnud4t" path="res://Camera/camera.tscn" id="3_bibos"]
 [ext_resource type="Script" uid="uid://gbgfq1egr8m4" path="res://Camera/camera.gd" id="4_s87nx"]
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_s87nx"]
+sky_top_color = Color(0.400834, 0.4196936, 0.682041, 1)
+sky_horizon_color = Color(0.6654856, 0.58355474, 0.9717987, 1)
+
+[sub_resource type="Sky" id="Sky_aa16h"]
+sky_material = SubResource("ProceduralSkyMaterial_s87nx")
+
+[sub_resource type="Environment" id="Environment_np5ak"]
+sky = SubResource("Sky_aa16h")
+ambient_light_source = 3
+
 [node name="Test" type="Node3D" unique_id=1690715140]
 
 [node name="Cancha" parent="." unique_id=1254177911 instance=ExtResource("1_s87nx")]
@@ -18,5 +29,8 @@ script = ExtResource("4_s87nx")
 
 [node name="Camera" parent="CameraPivot" index="0" unique_id=2009877200]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2106202788]
+environment = SubResource("Environment_np5ak")
 
 [editable path="CameraPivot"]
