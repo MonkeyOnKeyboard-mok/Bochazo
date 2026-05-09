@@ -24,11 +24,7 @@ ambient_light_source = 3
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.670622, 1.2285378, 0)
 
 [node name="CameraPivot" parent="." unique_id=1744960144 instance=ExtResource("3_bibos")]
-transform = Transform3D(-4.371139e-08, -0.40992305, 0.9121201, 0, 0.9121201, 0.40992305, -1, 1.7918305e-08, -3.9870034e-08, 35, 6.195, 0)
 script = ExtResource("4_s87nx")
-
-[node name="Camera" parent="CameraPivot" index="0" unique_id=2009877200]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2106202788]
 environment = SubResource("Environment_np5ak")
