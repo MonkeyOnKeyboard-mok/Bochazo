@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://d06em422bftb7"]
 
 [ext_resource type="Script" uid="uid://cwl2sx7nwu3hb" path="res://BochaBase/bocha_base.gd" id="1_3ib0r"]
+[ext_resource type="Script" uid="uid://06a5wxasjnc4" path="res://BochaBase/input_manager.gd" id="2_8hhpd"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_up8o7"]
 
@@ -18,3 +19,7 @@ mesh = SubResource("SphereMesh_up8o7")
 [node name="BochaCollision" type="CollisionShape3D" parent="BochaRigidBody" unique_id=1705946536]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource("SphereShape3D_s87nx")
+
+[node name="InputManager" type="Node3D" parent="." unique_id=1765078556 node_paths=PackedStringArray("bocha_rb")]
+script = ExtResource("2_8hhpd")
+bocha_rb = NodePath("../BochaRigidBody")
