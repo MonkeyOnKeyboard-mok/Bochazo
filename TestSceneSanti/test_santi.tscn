@@ -6,15 +6,21 @@
 [ext_resource type="Script" uid="uid://gbgfq1egr8m4" path="res://Camera/camera.gd" id="4_s87nx"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_s87nx"]
-sky_top_color = Color(0.400834, 0.4196936, 0.682041, 1)
-sky_horizon_color = Color(0.6654856, 0.58355474, 0.9717987, 1)
+sky_top_color = Color(0, 0.49608076, 0.6246699, 1)
+sky_horizon_color = Color(0.9999997, 0.3231792, 0.92586726, 1)
+ground_bottom_color = Color(0.64065737, 0, 0.27105764, 1)
 
 [sub_resource type="Sky" id="Sky_aa16h"]
 sky_material = SubResource("ProceduralSkyMaterial_s87nx")
 
 [sub_resource type="Environment" id="Environment_np5ak"]
+background_mode = 2
+background_energy_multiplier = 2.0
 sky = SubResource("Sky_aa16h")
 ambient_light_source = 3
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s87nx"]
+size = Vector3(63.233643, 2.6622314, 1)
 
 [node name="Test" type="Node3D" unique_id=1690715140]
 
@@ -28,5 +34,20 @@ script = ExtResource("4_s87nx")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2106202788]
 environment = SubResource("Environment_np5ak")
+
+[node name="Walls" type="Node3D" parent="." unique_id=1822668297]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Walls" unique_id=1250326063]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/StaticBody3D" unique_id=2090334193]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01574707, 0.8576401, 5.479231)
+shape = SubResource("BoxShape3D_s87nx")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="Walls" unique_id=147439803]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11.00664)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/StaticBody3D2" unique_id=659649121]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01574707, 0.8576401, 5.479231)
+shape = SubResource("BoxShape3D_s87nx")
 
 [editable path="CameraPivot"]
