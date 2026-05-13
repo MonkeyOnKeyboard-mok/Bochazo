@@ -7,9 +7,9 @@ func update_position() -> void:
 	var direction = 0.0
 
 	if Input.is_action_pressed("move_left"):
-		direction += 1.0
-	if Input.is_action_pressed("move_right"):
 		direction -= 1.0
+	if Input.is_action_pressed("move_right"):
+		direction += 1.0
 
 	if direction == 0.0:
 		return

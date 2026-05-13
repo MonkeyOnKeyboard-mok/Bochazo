@@ -32,7 +32,11 @@ func handle_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			print("[PositioningState] Click izquierdo detectado -> transicion a AIMING")
-			# Cualquier click inicia el aiming. No necesitamos raycast.
+			# Transicionar a AIMING primero
 			bocha.state_machine.transition_to(
 				bocha.state_machine.BochaState.AIMING
 			)
+			# Pasar el mismo evento al ThrowController para que inicie el arrastre inmediatamente
+			# Esto permite que el click que inicia AIMING tambien inicie el pull-back
+			if bocha.throw_controller != null:
+				bocha.throw_controller.handle_input(event)
