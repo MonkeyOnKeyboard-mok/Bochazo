@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bochas Argentinas - Documentación de Arquitectura Godot</title>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        h2 {
+            color: #764ba2;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        h3 {
+            color: #667eea;
+            margin: 25px 0 15px 0;
+            font-size: 1.5em;
+        }
+        
+        .mermaid {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+        
+        .folder-tree {
+            background: #2d3748;
+            color: #68d391;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 20px 0;
+            white-space: pre;
+            tab-size: 4;
+            letter-spacing: 0.5px;
+        }
+        
+        .folder-tree .folder { color: #f6ad55; font-weight: bold; }
+        .folder-tree .file { color: #63b3ed; }
+        .folder-tree .scene { color: #f687b3; font-style: italic; }
+        .folder-tree .comment { color: #a0aec0; font-style: italic; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background: #f7fafc;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin: 2px;
+        }
+        
+        .badge-phase { background: #ed8936; color: white; }
+        .badge-branch { background: #4299e1; color: white; }
+        .badge-priority { background: #48bb78; color: white; }
+        
+        .node-tree {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre;
+            tab-size: 4;
+            letter-spacing: 0.3px;
+        }
+        
+        .highlight {
+            background: #fef3c7;
+            padding: 15px;
+            border-left: 4px solid #f59e0b;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .warning {
+            background: #fee;
+            border-left-color: #e53e3e;
+        }
+        
+        .info {
+            background: #e6fffa;
+            border-left-color: #38b2ac;
+        }
+        
+        code {
+            background: #edf2f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e53e3e;
+        }
+        
+        pre code {
+            display: block;
+            padding: 15px;
+            overflow-x: auto;
+            background: #1a202c;
+            color: #68d391;
+            border-radius: 8px;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎱 Bochas Argentinas</h1>
+            <p class="subtitle">Arquitectura de Escenas Godot 4.x - Documentación Técnica</p>
+        </header>
+
+        <!-- FLUJO PRINCIPAL DEL JUEGO -->
+        <section>
+            <h2>📊 Flujo Principal del Juego</h2>
+            <div class="mermaid">
+flowchart TD
+    A[Boot Scene] --> B[MainMenu Scene]
+    B --> C{Game Mode?}
+    C -->|1v1 Local| D[CharacterSelect Scene]
+    C -->|Player vs IA| D
+    C -->|Opciones| E[Options Scene]
+    D --> F[Game Main Scene]
+    E --> B
+    F --> G{Round Complete?}
+    G -->|Yes| H[RoundResults Scene]
+    G -->|No| F
+    H --> I{Match Complete?}
+    I -->|No| D
+    I -->|Yes| J[MatchResults Scene]
+    J --> B
+    F -->|Pause| K[PauseMenu Scene]
+    K --> F
+    K --> B
+            </div>
+        </section>
+
+        <!-- ESTRUCTURA DE CARPETAS -->
+        <section>
+            <h2>📁 Estructura de Carpetas (Enfoque en Escenas)</h2>
+            <div class="folder-tree">
+res/
+├── <span class="folder">autoloads/</span>
+│   ├── global_signals.gd                 <span class="comment"># SignalBus centralizado</span>
+│   ├── game_config.gd                    <span class="comment"># Configuración global</span>
+│   └── save_manager.gd                   <span class="comment"># Persistencia de datos</span>
+│
+├── <span class="folder">scenes/</span>
+│   ├── <span class="folder">00_boot/</span>
+│   │   ├── boot.tscn                     <span class="scene"># Escena de inicio</span>
+│   │   └── boot.gd                       <span class="comment"># Carga recursos iniciales</span>
+│   │
+│   ├── <span class="folder">01_main_menu/</span>
+│   │   ├── main_menu.tscn
+│   │   ├── main_menu.gd
+│   │   ├── components/
+│   │   │   ├── menu_button.tscn
+│   │   │   ├── menu_button.gd
+│   │   │   ├── animated_background.tscn
+│   │   │   └── title_logo.tscn
+│   │   └── transitions/
+│   │       ├── fade_transition.tscn
+│   │       └── fade_transition.gd
+│   │
+│   ├── <span class="folder">02_options/</span>
+│   │   ├── options_menu.tscn
+│   │   ├── options_menu.gd
+│   │   ├── tabs/
+│   │   │   ├── audio_settings.tscn
+│   │   │   ├── video_settings.tscn
+│   │   │   ├── gameplay_settings.tscn
+│   │   │   └── controls_settings.tscn
+│   │   └── components/
+│   │       ├── settings_slider.tscn
+│   │       ├── settings_toggle.tscn
+│   │       └── key_binding.tscn
+│   │
+│   ├── <span class="folder">03_character_select/</span>
+│   │   ├── character_select.tscn
+│   │   ├── character_select.gd
+│   │   ├── components/
+│   │   │   ├── character_card.tscn
+│   │   │   ├── character_card.gd
+│   │   │   ├── character_preview.tscn
+│   │   │   ├── ball_preview.tscn
+│   │   │   └── stats_bar.tscn
+│   │   └── characters/
+│   │       ├── character_1.tscn
+│   │       ├── character_2.tscn
+│   │       └── character_3.tscn
+│   │
+│   ├── <span class="folder">04_game/</span>
+│   │   ├── <span class="folder">game_main/</span>
+│   │   │   ├── game_main.tscn            <span class="scene"># Escena principal del juego</span>
+│   │   │   ├── game_main.gd              <span class="comment"># GameManager principal</span>
+│   │   │   └── game_world.tscn           <span class="scene"># Mundo 3D con cámara</span>
+│   │   │
+│   │   ├── <span class="folder">components/</span>
+│   │   │   ├── <span class="folder">court/</span>
+│   │   │   │   ├── court.tscn
+│   │   │   │   ├── court.gd
+│   │   │   │   └── court_boundary.tscn
+│   │   │   │
+│   │   │   ├── <span class="folder">balls/</span>
+│   │   │   │   ├── bocce_ball.tscn       <span class="scene"># Escena reutilizable</span>
+│   │   │   │   ├── bocce_ball.gd
+│   │   │   │   ├── bochin.tscn
+│   │   │   │   ├── bochin.gd
+│   │   │   │   └── ball_trail.tscn
+│   │   │   │
+│   │   │   ├── <span class="folder">players/</span>
+│   │   │   │   ├── player_character.tscn
+│   │   │   │   ├── player_character.gd
+│   │   │   │   ├── player_controller.tscn
+│   │   │   │   └── player_controller.gd
+│   │   │   │
+│   │   │   ├── <span class="folder">camera/</span>
+│   │   │   │   ├── game_camera.tscn
+│   │   │   │   ├── game_camera.gd
+│   │   │   │   └── camera_rig.tscn
+│   │   │   │
+│   │   │   └── <span class="folder">throw_system/</span>
+│   │   │       ├── throw_handler.tscn
+│   │   │       ├── throw_handler.gd
+│   │   │       ├── gesture_tracker.tscn
+│   │   │       └── gesture_tracker.gd
+│   │   │
+│   │   ├── <span class="folder">managers/</span>
+│   │   │   ├── turn_manager.tscn
+│   │   │   ├── turn_manager.gd
+│   │   │   ├── score_manager.tscn
+│   │   │   ├── score_manager.gd
+│   │   │   ├── ball_manager.tscn
+│   │   │   └── ball_manager.gd
+│   │   │
+│   │   ├── <span class="folder">ai/</span>
+│   │   │   ├── ai_controller.tscn
+│   │   │   ├── ai_controller.gd
+│   │   │   └── ai_decision_maker.gd
+│   │   │
+│   │   └── <span class="folder">ui/</span>
+│   │       ├── game_hud.tscn
+│   │       ├── game_hud.gd
+│   │       ├── components/
+│   │       │   ├── score_display.tscn
+│   │       │   ├── turn_indicator.tscn
+│   │       │   ├── ball_counter.tscn
+│   │       │   ├── throw_power_bar.tscn
+│   │       │   └── distance_indicator.tscn
+│   │       └── pause_menu.tscn
+│   │
+│   ├── <span class="folder">05_round_results/</span>
+│   │   ├── round_results.tscn
+│   │   ├── round_results.gd
+│   │   └── components/
+│   │       ├── round_summary.tscn
+│   │       └── points_animation.tscn
+│   │
+│   └── <span class="folder">06_match_results/</span>
+│       ├── match_results.tscn
+│       ├── match_results.gd
+│       └── components/
+│           ├── winner_display.tscn
+│           └── final_stats.tscn
+│
+├── <span class="folder">resources/</span>
+│   ├── <span class="folder">characters/</span>
+│   │   ├── character_1_stats.tres
+│   │   ├── character_2_stats.tres
+│   │   └── character_3_stats.tres
+│   │
+│   ├── <span class="folder">balls/</span>
+│   │   ├── ball_type_1.tres
+│   │   ├── ball_type_2.tres
+│   │   └── ball_type_3.tres
+│   │
+│   ├── <span class="folder">game_config/</span>
+│   │   ├── game_rules.tres
+│   │   ├── physics_config.tres
+│   │   └── ai_config.tres
+│   │
+│   └── <span class="folder">ui/</span>
+│       ├── theme.tres
+│       └── fonts/
+│
+├── <span class="folder">assets/</span>
+│   ├── <span class="folder">models/</span>
+│   │   ├── characters/
+│   │   ├── balls/
+│   │   └── court/
+│   │
+│   ├── <span class="folder">textures/</span>
+│   │   ├── ui/
+│   │   ├── characters/
+│   │   └── environment/
+│   │
+│   ├── <span class="folder">audio/</span>
+│   │   ├── music/
+│   │   ├── sfx/
+│   │   └── voice/
+│   │
+│   └── <span class="folder">animations/</span>
+│       ├── characters/
+│       └── ui/
+│
+└── <span class="folder">scripts/</span>
+    ├── <span class="folder">utils/</span>
+    │   ├── scene_loader.gd
+    │   ├── tween_helpers.gd
+    │   └── math_utils.gd
+    │
+    └── <span class="folder">data/</span>
+        ├── character_data.gd
+        └── ball_data.gd
+            </div>
+        </section>
+
+        <!-- MÁQUINA DE ESTADOS -->
+        <section>
+            <h2>🔄 Máquina de Estados del GameManager</h2>
+            <div class="mermaid">
+stateDiagram-v2
+    [*] --> Initializing
+    Initializing --> WaitingForPlayers: Resources loaded
+    WaitingForPlayers --> CharacterSelection: Players confirmed
+    CharacterSelection --> RoundSetup: Characters selected
+    RoundSetup --> JackThrow: P1 throws jack
+    JackThrow --> P1FirstBall: Jack placed
+    P1FirstBall --> P2Turn: Ball thrown
+    P2Turn --> CheckProximity: Ball stopped
+    CheckProximity --> P1Turn: P2 closer
+    CheckProximity --> P2Turn: P1 closer
+    P1Turn --> CheckProximity: Ball thrown
+    CheckProximity --> P2Turn: P2 closer
+    CheckProximity --> RoundEnd: All balls thrown
+    P2Turn --> RoundEnd: All balls thrown
+    RoundEnd --> ScoreCalculation: Calculate points
+    ScoreCalculation --> MatchEnd: Match complete
+    ScoreCalculation --> NextRound: Continue match
+    NextRound --> RoundSetup
+    MatchEnd --> ResultsScreen
+    ResultsScreen --> [*]
+    
+    note right of CheckProximity
+        Determine which player
+        has closest ball to jack
+        and assign turn
+    end note
+    
+    note right of RoundEnd
+        Check if both players
+        threw all 6 balls
+    end note
+            </div>
+        </section>
+
+        <!-- SISTEMA DE TURNOS -->
+        <section>
+            <h2>🎯 Sistema de Turnos Detallado</h2>
+            <div class="mermaid">
+flowchart TD
+    Start[Inicio de Ronda] --> A[Player 1 lanza Bochin]
+    A --> B[Player 1 lanza 1ra bocha]
+    B --> C{Medir distancias}
+    C --> D[¿P1 tiene bocha más cercana?]
+    D -->|Sí| E[Turno: Player 2]
+    D -->|No| F[Turno: Player 1]
+    E --> G[Player 2 lanza bocha]
+    F --> H[Player 1 lanza bocha]
+    G --> I{Medir distancias}
+    H --> I
+    I --> J{¿Quién tiene la más cercana?}
+    J -->|P1| K{P2 tiene bochas?}
+    J -->|P2| L{P1 tiene bochas?}
+    K -->|Sí| M[Turno: Player 2]
+    K -->|No| N[Turno: Player 1 x restantes]
+    L -->|Sí| O[Turno: Player 1]
+    L -->|No| P[Turno: Player 2 x restantes]
+    M --> G
+    N --> Q[Player 1 lanza hasta completar 6]
+    O --> H
+    P --> R[Player 2 lanza hasta completar 6]
+    Q --> S[Ambos completaron 6?]
+    R --> S
+    S -->|No| I
+    S -->|Sí| T[Fin de Ronda - Scoring]
+    
+    style Start fill:#9f7aea
+    style T fill:#f6ad55
+    style S fill:#48bb78
+            </div>
+            
+            <div class="highlight info">
+                <strong>Regla clave:</strong> El jugador que NO tiene la bocha más cercana al bochin es quien lanza. 
+                Si un jugador agota sus 6 bochas, el otro jugador puede lanzar todas las que le queden.
+            </div>
+        </section>
+
+        <!-- FLUJO DE LANZAMIENTO -->
+        <section>
+            <h2>🎮 Flujo de Lanzamiento con Gestos</h2>
+            <div class="mermaid">
+sequenceDiagram
+    participant P as Player
+    participant I as InputHandler
+    participant G as GestureTracker
+    participant T as ThrowSystem
+    participant B as Ball (RigidBody)
+    participant C as Camera
+    participant H as HUD
+    
+    P->>I: Click Izquierdo en Ball
+    I->>H: Show power bar
+    I->>G: Start tracking
+    P->>G: Mouse Down + Move Down
+    Note over G: Fase 1: "Toma de carrera"<br/>acumula potencia
+    G->>H: Update power bar
+    P->>G: Move Up (straight/curve)
+    Note over G: Fase 2: Dirección y efecto<br/>calcula vector y curva
+    G->>H: Show trajectory preview
+    P->>I: Mouse Up (Release)
+    I->>G: Stop tracking
+    G->>T: Send gesture data<br/>(power, direction, curve)
+    T->>T: Calculate physics<br/>impulse & angular_velocity
+    T->>B: apply_central_impulse()
+    T->>B: angular_velocity = curve
+    T->>C: Shake camera slightly
+    B->>B: Physics simulation
+    Note over B: Ball rolls with friction<br/>and damping
+    B->>T: velocity < threshold
+    T->>H: Hide power bar
+    T->>H: Show "Ball Stopped"
+    Note over T: Signal: ball_stopped
+            </div>
+        </section>
+
+        <!-- SISTEMA DE PUNTUACIÓN -->
+        <section>
+            <h2>📊 Algoritmo de Puntuación</h2>
+            <div class="mermaid">
+flowchart LR
+    A[Todas las bochas<br/>lanzadas] --> B[Calcular distancia<br/>cada bocha al bochin]
+    B --> C[Crear lista ordenada<br/>por distancia ascendente]
+    C --> D[Identificar dueño de<br/>primera bocha P1 o P2]
+    D --> E{Contar bochas<br/>consecutivas del mismo dueño}
+    E --> F[Puntos = cantidad de<br/>bochas consecutivas]
+    F --> G[Asignar puntos al<br/>jugador ganador]
+    G --> H{Match completo?<br/>ej: 12 puntos}
+    H -->|No| I[Iniciar nueva ronda<br/>Ganador comienza]
+    H -->|Sí| J[Fin del Match<br/>Mostrar resultados]
+    
+    style A fill:#667eea,color:white
+    style F fill:#f6ad55
+    style J fill:#48bb78,color:white
+            </div>
+            
+            <div class="node-tree">
+<strong>Ejemplo práctico:</strong>
+Lista ordenada por distancia al bochin:
+1. P1_Bocha3 - 0.5m  ← Líder
+2. P1_Bocha1 - 0.8m  ← +1 punto
+3. P1_Bocha5 - 1.2m  ← +1 punto
+4. P2_Bocha2 - 1.5m  ← CORTE (cambia de jugador)
+
+Resultado: P1 gana 3 puntos
+            </div>
+        </section>
+
+        <!-- ÁRBOL DE NODOS PRINCIPALES -->
+        <section>
+            <h2>🌳 Árboles de Nodos Detallados</h2>
+            
+            <h3>MainMenu.tscn</h3>
+            <div class="node-tree">
+MainMenu (Control)
+├─ Background (ColorRect/TextureRect)
+│  └─ AnimatedTexture (AnimationPlayer)
+├─ TitleLogo (TextureRect)
+│  └─ LogoAnimation (AnimationPlayer)
+├─ MenuContainer (VBoxContainer)
+│  ├─ PlayButton (Button) [scene: menu_button.tscn]
+│  ├─ OptionsButton (Button) [scene: menu_button.tscn]
+│  └─ QuitButton (Button) [scene: menu_button.tscn]
+├─ VersionLabel (Label)
+└─ TransitionEffect (CanvasLayer)
+   └─ FadeAnimation (AnimationPlayer)
+            </div>
+            
+            <h3>CharacterSelect.tscn</h3>
+            <div class="node-tree">
+CharacterSelect (Control)
+├─ Background (TextureRect)
+├─ TitleLabel (Label)
+├─ CharacterCarousel (HBoxContainer)
+│  ├─ PrevButton (Button)
+│  ├─ CharactersContainer (HBoxContainer)
+│  │  ├─ CharacterCard1 [scene: character_card.tscn]
+│  │  │  ├─ CharacterPreview (Viewport/CharacterScene)
+│  │  │  ├─ NameLabel (Label)
+│  │  │  ├─ StatsContainer (VBoxContainer)
+│  │  │  │  ├─ StrengthBar [scene: stats_bar.tscn]
+│  │  │  │  ├─ AccuracyBar [scene: stats_bar.tscn]
+│  │  │  │  └─ SpinBar [scene: stats_bar.tscn]
+│  │  │  └─ BallPreview [scene: ball_preview.tscn]
+│  │  ├─ CharacterCard2 [scene: character_card.tscn]
+│  │  └─ CharacterCard3 [scene: character_card.tscn]
+│  └─ NextButton (Button)
+├─ SelectedCharacters (HBoxContainer)
+│  ├─ Player1Selection (Panel)
+│  │  └─ Label: "Player 1"
+│  └─ Player2Selection (Panel)
+│     └─ Label: "Player 2 / IA"
+├─ GameModeSelector (HBoxContainer)
+│  ├─ PvPButton (Button)
+│  └─ PvAIButton (Button)
+└─ StartGameButton (Button)
+            </div>
+            
+            <h3>GameMain.tscn</h3>
+            <div class="node-tree">
+GameMain (Node3D)
+├─ WorldEnvironment (WorldEnvironment)
+├─ GameManagers (Node)
+│  ├─ GameManager (Node) [script: game_main.gd]
+│  ├─ TurnManager (Node) [scene: managers/turn_manager.tscn]
+│  ├─ ScoreManager (Node) [scene: managers/score_manager.tscn]
+│  └─ BallManager (Node) [scene: managers/ball_manager.tscn]
+├─ GameWorld (Node3D) [scene: game_world.tscn]
+│  ├─ Court [scene: components/court/court.tscn]
+│  │  ├─ CourtMesh (StaticBody3D)
+│  │  ├─ BoundaryLines (MeshInstance3D)
+│  │  └─ CollisionBoundaries (Area3D)
+│  ├─ Lighting (Node3D)
+│  │  ├─ DirectionalLight3D
+│  │  └─ AmbientLight
+│  └─ Environment (Node3D)
+│     ├─ Skybox
+│     └─ BackgroundElements
+├─ Players (Node3D)
+│  ├─ Player1 [scene: components/players/player_character.tscn]
+│  │  ├─ CharacterModel (Node3D)
+│  │  ├─ AnimationPlayer
+│  │  └─ PlayerController [scene: components/players/player_controller.tscn]
+│  └─ Player2 [scene: components/players/player_character.tscn]
+│     └─ (Estructura similar)
+├─ Balls (Node3D)
+│  ├─ Bochin [scene: components/balls/bochin.tscn]
+│  └─ BallInstances (Node3D)
+│     └─ [Instancias dinámicas de bocce_ball.tscn]
+├─ CameraRig (Node3D) [scene: components/camera/camera_rig.tscn]
+│  ├─ GameCamera (Camera3D) [scene: components/camera/game_camera.tscn]
+│  ├─ CameraPivot (Node3D)
+│  └─ CameraSmoothFollow (Script)
+├─ ThrowSystem (Node3D)
+│  ├─ ThrowHandler [scene: components/throw_system/throw_handler.tscn]
+│  └─ GestureTracker [scene: components/throw_system/gesture_tracker.tscn]
+├─ AIController [scene: ai/ai_controller.tscn] (si es PvAI)
+└─ UI_Layer (CanvasLayer)
+   └─ GameHUD [scene: ui/game_hud.tscn]
+            </div>
+        </section>
+
+        <!-- ROADMAP COMPLETO -->
+        <section>
+            <h2>🗺️ Roadmap Completo de Implementación</h2>
+            
+            <h3>Fase 1: Foundation (Semanas 1-2)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Rama Git</th>
+                        <th>Escenas Principales</th>
+                        <th>Responsable</th>
+                        <th>Dependencies</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Proyecto base y configuración</td>
+                        <td><span class="badge badge-branch">main</span></td>
+                        <td><code>boot.tscn</code></td>
+                        <td>Tech Lead</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Sistema de señales globales</td>
+                        <td><span class="badge badge-branch">feat/autoloads</span></td>
+                        <td><code>global_signals.gd</code></td>
+                        <td>Backend Dev</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Recursos de configuración</td>
+                        <td><span class="badge badge-branch">feat/game-config</span></td>
+                        <td><code>game_rules.tres</code>, <code>physics_config.tres</code></td>
+                        <td>Game Designer</td>
+                        <td>autoloads</td>
+                    </tr>
+                    <tr>
+                        <td>Menú principal básico</td>
+                        <td><span class="badge badge-branch">feat/main-menu</span></td>
+                        <td><code>main_menu.tscn</code></td>
+                        <td>UI Dev</td>
+                        <td>autoloads</td>
+                    </tr>
+                    <tr>
+                        <td>Sistema de escenas y transiciones</td>
+                        <td><span class="badge badge-branch">feat/scene-loader</span></td>
+                        <td><code>scene_loader.gd</code>, <code>fade_transition.tscn</code></td>
+                        <td>Backend Dev</td>
+                        <td>main-menu</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Fase 2: Core Gameplay (Semanas 3-5)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Rama Git</th>
+                        <th>Escenas Principales</th>
+                        <th>Responsable</th>
+                        <th>Dependencies</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cancha y física básica</td>
+                        <td><span class="badge badge-branch">feat/court-physics</span></td>
+                        <td><code>court.tscn</code>, <code>bocce_ball.tscn</code></td>
+                        <td>Physics Dev</td>
+                        <td>game-config</td>
+                    </tr>
+                    <tr>
+                        <td>Sistema de lanzamiento</td>
+                        <td><span class="badge badge-branch">feat/throw-system</span></td>
+                        <td><code>throw_handler.tscn</code>, <code>gesture_tracker.tscn</code></td>
+                        <td>Gameplay Dev</td>
+                        <td>court-physics</td>
+                    </tr>
+                    <tr>
+                        <td>Game Manager y turnos</td>
+                        <td><span class="badge badge-branch">feat/game-loop</span></td>
+                        <td><code>game_main.tscn</code>, <code>turn_manager.tscn</code></td>
+                        <td>Backend Dev</td>
+                        <td>throw-system</td>
+                    </tr>
+                    <tr>
+                        <td>Sistema de puntuación</td>
+                        <td><span class="badge badge-branch">feat/scoring</span></td>
+                        <td><code>score_manager.tscn</code></td>
+                        <td>Backend Dev</td>
+                        <td>game-loop</td>
+                    </tr>
+                    <tr>
+                        <td>Cámara y controles</td>
+                        <td><span class="badge badge-branch">feat/camera-system</span></td>
+                        <td><code>camera_rig.tscn</code>, <code>game_camera.tscn</code></td>
+                        <td>Graphics Dev</td>
+                        <td>court-physics</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Fase 3: Characters & UI (Semanas 6-7)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Rama Git</th>
+                        <th>Escenas Principales</th>
+                        <th>Responsable</th>
+                        <th>Dependencies</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Selección de personajes</td>
+                        <td><span class="badge badge-branch">feat/character-select</span></td>
+                        <td><code>character_select.tscn</code>, <code>character_card.tscn</code></td>
+                        <td>UI Dev</td>
+                        <td>main-menu</td>
+                    </tr>
+                    <tr>
+                        <td>Personajes y estadísticas</td>
+                        <td><span class="badge badge-branch">feat/characters</span></td>
+                        <td><code>player_character.tscn</code>, <code>character_*.tres</code></td>
+                        <td>3D Artist</td>
+                        <td>character-select</td>
+                    </tr>
+                    <tr>
+                        <td>HUD del juego</td>
+                        <td><span class="badge badge-branch">feat/game-hud</span></td>
+                        <td><code>game_hud.tscn</code>, <code>score_display.tscn</code></td>
+                        <td>UI Dev</td>
+                        <td>game-loop</td>
+                    </tr>
+                    <tr>
+                        <td>Menú de opciones</td>
+                        <td><span class="badge badge-branch">feat/options-menu</span></td>
+                        <td><code>options_menu.tscn</code>, <code>audio_settings.tscn</code></td>
+                        <td>UI Dev</td>
+                        <td>main-menu</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Fase 4: AI & Polish (Semanas 8-9)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Rama Git</th>
+                        <th>Escenas Principales</th>
+                        <th>Responsable</th>
+                        <th>Dependencies</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>IA básica</td>
+                        <td><span class="badge badge-branch">feat/ai-basic</span></td>
+                        <td><code>ai_controller.tscn</code></td>
+                        <td>AI Dev</td>
+                        <td>game-loop, throw-system</td>
+                    </tr>
+                    <tr>
+                        <td>IA avanzada con decisiones</td>
+                        <td><span class="badge badge-branch">feat/ai-decisions</span></td>
+                        <td><code>ai_decision_maker.gd</code></td>
+                        <td>AI Dev</td>
+                        <td>ai-basic</td>
+                    </tr>
+                    <tr>
+                        <td>Resultados de ronda</td>
+                        <td><span class="badge badge-branch">feat/round-results</span></td>
+                        <td><code>round_results.tscn</code></td>
+                        <td>UI Dev</td>
+                        <td>scoring</td>
+                    </tr>
+                    <tr>
+                        <td>Resultados de match</td>
+                        <td><span class="badge badge-branch">feat/match-results</span></td>
+                        <td><code>match_results.tscn</code></td>
+                        <td>UI Dev</td>
+                        <td>round-results</td>
+                    </tr>
+                    <tr>
+                        <td>Audio y SFX</td>
+                        <td><span class="badge badge-branch">feat/audio</span></td>
+                        <td>AudioStreamPlayers en escenas</td>
+                        <td>Sound Designer</td>
+                        <td>game-loop</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Fase 5: Integration & Testing (Semanas 10-11)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Rama Git</th>
+                        <th>Escenas Principales</th>
+                        <th>Responsable</th>
+                        <th>Dependencies</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Integración completa</td>
+                        <td><span class="badge badge-branch">dev/integration</span></td>
+                        <td>Todas las escenas</td>
+                        <td>Tech Lead</td>
+                        <td>Todas las features</td>
+                    </tr>
+                    <tr>
+                        <td>Balanceo y tuning</td>
+                        <td><span class="badge badge-branch">dev/balancing</span></td>
+                        <td><code>game_rules.tres</code>, <code>physics_config.tres</code></td>
+                        <td>Game Designer</td>
+                        <td>integration</td>
+                    </tr>
+                    <tr>
+                        <td>Testing y bug fixing</td>
+                        <td><span class="badge badge-branch">dev/testing</span></td>
+                        <td>-</td>
+                        <td>QA Team</td>
+                        <td>integration</td>
+                    </tr>
+                    <tr>
+                        <td>Build final y release</td>
+                        <td><span class="badge badge-branch">main</span></td>
+                        <td>-</td>
+                        <td>Tech Lead</td>
+                        <td>testing</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- DIAGRAMA DE FLUJO GIT -->
+        <section>
+            <h2>🌿 Estrategia Git y Ramas Paralelas</h2>
+            <div class="mermaid">
+gitGraph
+    commit id: "Initial Setup"
+    branch feat/autoloads
+    checkout feat/autoloads
+    commit id: "GlobalSignals"
+    commit id: "GameConfig"
+    checkout main
+    merge feat/autoloads
+    
+    branch feat/main-menu
+    checkout feat/main-menu
+    commit id: "MainMenu UI"
+    checkout main
+    
+    branch feat/court-physics
+    checkout feat/court-physics
+    commit id: "Court Scene"
+    commit id: "Ball Physics"
+    checkout main
+    
+    branch feat/throw-system
+    checkout feat/throw-system
+    commit id: "Gesture Tracker"
+    commit id: "Throw Handler"
+    checkout main
+    merge feat/court-physics
+    
+    branch feat/game-loop
+    checkout feat/game-loop
+    commit id: "Turn Manager"
+    commit id: "Ball Manager"
+    checkout main
+    merge feat/throw-system
+    
+    branch feat/character-select
+    checkout feat/character-select
+    commit id: "Character Cards"
+    checkout main
+    
+    branch feat/camera-system
+    checkout feat/camera-system
+    commit id: "Camera Rig"
+    checkout main
+    merge feat/game-loop
+    
+    branch feat/ai-basic
+    checkout feat/ai-basic
+    commit id: "AI Controller"
+    checkout main
+    merge feat/character-select
+    merge feat/camera-system
+    
+    branch dev/integration
+    checkout dev/integration
+    commit id: "Full Integration"
+    checkout main
+    merge feat/ai-basic
+    merge dev/integration tag: "v1.0.0"
+            </div>
+            
+            <div class="highlight warning">
+                <strong>Reglas de Git:</strong>
+                <ul>
+                    <li><strong>Nunca</strong> hacer commit directo a <code>main</code> excepto el Tech Lead</li>
+                    <li>Cada feature debe tener su propia rama: <code>feat/nombre-feature</code></li>
+                    <li>Las ramas de features NO se tocan entre sí. Cada una trabaja en escenas/scripts distintos</li>
+                    <li>Usar <code>dev/integration</code> para pruebas de integración antes de mergear a <code>main</code></li>
+                    <li>Commits atómicos: un cambio = un commit descriptivo</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- CONEXIÓN DE SEÑALES -->
+        <section>
+            <h2>🔌 Diagrama de Conexión de Señales</h2>
+            <div class="mermaid">
+flowchart TD
+    subgraph "Input Layer"
+        GI[GestureTracker]
+        PC[PlayerController]
+    end
+    
+    subgraph "Game Systems"
+        TM[TurnManager]
+        BM[BallManager]
+        SM[ScoreManager]
+        GM[GameManager]
+    end
+    
+    subgraph "UI Layer"
+        HUD[GameHUD]
+        RD[RoundResults]
+    end
+    
+    subgraph "Game Objects"
+        BB[BocceBall]
+        BO[Bochin]
+    end
+    
+    GI -->|gesture_completed| TS[ThrowSystem]
+    PC -->|move_player| CR[CameraRig]
+    
+    TS -->|ball_thrown| BM
+    TS -->|ball_launched| BB
+    
+    BB -->|body_entered| BM
+    BB -->|stopped_moving| BM
+    
+    BM -->|all_balls_placed| SM
+    BM -->|ball_count_update| HUD
+    
+    SM -->|round_scored| RD
+    SM -->|points_updated| HUD
+    
+    TM -->|turn_changed| HUD
+    TM -->|turn_changed| PC
+    TM -->|next_player| GM
+    
+    GM -->|round_ended| RD
+    GM -->|game_state_change| TM
+    
+    style GI fill:#9f7aea,color:white
+    style GM fill:#f6ad55,color:white
+    style HUD fill:#48bb78,color:white
+    style BB fill:#63b3ed,color:white
+            </div>
+        </section>
+
+        <!-- CONFIGURACIÓN DE GAMESENSE -->
+        <section>
+            <h2>🎛️ Configuración de GameSense (Recursos .tres)</h2>
+            
+            <h3>game_rules.tres</h3>
+            <pre><code>extends Resource
+class_name GameRules
+
+@export_group("Match Configuration")
+@export var max_balls_per_player: int = 6
+@export var points_to_win_match: int = 12
+@export var court_length_meters: float = 25.0
+@export var court_width_meters: float = 4.0
+
+@export_group("Turn Rules")
+@export var player1_starts_first_round: bool = true
+@export var winner_starts_next_round: bool = true
+@export var allow_jack_rethrow: bool = false
+
+@export_group("Scoring")
+@export var min_distance_to_score: float = 0.1
+@export var precision_decimal_places: int = 2</code></pre>
+
+            <h3>physics_config.tres</h3>
+            <pre><code>extends Resource
+class_name PhysicsConfig
+
+@export_group("Ball Physics")
+@export var ball_mass: float = 1.0
+@export var ball_friction: float = 0.5
+@export var ball_bounce: float = 0.3
+@export var linear_damping: float = 0.8
+@export var angular_damping: float = 0.9
+
+@export_group("Throw Mechanics")
+@export var min_throw_power: float = 5.0
+@export var max_throw_power: float = 25.0
+@export var power_multiplier: float = 1.5
+@export var spin_multiplier: float = 2.0
+@export var curve_sensitivity: float = 1.2
+
+@export_group("Gesture Detection")
+@export var gesture_smoothing: float = 0.1
+@export var min_gesture_length: float = 50.0
+@export var max_gesture_time: float = 3.0
+@export var power_accumulation_rate: float = 10.0
+
+@export_group("Environment")
+@export var gravity: float = 9.8
+@export var air_resistance: float = 0.01</code></pre>
+
+            <h3>ai_config.tres</h3>
+            <pre><code>extends Resource
+class_name AIConfig
+
+@export_group("Difficulty Levels")
+@export var easy_error_margin: float = 0.3
+@export var medium_error_margin: float = 0.15
+@export var hard_error_margin: float = 0.05
+
+@export_group("Decision Making")
+@export var ai_reaction_time_ms: float = 1000.0
+@export var target_selection_variance: float = 0.2
+@export var aggressive_play_threshold: float = 0.7
+
+@export_group("Throw Accuracy")
+@export var base_accuracy: float = 0.8
+@export var pressure_factor: float = 0.1
+@export var learning_rate: float = 0.05</code></pre>
+        </section>
+
+        <!-- CHECKLIST DE IMPLEMENTACIÓN -->
+        <section>
+            <h2>✅ Checklist de Implementación por Escena</h2>
+            
+            <h3>MainMenu Checklist</h3>
+            <ul>
+                <li>☐ Botón "Jugar" abre submenú (1v1 / PvAI)</li>
+                <li>☐ Botón "Opciones" carga <code>options_menu.tscn</code></li>
+                <li>☐ Botón "Salir" cierra el juego</li>
+                <li>☐ Animaciones de entrada/salida</li>
+                <li>☐ Música de fondo y SFX en botones</li>
+                <li>☐ Transición suave a CharacterSelect</li>
+            </ul>
+            
+            <h3>CharacterSelect Checklist</h3>
+            <ul>
+                <li>☐ Carrusel de personajes navegable</li>
+                <li>☐ Preview 3D del personaje seleccionado</li>
+                <li>☐ Barras de estadísticas visibles</li>
+                <li>☐ Selector de modo (PvP / PvAI)</li>
+                <li>☐ Validación: ambos jugadores deben seleccionar</li>
+                <li>☐ Botón "Comenzar" habilitado solo cuando sea válido</li>
+                <li>☐ Guardar selección en <code>game_config.gd</code></li>
+            </ul>
+            
+            <h3>GameMain Checklist</h3>
+            <ul>
+                <li>☐ Cancha cargada con límites visibles</li>
+                <li>☐ Cámara sigue movimiento A/D suavemente</li>
+                <li>☐ Sistema de gestos detecta: down (power) + up (direction/curve)</li>
+                <li>☐ Bochin se lanza primero (solo P1 en ronda 1)</li>
+                <li>☐ TurnManager alterna turnos correctamente</li>
+                <li>☐ BallManager cuenta bochas lanzadas (máx 6)</li>
+                <li>☐ HUD muestra: turno actual, bochas restantes, marcador</li>
+                <li>☐ ScoreManager calcula puntos al finalizar ronda</li>
+                <li>☐ Transición a RoundResults</li>
+            </ul>
+            
+            <h3>OptionsMenu Checklist</h3>
+            <ul>
+                <li>☐ Tabs: Audio, Video, Gameplay, Controles</li>
+                <li>☐ Sliders: Volumen música, SFX, master</li>
+                <li>☐ Resoluciones disponibles detectadas</li>
+                <li>☐ Fullscreen toggle funcional</li>
+                <li>☐ Rebind de teclas (A, D, Click lanzar)</li>
+                <li>☐ Botón "Guardar" y "Cancelar"</li>
+                <li>☐ Persistencia en <code>save_manager.gd</code></li>
+            </ul>
+        </section>
+
+        <!-- TESTING INDEPENDIENTE -->
+        <section>
+            <h2>🧪 Testing Independiente por Rama</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>feat/court-physics</h3>
+                    <ul>
+                        <li>Crear escena de test: <code>test_court.tscn</code></li>
+                        <li>Spawnear bocha manualmente</li>
+                        <li>Verificar: fricción, rebote, límites</li>
+                        <li>Probar con diferentes valores en <code>physics_config.tres</code></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>feat/throw-system</h3>
+                    <ul>
+                        <li>Crear escena: <code>test_throw.tscn</code></li>
+                        <li>Simular gestos con mouse</li>
+                        <li>Verificar: power bar, dirección, curva</li>
+                        <li>Debug: dibujar trayectoria con <code>DebugDrawer</code></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>feat/game-loop</h3>
+                    <ul>
+                        <li>Crear escena: <code>test_turns.tscn</code></li>
+                        <li>Simular lanzamientos con botones</li>
+                        <li>Verificar: alternancia de turnos, conteo 6 bochas</li>
+                        <li>Test edge cases: empate, un jugador sin bochas</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>feat/scoring</h3>
+                    <ul>
+                        <li>Crear escena: <code>test_scoring.tscn</code></li>
+                        <li>Posicionar bochas manualmente</li>
+                        <li>Verificar: cálculo de distancias, puntos consecutivos</li>
+                        <li>Probar casos: 1-6 puntos posibles</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- RECOMENDACIONES FINALES -->
+        <section>
+            <h2>💡 Recomendaciones Finales</h2>
+            
+            <div class="highlight info">
+                <strong>Principios de Diseño:</strong>
+                <ol>
+                    <li><strong>Una escena = una responsabilidad:</strong> Si una escena hace más de 3 cosas, dividirla</li>
+                    <li><strong>Composición sobre herencia:</strong> Usar <code>instancia</code> de escenas, no herencia de scripts</li>
+                    <li><strong>Señales sobre referencias directas:</strong> Usar <code>SignalBus</code> para comunicación entre sistemas</li>
+                    <li><strong>Recursos sobre hardcode:</strong> Todos los valores de juego en archivos <code>.tres</code></li>
+                    <li><strong>Nodos exportables:</strong> Usar <code>@export</code> para configurar desde el Inspector</li>
+                </ol>
+            </div>
+            
+            <h3>Convenciones de Nomenclatura</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Convención</th>
+                        <th>Ejemplo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Escenas</td>
+                        <td><code>snake_case.tscn</code></td>
+                        <td><code>character_select.tscn</code></td>
+                    </tr>
+                    <tr>
+                        <td>Scripts</td>
+                        <td><code>snake_case.gd</code></td>
+                        <td><code>turn_manager.gd</code></td>
+                    </tr>
+                    <tr>
+                        <td>Recursos</td>
+                        <td><code>snake_case.tres</code></td>
+                        <td><code>physics_config.tres</code></td>
+                    </tr>
+                    <tr>
+                        <td>Nodos</td>
+                        <td><code>PascalCase</code></td>
+                        <td><code>TurnManager</code>, <code>BallSpawner</code></td>
+                    </tr>
+                    <tr>
+                        <td>Señales</td>
+                        <td><code>snake_case</code></td>
+                        <td><code>turn_changed</code>, <code>ball_thrown</code></td>
+                    </tr>
+                    <tr>
+                        <td>Variables</td>
+                        <td><code>snake_case</code></td>
+                        <td><code>current_player</code>, <code>max_balls</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Optimizaciones Recomendadas</h3>
+            <ul>
+                <li>Usar <code>VisibilityNotifier3D</code> para desactivar objetos fuera de cámara</li>
+                <li>Implementar object pooling para las bochas (reutilizar en vez de instanciar/destruir)</li>
+                <li>Usar <code>LOD</code> (Level of Detail) en modelos 3D si es necesario</li>
+                <li>Pre-cargar escenas pesadas en <code>boot.tscn</code> o durante transiciones</li>
+                <li>Usar <code>call_deferred()</code> para operaciones pesadas en señales</li>
+            </ul>
+        </section>
+
+        <footer style="text-align: center; padding: 40px; color: white;">
+            <p><strong>Bochas Argentinas - Documentación de Arquitectura</strong></p>
+            <p>Godot 4.x | Scene-Based Architecture | 2026</p>
+        </footer>
+    </div>
+</body>
+</html>
