@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bochazo - Por que no aparecen los Resources y como solucionarlo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #e0e0e0; line-height: 1.6; padding: 2rem; }
+        h1 { color: #ff6b6b; text-align: center; margin-bottom: 0.5rem; font-size: 2rem; }
+        h2 { color: #00d4ff; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #00d4ff33; padding-bottom: 0.5rem; }
+        h3 { color: #ffd93d; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        h4 { color: #4ecdc4; margin-top: 1rem; margin-bottom: 0.5rem; }
+        .subtitle { text-align: center; color: #888; margin-bottom: 2rem; font-style: italic; }
+        code { background: #0f3460; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.9rem; color: #e0e0e0; }
+        pre { background: #0f3460; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 0.5rem 0; }
+        pre code { background: none; padding: 0; color: #c9d1d9; }
+        .comment { color: #8b949e; }
+        .keyword { color: #ff7b72; }
+        .type { color: #79c0ff; }
+        .string { color: #a5d6ff; }
+        .func { color: #d2a8ff; }
+        .var { color: #ffa657; }
+        .number { color: #79c0ff; }
+        .error { color: #ff6b6b; font-weight: bold; }
+        .fix { color: #4ecdc4; font-weight: bold; }
+        .description { background: #16213e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border-left: 4px solid #ff6b6b; }
+        .description.ok { border-left-color: #4ecdc4; }
+        .description.warn { border-left-color: #ffd93d; }
+        .description.info { border-left-color: #00d4ff; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #333; }
+        th { background: #0f3460; color: #00d4ff; }
+        tr:hover { background: #16213e; }
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+        .badge-critical { background: #ff6b6b; color: #fff; }
+        .badge-warning { background: #ffd93d; color: #000; }
+        .badge-info { background: #00d4ff; color: #000; }
+        .badge-ok { background: #4ecdc4; color: #000; }
+        ol, ul { margin-left: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <h1>Por que no aparecen los Resources en Godot</h1>
+    <p class="subtitle">Explicacion del problema y 3 soluciones concretas</p>
+
+    <h2>El Problema</h2>
+    <div class="description">
+        Cuando haces click derecho en el FileSystem → <strong>New Resource...</strong> y buscas <code>PositioningState</code>, <strong>no aparece en la lista</strong>. Lo mismo con los otros 3 estados. Esto es un comportamiento conocido de Godot 4.x con <code>class_name</code> en clases que extienden <code>RefCounted</code>.
+    </div>
+
+    <h2>Por que pasa esto</h2>
+    <div class="description info">
+        <code>class_name</code> registra la clase globalmente para que puedas usarla en codigo (<code>var x = PositioningState.new()</code>), pero <strong>NO necesariamente la registra en el dialogo de "New Resource"</strong>. Godot solo muestra ciertos tipos en ese dialogo, y las clases custom que extienden <code>RefCounted</code> a veces no aparecen, especialmente si:
+        <ul>
+            <li>El proyecto no recompilo los scripts despues de agregar el <code>class_name</code></li>
+            <li>Hay un error de compilacion en algun script que bloquea el registro</li>
+            <li>Godot 4.x tiene un bug conocido con <code>class_name</code> + <code>RefCounted</code> en el resource picker</li>
+        </ul>
+    </div>
+
+    <h2>Solucion 1 (RECOMENDADA): Usar Opcion A - Crear estados en codigo</h2>
+    <div class="description ok">
+        <strong>Esta es la solucion mas simple y la que te recomiendo.</strong> No necesitas crear archivos <code>.tres</code> ni asignarlos en el inspector. El StateMachine crea los estados automaticamente en su <code>_ready()</code>.
+        <br><br>
+        <strong>Ventaja:</strong> Funciona inmediatamente. Zero configuracion en el editor.<br>
+        <strong>Desventaja:</strong> Los <code>@export</code> en los states no se ven en ningun inspector (pero no rompen nada).
+    </div>
+
+    <h3>Paso unico: Reemplazar StateMachine.gd</h3>
+    <pre><code><span class="comment"># StateMachine.gd -- Version Opcion A (sin .tres, funciona YA)</span>
+<span class="keyword">extends</span> <span class="type">Node</span>
+
+<span class="keyword">signal</span> state_changed(new_state: <span class="type">String</span>)
+
+<span class="keyword">enum</span> <span class="type">BochaState</span> {
+    POSITIONING,
+    AIMING,
+    THROWING,
+    ROLLING
+}
+
+<span class="keyword">var</span> current_state: <span class="type">BochaState</span> = <span class="type">BochaState</span>.POSITIONING
+
+<span class="comment"># Los estados se crean en codigo, NO desde el inspector</span>
+<span class="keyword">var</span> states: <span class="type">Dictionary</span> = {}
+
+<span class="keyword">func</span> <span class="func">_ready</span>() -> <span class="type">void</span>:
+    <span class="comment"># Crear los estados directamente con .new()</span>
+    states[<span class="type">BochaState</span>.POSITIONING] = <span class="type">PositioningState</span>.new()
+    states[<span class="type">BochaState</span>.AIMING] = <span class="type">AimingState</span>.new()
+    states[<span class="type">BochaState</span>.THROWING] = <span class="type">ThrowingState</span>.new()
+    states[<span class="type">BochaState</span>.ROLLING] = <span class="type">RollingState</span>.new()
+
+    <span class="comment"># Inicializar cada estado con referencia al padre</span>
+    <span class="keyword">for</span> state <span class="keyword">in</span> states.values():
+        state.init(get_parent())
+
+    <span class="comment"># Entrar al estado inicial</span>
+    states[current_state].enter()
+
+<span class="keyword">func</span> <span class="func">_process</span>(delta: <span class="type">float</span>) -> <span class="type">void</span>:
+    states[current_state].update(delta)
+
+<span class="keyword">func</span> <span class="func">_physics_process</span>(delta: <span class="type">float</span>) -> <span class="type">void</span>:
+    states[current_state].physics_update(delta)
+
+<span class="keyword">func</span> <span class="func">_input</span>(event: <span class="type">InputEvent</span>) -> <span class="type">void</span>:
+    states[current_state].handle_input(event)
+
+<span class="keyword">func</span> <span class="func">transition_to</span>(new_state: <span class="type">BochaState</span>) -> <span class="type">void</span>:
+    <span class="keyword">if</span> new_state == current_state:
+        <span class="keyword">return</span>
+
+    states[current_state].exit()
+    current_state = new_state
+    states[current_state].enter()
+    state_changed.emit(<span class="type">BochaState</span>.keys()[current_state])</code></pre>
+
+    <div class="description ok">
+        <strong>Con esto ya funciona.</strong> No necesitas crear ningun <code>.tres</code>. Los <code>@export</code> que tienen los scripts de los estados simplemente se ignoran (no causan error, solo no se muestran en ningun inspector).
+    </div>
+
+    <h2>Solucion 2: Crear los .tres manualmente como archivos de texto</h2>
+    <div class="description info">
+        Si igual queres los archivos <code>.tres</code> para poder configurarlos desde el inspector despues, podés crearlos <strong>manualmente como archivos de texto</strong>. Godot los lee perfectamente.
+    </div>
+
+    <h3>Paso 1: Crear los 4 archivos .tres en la carpeta States/</h3>
+    <p>Creá estos archivos de texto en <code>res://BochaGian/States/</code>:</p>
+
+    <h4>positioning_state.tres</h4>
+    <pre><code>[gd_resource type="PositioningState" format=3]
+
+freeze_on_enter = true
+reset_velocity_on_enter = true</code></pre>
+
+    <h4>aiming_state.tres</h4>
+    <pre><code>[gd_resource type="AimingState" format=3]
+
+show_power_indicator = true
+min_power_to_throw = 0.1</code></pre>
+
+    <h4>throwing_state.tres</h4>
+    <pre><code>[gd_resource type="ThrowingState" format=3]
+
+apply_curve = true
+curve_multiplier = 2.0
+play_throw_effect = true</code></pre>
+
+    <h4>rolling_state.tres</h4>
+    <pre><code>[gd_resource type="RollingState" format=3]
+
+stop_threshold = 0.05
+required_stop_time = 0.5
+enable_trail_effect = true
+trail_min_speed = 0.5</code></pre>
+
+    <h3>Paso 2: Asignar los .tres al StateMachine desde el inspector</h3>
+    <div class="description ok">
+        <ol>
+            <li>Abrí <code>bocha.tscn</code></li>
+            <li>Seleccioná el nodo <code>StateMachine</code></li>
+            <li>En el Inspector, seccion <code>States</code></li>
+            <li>Para cada campo (<code>Positioning State</code>, <code>Aiming State</code>, etc.):
+                <ul>
+                    <li>Hace click en el campo vacio</li>
+                    <li>Elegí <strong>Load...</strong></li>
+                    <li>Navegá a <code>res://BochaGian/States/</code></li>
+                    <li>Seleccioná el <code>.tres</code> correspondiente</li>
+                </ul>
+            </li>
+            <li>Guardá la escena (Ctrl+S)</li>
+        </ol>
+    </div>
+
+    <div class="description warn">
+        <strong>Importante:</strong> Despues de crear los archivos <code>.tres</code>, Godot necesita importarlos. Si no aparecen en el FileSystem, hace click en el boton <strong>Scan</strong> (icono de carpeta con flechas) en la parte superior del panel FileSystem, o reinicia el proyecto.
+    </div>
+
+    <h3>Paso 3: Mantener el StateMachine.gd de la Opcion B</h3>
+    <div class="description info">
+        Si usas esta solucion, el <code>StateMachine.gd</code> se queda como ya lo tenes (con los <code>@export var</code>). No hace falta cambiarlo.
+    </div>
+
+    <h2>Solucion 3: Forzar que aparezcan en el dialogo de New Resource</h2>
+    <div class="description info">
+        Si queres que los states aparezcan en el dialogo de <strong>New Resource...</strong>, hay un par de cosas que podes probar:
+    </div>
+
+    <h3>Intento A: Recargar los scripts del proyecto</h3>
+    <ol>
+        <li>En Godot, anda a <strong>Project → Reload Current Project</strong></li>
+        <li>Espera a que recargue</li>
+        <li>Intenta de nuevo: click derecho en FileSystem → New Resource → busca "PositioningState"</li>
+    </ol>
+
+    <h3>Intento B: Verificar que no haya errores de compilacion</h3>
+    <div class="description warn">
+        Si algun script tiene un error, Godot no registra los <code>class_name</code>. Fijate en el <strong>Output</strong> del editor si hay errores de compilacion. Los scripts actuales de BochaGian estan bien, pero si agregaste algo nuevo, puede estar bloqueando el registro.
+    </div>
+
+    <h3>Intento C: Usar @icon para que aparezcan mejor</h3>
+    <div class="description info">
+        Agregar un icono al <code>class_name</code> a veces ayuda a que Godot lo reconozca mejor en los dialogos:
+    </div>
+    <pre><code><span class="keyword">extends</span> <span class="type">RefCounted</span>
+<span class="keyword">class_name</span> <span class="type">PositioningState</span> <span class="string">"res://icon.svg"</span>
+<span class="comment"># ^ El icono es opcional, pero a veces ayuda</span></code></pre>
+
+    <h2>Comparacion de las 3 soluciones</h2>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Solucion 1: Opcion A (codigo)</th>
+                <th>Solucion 2: .tres manual</th>
+                <th>Solucion 3: Forzar dialogo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Dificultad</strong></td>
+                <td><span class="badge badge-ok">Muy facil</span></td>
+                <td><span class="badge badge-ok">Facil</span></td>
+                <td><span class="badge badge-warning">Incierto</span></td>
+            </tr>
+            <tr>
+                <td><strong>Funciona seguro</strong></td>
+                <td><span class="badge badge-ok">Si</span></td>
+                <td><span class="badge badge-ok">Si</span></td>
+                <td><span class="badge badge-critical">Quizas no</span></td>
+            </tr>
+            <tr>
+                <td><strong>Configurable en inspector</strong></td>
+                <td><span class="badge badge-critical">No</span></td>
+                <td><span class="badge badge-ok">Si</span></td>
+                <td><span class="badge badge-ok">Si</span></td>
+            </tr>
+            <tr>
+                <td><strong>Pasos requeridos</strong></td>
+                <td>1 (cambiar StateMachine.gd)</td>
+                <td>2 (crear archivos + asignar)</td>
+                <td>Variable</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Mi recomendacion</h2>
+    <div class="description ok">
+        <strong>Usa la Solucion 1 (Opcion A).</strong> Cambia el <code>StateMachine.gd</code> al que crea los estados con <code>.new()</code> y listo. Funciona inmediatamente, sin configuracion extra.
+        <br><br>
+        Despues, cuando todo el juego este funcionando y quieras ajustar valores de los estados frecuentemente, recien ahi migras a la Opcion B creando los <code>.tres</code> (Solucion 2). No tiene sentido pelear con el editor de Godot para algo que no es esencial en esta etapa.
+        <br><br>
+        <strong>El patron de State Machine funciona igual de bien con ambas opciones.</strong> La unica diferencia es donde se configuran los valores (codigo vs inspector).
+    </div>
+</body>
+</html>
