@@ -143,8 +143,18 @@ offset_bottom = 47.61123
 scale = Vector2(0.10551454, 0.10551454)
 text = "Contra CPU"
 
+[node name="Back" type="Button" parent="ChooseOpp" unique_id=859897053]
+layout_mode = 0
+offset_left = 28.706043
+offset_top = 28.399841
+offset_right = 85.70604
+offset_bottom = 59.39984
+scale = Vector2(0.13928252, 0.10826816)
+text = "Volver"
+
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Creditos" to="." method="_on_creditos_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="ChooseOpp/VsPlayer" to="." method="_on_vs_player_pressed"]
 [connection signal="pressed" from="ChooseOpp/VsCPU" to="." method="_on_vs_cpu_pressed"]
+[connection signal="pressed" from="ChooseOpp/Back" to="." method="_on_back_pressed"]

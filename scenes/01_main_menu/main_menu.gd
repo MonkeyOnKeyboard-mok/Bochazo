@@ -45,7 +45,7 @@ func _on_play_pressed() -> void:
 	choose_opp.show()
 	##Audio.click()
 	pass
-	
+
 func creditos() -> void:
 	#creditos_png.show()
 	pass
@@ -69,3 +69,6 @@ func _on_vs_cpu_pressed() -> void:
 	##Audio.menu_out()
 	##$fade_transition/Fade_timer.start()
 	##$fade_transition/AnimationPlayer.play("fade_in")
+
+func _on_back_pressed() -> void:
+	choose_opp.hide()

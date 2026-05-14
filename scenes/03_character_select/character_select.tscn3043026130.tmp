@@ -9,7 +9,7 @@
 gradient = SubResource("Gradient_d67qk")
 
 [sub_resource type="Gradient" id="Gradient_h5lt7"]
-colors = PackedColorArray(0.94028825, 0.0006804966, 0.00037272455, 1, 1, 0, 0.13725491, 1)
+colors = PackedColorArray(0.6456008, 0, 0, 1, 1, 0, 0.13725491, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_khmfb"]
 gradient = SubResource("Gradient_h5lt7")
