@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://db5blw52kmb24"]
+
+[ext_resource type="Texture2D" uid="uid://cb0g74xqi36rm" path="res://scenes/03_character_select/texture.png" id="1_k6ifk"]
+[ext_resource type="ArrayMesh" uid="uid://dt2q8300627vh" path="res://scenes/03_character_select/Modelo_jugador2.obj" id="2_ougup"]
+[ext_resource type="Script" uid="uid://c16b2fqw3ekc" path="res://scenes/03_character_select/player_char_select.gd" id="3_ougup"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ougup"]
+albedo_texture = ExtResource("1_k6ifk")
+
+[node name="Raul" type="Node3D" unique_id=1871043710]
+transform = Transform3D(-0.5, 0, -7.54979e-08, 0, 0.5, 0, 7.54979e-08, 0, -0.5, 0, 0, 0)
+script = ExtResource("3_ougup")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=198586651]
+material_override = SubResource("StandardMaterial3D_ougup")
+mesh = ExtResource("2_ougup")

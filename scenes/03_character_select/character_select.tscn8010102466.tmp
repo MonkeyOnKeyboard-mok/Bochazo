@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://barypadvayqwp"]
+
+[ext_resource type="Script" uid="uid://dcmyrb6u2xmc0" path="res://scenes/03_character_select/character_select.gd" id="1_d67qk"]
+[ext_resource type="PackedScene" uid="uid://db5blw52kmb24" path="res://scenes/03_character_select/raul.tscn" id="2_h5lt7"]
+
+[sub_resource type="Gradient" id="Gradient_d67qk"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_h5lt7"]
+gradient = SubResource("Gradient_d67qk")
+
+[node name="CharacterSelect" type="Node3D" unique_id=108657606]
+script = ExtResource("1_d67qk")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=691383955]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64526874, 1.390383)
+current = true
+
+[node name="Background" type="Sprite3D" parent="." unique_id=565741794]
+transform = Transform3D(14.248935, 0, 0, 0, 7.6008053, 0, 0, 0, 4.27262, 0, 0, -4.1128116)
+texture = SubResource("GradientTexture2D_h5lt7")
+
+[node name="Players" type="Node3D" parent="." unique_id=1881728522]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.0755513)
+
+[node name="Raul" parent="Players" unique_id=2082799831 instance=ExtResource("2_h5lt7")]
+
+[node name="Raul2" parent="Players" unique_id=1319635846 instance=ExtResource("2_h5lt7")]
