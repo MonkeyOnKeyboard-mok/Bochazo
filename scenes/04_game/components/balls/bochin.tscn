@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://4qe83ntmmj7w"]
+
+[ext_resource type="Script" uid="uid://bug232h66kc3t" path="res://scenes/04_game/components/balls/bochin.gd" id="1_fw4uf"]
+[ext_resource type="Resource" uid="uid://bk2osp5qyya1y" path="res://resources/game_config/bocce_ball.tres" id="2_rkk4d"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_5ugk0"]
+radius = 0.2
+height = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hdhda"]
+radius = 0.2
+
+[node name="Bochin" type="RigidBody3D" unique_id=1841816552]
+mass = 0.4
+script = ExtResource("1_fw4uf")
+physics_config = ExtResource("2_rkk4d")
+
+[node name="BallMesh" type="MeshInstance3D" parent="." unique_id=123046408]
+mesh = SubResource("SphereMesh_5ugk0")
+
+[node name="BallCollision" type="CollisionShape3D" parent="." unique_id=169731938]
+shape = SubResource("SphereShape3D_hdhda")
