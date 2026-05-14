@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://l7nbp2656lvs" path="res://scenes/00_boot/boot.gd" id="1_wkw65"]
 [ext_resource type="Texture2D" uid="uid://cspgvuql7rsy0" path="res://assets/textures/LogoLeapDogSTUDIO.png" id="2_s7wnd"]
+[ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="3_s7wnd"]
 
 [node name="Boot" type="Node2D" unique_id=294296892]
 script = ExtResource("1_wkw65")
@@ -14,12 +15,4 @@ offset_bottom = 1080.0
 position = Vector2(960, 540)
 texture = ExtResource("2_s7wnd")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1775460541]
-
-[node name="FadeRect" type="ColorRect" parent="CanvasLayer" unique_id=1708324133]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0)
+[node name="FadeTransition" parent="." unique_id=188914972 instance=ExtResource("3_s7wnd")]
