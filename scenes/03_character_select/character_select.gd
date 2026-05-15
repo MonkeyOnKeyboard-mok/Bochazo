@@ -10,6 +10,7 @@ var index : int = 0
 @onready var players: Node3D = $Players
 @onready var hud: Node3D = $Hud
 @onready var flecha: Sprite3D = $Hud/Flecha
+@onready var label_player: Label3D = $Hud/Flecha/Label3D
 @onready var nombre: Label3D = $Hud/Nombre
 
 # Called when the node enters the scene tree for the first time.
@@ -18,6 +19,7 @@ func _ready() -> void:
 		player_list.append(character)
 	print(player_list)
 	current_character = player_list [index]
+	label_player.text = "Player 1"
 	#player_list[0].play("idle") // Jugador 1 hace su animación idle
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -49,6 +51,10 @@ func choose() -> void:
 			current_character.player_num = "player1"
 			## Change Flecha to P2 instead of P1
 			flecha.modulate = Color(0.0, 0.0, 1.0, 1.0)
+			if !GameManager.vsAI:
+				label_player.text = "Player 2"
+			else: 
+				label_player.text = "CPU"
 		else:
 			GameManager.player2_char = current_character
 			p2_chose = true
