@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://cfvars3nwg0x2"]
 
 [ext_resource type="Script" uid="uid://bc8qyx45be5cn" path="res://scenes/01_main_menu/main_menu.gd" id="1_lkjtg"]
-[ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="2_eefsq"]
 [ext_resource type="Texture2D" uid="uid://d121vkqev0l21" path="res://TestSceneSanti/placeholders/jugar.png" id="2_q0j04"]
 [ext_resource type="Texture2D" uid="uid://bfqvqcolhkdap" path="res://TestSceneSanti/placeholders/jugar_select.png" id="3_e1m5t"]
 [ext_resource type="Texture2D" uid="uid://dfa1q8ixs7wwn" path="res://TestSceneSanti/placeholders/creditos.png" id="4_6prxp"]
@@ -112,9 +111,6 @@ texture_hover = ExtResource("5_6e25n")
 ignore_texture_size = true
 stretch_mode = 5
 script = SubResource("GDScript_lkjtg")
-
-[node name="FadeTransition" parent="." unique_id=188914972 instance=ExtResource("2_eefsq")]
-visible = false
 
 [node name="ChooseOpp" type="ColorRect" parent="." unique_id=220067101]
 layout_mode = 0

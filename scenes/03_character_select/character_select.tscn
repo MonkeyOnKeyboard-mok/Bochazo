@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dcmyrb6u2xmc0" path="res://scenes/03_character_select/character_select.gd" id="1_d67qk"]
 [ext_resource type="PackedScene" uid="uid://db5blw52kmb24" path="res://scenes/03_character_select/raul.tscn" id="2_h5lt7"]
-[ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="3_khmfb"]
 
 [sub_resource type="Gradient" id="Gradient_d67qk"]
 
@@ -51,8 +50,3 @@ text = "Jugador"
 [node name="Nombre" type="Label3D" parent="Hud" unique_id=240457869]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3715466, -3.1074228)
 text = "Nombre"
-
-[node name="SubViewport" type="SubViewport" parent="." unique_id=796761324]
-
-[node name="FadeTransition" parent="SubViewport" unique_id=369012725 instance=ExtResource("3_khmfb")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
