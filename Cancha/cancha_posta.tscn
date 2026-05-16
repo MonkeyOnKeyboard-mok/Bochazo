@@ -1,16 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://bqmvwo3hl8oyt"]
 
 [ext_resource type="PackedScene" uid="uid://rirhhk5svoiv" path="res://Cancha/cancha.tscn" id="1_sju1p"]
-[ext_resource type="Shader" uid="uid://dq7xafmtk2cmq" path="res://Cancha/cancha_bochas.gdshader" id="2_8nnev"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bibos"]
-render_priority = 0
-shader = ExtResource("2_8nnev")
-shader_parameter/top_color = Color(0.21076313, 0.0073981537, 0.2349132, 1)
-shader_parameter/bottom_color = Color(0.20784314, 1, 1, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_sju1p"]
-size = Vector3(62.689697, 0.41031176, 10.046143)
 
 [node name="Cancha" type="Node3D" unique_id=1254177911]
 

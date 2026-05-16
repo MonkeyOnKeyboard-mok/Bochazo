@@ -1,0 +1,119 @@
+[gd_scene format=3 uid="uid://b1u7ph1hhqb66"]
+
+[ext_resource type="PackedScene" uid="uid://b4bqnwgulw6e6" path="res://scenes/04_game/components/court/court.tscn" id="1_ksdrd"]
+
+[sub_resource type="GDScript" id="GDScript_ksdrd"]
+resource_name = "test_court"
+script/source = "extends Node3D
+
+@export_group(\"Referencias\")
+@export_file(\"*.tscn\") var bocce_ball_scene: String = \"res://scenes/04_game/components/balls/bocce_ball.tscn\"
+@export_file(\"*.tscn\") var bochin_scene: String = \"res://scenes/04_game/components/balls/bochin.tscn\"
+@export var test_camera: Camera3D
+@export var spawn_height: float = 1.5
+@export var throw_force: float = 10.0
+@export_group(\"Debug Controls\")
+@export var push_last_ball_key: Key = KEY_W
+@export var push_force: float = 10.0
+
+var _spawned_balls: Array[RigidBody3D] = []
+
+
+func _ready():
+	if test_camera == null and has_node(\"TestCamera\"):
+		test_camera = $TestCamera
+		
+	print(\"[TestCourt] 🎯 Click Izq: Lanzar Bocha | Click Der: Lanzar Bochin | Espacio: Limpiar\")
+
+func _input(event):
+	if event is InputEventMouseButton and event.pressed:
+		match event.button_index:
+			MOUSE_BUTTON_LEFT:
+				_spawn_and_throw(bocce_ball_scene, \"Bocha\")
+			MOUSE_BUTTON_RIGHT:
+				_spawn_and_throw(bochin_scene, \"Bochin\")
+	elif event is InputEventKey and event.pressed and event.keycode == KEY_SPACE:
+		_clear_balls()
+	elif event is InputEventKey and event.pressed and event.keycode == push_last_ball_key:
+		_impulse_last_ball()
+
+func _spawn_and_throw(scene_path: String, name_prefix: String):
+	if not FileAccess.file_exists(scene_path):
+		push_error(\"[TestCourt] ❌ Escena no encontrada: %s\" % scene_path)
+		return
+
+	var packed_scene = load(scene_path)
+	var ball = packed_scene.instantiate()
+	ball.name = \"%s_%d\" % [name_prefix, randi() % 9999]
+	_spawned_balls.append(ball)
+
+	# Posicionar frente a la cámara
+	var cam_pos = test_camera.global_position
+	var cam_dir = test_camera.global_transform.basis.z
+	ball.global_position = cam_pos - (cam_dir * 10.0) + Vector3(0, spawn_height, 0)
+
+	# Conectar señales para debug
+	if ball.has_signal(\"stopped_moving\"):
+		ball.stopped_moving.connect(_on_ball_stopped)
+	if ball.has_signal(\"collision_occurred\"):
+		ball.collision_occurred.connect(_on_ball_collided)
+
+	add_child(ball)
+
+	# Aplicar impulso en dirección de la cámara
+	ball.apply_central_impulse(-cam_dir * throw_force)
+	print(\"[TestCourt] 🚀 %s lanzado | Fuerza: %.1f\" % [name_prefix, throw_force])
+
+func _on_ball_stopped(ball_ref: RigidBody3D):
+	print(\"[TestCourt] 🛑 %s se detuvo en %s\" % [ball_ref.name, ball_ref.global_position.round()])
+
+func _on_ball_collided(impulse: Vector3):
+	if impulse.length() > 2.0:
+		print(\"[TestCourt] 💥 Colisión fuerte detectada (|v|: %.2f)\" % impulse.length())
+
+func _clear_balls():
+	for ball in _spawned_balls:
+		if is_instance_valid(ball):
+			ball.queue_free()
+	_spawned_balls.clear()
+	print(\"[TestCourt] 🧹 Bochas limpiadas\")
+	
+func _impulse_last_ball() -> void:
+	if _spawned_balls.is_empty():
+		print(\"[TestCourt] ⚠️ No hay bochas para impulsar\")
+		return
+		
+	var ball = _spawned_balls.back()
+	if not is_instance_valid(ball):
+		print(\"[TestCourt] ⚠️ La última bocha ya fue eliminada\")
+		return
+		
+	# Reanudar física si estaba detenida/congelada
+	if ball.has_method(\"resume_movement\"):
+		ball.resume_movement()
+	else:
+		ball.freeze = false # Fallback seguro
+		
+	# Impulso en dirección de la cámara
+	var cam_dir = test_camera.global_transform.basis.z.normalized()
+	ball.apply_central_impulse(-cam_dir * push_force)
+	
+	print(\"[TestCourt] 🚀 Impulso a %s | Fuerza: %.1f\" % [ball.name, push_force])
+"
+
+[sub_resource type="Environment" id="Environment_ym8ln"]
+
+[node name="TestCourt" type="Node3D" unique_id=98594765]
+script = SubResource("GDScript_ksdrd")
+
+[node name="Court" parent="." unique_id=1767025561 instance=ExtResource("1_ksdrd")]
+
+[node name="TestCamera" type="Camera3D" parent="." unique_id=1410064119]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -38.70582, 3.1043491, 0)
+near = 2.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1985138796]
+environment = SubResource("Environment_ym8ln")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1867578189]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 11.402227, 0)

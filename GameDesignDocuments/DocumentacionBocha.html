@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bochazo - Documentacion Completa de Bocha.tscn</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #e0e0e0; line-height: 1.7; padding: 2rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h1 { color: #4ecdc4; text-align: center; margin-bottom: 0.5rem; font-size: 2rem; }
+        h2 { color: #00d4ff; margin-top: 3rem; margin-bottom: 1rem; border-bottom: 2px solid #00d4ff33; padding-bottom: 0.5rem; font-size: 1.5rem; }
+        h3 { color: #ffd93d; margin-top: 2rem; margin-bottom: 0.7rem; font-size: 1.2rem; }
+        h4 { color: #a855f7; margin-top: 1.2rem; margin-bottom: 0.5rem; font-size: 1rem; }
+        .subtitle { text-align: center; color: #888; margin-bottom: 2.5rem; font-style: italic; }
+        code { background: #0f3460; padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.88rem; color: #e0e0e0; }
+        pre { background: #0f3460; padding: 1rem 1.2rem; border-radius: 8px; overflow-x: auto; margin: 0.8rem 0; line-height: 1.5; border: 1px solid #1a3a6a; }
+        pre code { background: none; padding: 0; color: #c9d1d9; font-size: 0.85rem; }
+        .comment { color: #8b949e; }
+        .keyword { color: #ff7b72; }
+        .type { color: #79c0ff; }
+        .string { color: #a5d6ff; }
+        .func { color: #d2a8ff; }
+        .var { color: #ffa657; }
+        .number { color: #79c0ff; }
+        .description { background: #16213e; padding: 1rem 1.2rem; border-radius: 8px; margin: 1rem 0; border-left: 4px solid #00d4ff; }
+        .description.ok { border-left-color: #4ecdc4; }
+        .description.warn { border-left-color: #ffd93d; }
+        .description.danger { border-left-color: #ff6b6b; }
+        .description p { margin-bottom: 0.5rem; }
+        .description p:last-child { margin-bottom: 0; }
+        .description ul { margin-top: 0.5rem; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { padding: 0.7rem 0.9rem; text-align: left; border-bottom: 1px solid #2a2a4a; }
+        th { background: #0f3460; color: #00d4ff; font-weight: 600; }
+        tr:hover { background: #16213e; }
+        td code { font-size: 0.82rem; }
+        .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 10px; font-size: 0.7rem; font-weight: bold; vertical-align: middle; }
+        .badge-physics { background: #4ecdc433; color: #4ecdc4; border: 1px solid #4ecdc444; }
+        .badge-logic { background: #ffd93d33; color: #ffd93d; border: 1px solid #ffd93d44; }
+        .badge-state { background: #a855f733; color: #a855f7; border: 1px solid #a855f744; }
+        .badge-input { background: #22d3ee33; color: #22d3ee; border: 1px solid #22d3ee44; }
+        .badge-visual { background: #ff6b6b33; color: #ff6b6b; border: 1px solid #ff6b6b44; }
+        .badge-root { background: #00d4ff33; color: #00d4ff; border: 1px solid #00d4ff44; }
+        .tree-box { background: #16213e; border-radius: 8px; padding: 1.5rem 2rem; margin: 1rem 0; }
+        .tree-box pre { background: none; padding: 0; margin: 0; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.88rem; line-height: 1.7; overflow-x: auto; }
+        .flow { background: #16213e; padding: 1rem 1.2rem; border-radius: 8px; margin: 1rem 0; }
+        .flow-steps { display: flex; align-items: center; flex-wrap: wrap; gap: 0.3rem; }
+        .flow-item { padding: 0.4rem 0.8rem; background: #0f3460; border-radius: 4px; font-size: 0.85rem; white-space: nowrap; }
+        .arrow { color: #00d4ff; font-size: 0.85rem; }
+        ol, ul { margin-left: 1.5rem; }
+        li { margin-bottom: 0.4rem; }
+        .toc { background: #16213e; padding: 1.2rem 1.5rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #2a2a4a; }
+        .toc a { color: #00d4ff; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; color: #4ecdc4; }
+        .toc ul { list-style: none; margin-left: 0; column-count: 2; column-gap: 2rem; }
+        .toc li { padding: 0.25rem 0; }
+        .toc li::before { content: "→ "; color: #00d4ff66; }
+        hr { border: none; border-top: 1px solid #333; margin: 2rem 0; }
+
+        /* Scrollbar styling for code blocks */
+        pre::-webkit-scrollbar { height: 6px; }
+        pre::-webkit-scrollbar-track { background: #0a1a3a; border-radius: 3px; }
+        pre::-webkit-scrollbar-thumb { background: #2a4a7a; border-radius: 3px; }
+
+        /* Responsive TOC */
+        @media (max-width: 700px) {
+            .toc ul { column-count: 1; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Bochazo - Documentacion Completa</h1>
+    <p class="subtitle">Escena: res://BochaGian/bocha.tscn | Godot 4.6 | Arquitectura por Composicion</p>
+
+    <div class="container">
+
+    <div class="toc">
+        <h3 style="margin-top:0; color: #00d4ff;">Indice</h3>
+        <ul>
+            <li><a href="#overview">1. Vista General del Sistema</a></li>
+            <li><a href="#tree">2. Arbol de Nodos</a></li>
+            <li><a href="#axes">3. Sistema de Ejes</a></li>
+            <li><a href="#states">4. Maquina de Estados (StateMachine)</a></li>
+            <li><a href="#bocha-gd">5. bocha.gd (Nodo Raiz)</a></li>
+            <li><a href="#statemachine-gd">6. StateMachine.gd (Orquestador)</a></li>
+            <li><a href="#positioncontroller-gd">7. PositionController.gd (Movimiento Lateral)</a></li>
+            <li><a href="#throwcontroller-gd">8. ThrowController.gd (Gesto de Lanzamiento)</a></li>
+            <li><a href="#states-detail">9. Los 4 Estados (Scripts de Estado)</a></li>
+            <li><a href="#inputhandler-gd">10. InputHandler.gd (Raycast - Reservado)</a></li>
+            <li><a href="#visualeffects-gd">11. VisualEffects.gd (Efectos Visuales)</a></li>
+            <li><a href="#flow">12. Flujo Completo Paso a Paso</a></li>
+            <li><a href="#debug">13. Guia de Debugging</a></li>
+            <li><a href="#customize">14. Como Personalizar</a></li>
+            <li><a href="#common-issues">15. Problemas Comunes y Soluciones</a></li>
+        </ul>
+    </div>
+
+    <h2 id="overview">1. Vista General del Sistema</h2>
+    <div class="description">
+        <strong>Que es:</strong> La escena <code>bocha.tscn</code> representa una bocha de bochas con comportamiento autonomo. Se instancia dentro de una escena padre (la cancha) y maneja todo su ciclo de vida: posicionamiento lateral, apuntado, lanzamiento con gesto del mouse, y rodado hasta detenerse.
+        <br><br>
+        <strong>Arquitectura:</strong> Composicion pura. Cada nodo hijo tiene una responsabilidad unica. No hay un script monolitico. La comunicacion entre componentes se hace por referencias directas (inyectadas en <code>_ready()</code>) y señales.
+        <br><br>
+        <strong>Patron principal:</strong> State Machine con estados como <code>RefCounted</code> (no son nodos). El StateMachine delega <code>_process</code>, <code>_physics_process</code> e <code>_input</code> al estado activo.
+    </div>
+
+    <h2 id="tree">2. Arbol de Nodos</h2>
+    <div class="tree-box">
+<pre><span style="color:#00d4ff; font-weight:bold;">Bocha</span> <span style="color:#888;">(Node3D)</span> <span style="background:#00d4ff33; color:#00d4ff; padding:1px 6px; border-radius:8px; font-size:0.75rem;">RAIZ</span>
+│  <span style="color:#888;">script: bocha.gd</span>
+│
+├── <span style="color:#4ecdc4; font-weight:bold;">PhysicsBody</span> <span style="color:#888;">(RigidBody3D)</span> <span style="background:#4ecdc433; color:#4ecdc4; padding:1px 6px; border-radius:8px; font-size:0.75rem;">FISICA</span>
+│   ├── MeshInstance3D        <span style="color:#888;">← Mesh visual (bocha_azul.obj, escala 30)</span>
+│   └── CollisionShape3D      <span style="color:#888;">← SphereShape3D, radius=1.0</span>
+│
+├── <span style="color:#22d3ee; font-weight:bold;">InputHandler</span> <span style="color:#888;">(Node)</span> <span style="background:#22d3ee33; color:#22d3ee; padding:1px 6px; border-radius:8px; font-size:0.75rem;">INPUT</span>
+│   <span style="color:#888;">script: InputHandler.gd (raycast, reservado)</span>
+│
+├── <span style="color:#ffd93d; font-weight:bold;">PositionController</span> <span style="color:#888;">(Node)</span> <span style="background:#ffd93d33; color:#ffd93d; padding:1px 6px; border-radius:8px; font-size:0.75rem;">LOGICA</span>
+│   <span style="color:#888;">script: PositionController.gd (movimiento lateral A/D)</span>
+│
+├── <span style="color:#ffd93d; font-weight:bold;">ThrowController</span> <span style="color:#888;">(Node)</span> <span style="background:#ffd93d33; color:#ffd93d; padding:1px 6px; border-radius:8px; font-size:0.75rem;">LOGICA</span>
+│   <span style="color:#888;">script: ThrowController.gd (gesto: click → arrastrar → soltar)</span>
+│
+├── <span style="color:#a855f7; font-weight:bold;">StateMachine</span> <span style="color:#888;">(Node)</span> <span style="background:#a855f733; color:#a855f7; padding:1px 6px; border-radius:8px; font-size:0.75rem;">ESTADOS</span>
+│   <span style="color:#888;">script: StateMachine.gd (orquestador de estados)</span>
+│   <span style="color:#888;">Estados (creados en codigo, NO son nodos):</span>
+│   <span style="color:#a855f7;">├── PositioningState</span>
+│   <span style="color:#a855f7;">├── AimingState</span>
+│   <span style="color:#a855f7;">├── ThrowingState</span>
+│   <span style="color:#a855f7;">└── RollingState</span>
+│
+└── <span style="color:#ff6b6b; font-weight:bold;">VisualEffects</span> <span style="color:#888;">(Node3D)</span> <span style="background:#ff6b6b33; color:#ff6b6b; padding:1px 6px; border-radius:8px; font-size:0.75rem;">VISUAL</span>
+    <span style="color:#888;">script: VisualEffects.gd</span>
+    ├── TrailParticles <span style="color:#888;">(GPUParticles3D)</span>
+    └── ImpactDecal <span style="color:#888;">(Decal)</span></pre>
+    </div>
+
+    <h2 id="axes">3. Sistema de Ejes</h2>
+    <div class="description warn">
+        <strong>IMPORTANTE:</strong> Esta escena usa un sistema de ejes especifico. Si cambias la orientacion de la cancha o la camara, puede que necesites ajustar las direcciones.
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Eje</th>
+                <th>Positivo</th>
+                <th>Negativo</th>
+                <th>Uso en el juego</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Y</strong></td><td>Arriba</td><td>Abajo</td><td>Altura / Gravedad (no se modifica manualmente)</td></tr>
+            <tr><td><strong>X</strong></td><td>Hacia atras</td><td>Hacia adelante</td><td><strong>Direccion de lanzamiento</strong> (-X = adelante)</td></tr>
+            <tr><td><strong>Z</strong></td><td>Hacia izquierda</td><td>Hacia derecha</td><td><strong>Movimiento lateral</strong> (posicionamiento A/D)</td></tr>
+        </tbody>
+    </table>
+    <div class="description info">
+        <strong>Curva/efecto:</strong> Se aplica como <code>angular_velocity.y</code> del RigidBody3D. Valor positivo = giro a la derecha, negativo = giro a la izquierda.
+    </div>
+
+    <h2 id="states">4. Maquina de Estados</h2>
+    <div class="description">
+        La bocha tiene 4 estados que definen su comportamiento en cada momento. Solo un estado esta activo a la vez.
+    </div>
+    <div class="flow">
+        <div class="flow-steps">
+            <div class="flow-item" style="color:#4ecdc4;">POSITIONING</div>
+            <span class="arrow">→ click →</span>
+            <div class="flow-item" style="color:#ffd93d;">AIMING</div>
+            <span class="arrow">→ gesto RELEASED →</span>
+            <div class="flow-item" style="color:#ff6b6b;">THROWING</div>
+            <span class="arrow">→ impulso aplicado →</span>
+            <div class="flow-item" style="color:#a855f7;">ROLLING</div>
+            <span class="arrow">→ se detiene →</span>
+            <div class="flow-item" style="color:#4ecdc4;">POSITIONING</div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Estado</th>
+                <th>Que hace</th>
+                <th>Freeze?</th>
+                <th>Como se sale</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>POSITIONING</strong></td>
+                <td>Escucha A/D para mover lateralmente en Z. Escucha click para iniciar lanzamiento.</td>
+                <td>Sì (no cae)</td>
+                <td>Click izquierdo → AIMING</td>
+            </tr>
+            <tr>
+                <td><strong>AIMING</strong></td>
+                <td>Escucha gesto del mouse (click→arrastrar→soltar). Calcula potencia y curva.</td>
+                <td>Sì (no cae)</td>
+                <td>Gesto RELEASED con power >= min → THROWING</td>
+            </tr>
+            <tr>
+                <td><strong>THROWING</strong></td>
+                <td>Unfreeza la bocha, aplica impulso central + curva angular. Dura 1 frame.</td>
+                <td>No (recibe fisica)</td>
+                <td>Impulso aplicado → ROLLING</td>
+            </tr>
+            <tr>
+                <td><strong>ROLLING</strong></td>
+                <td>Monitorea velocidad. Cuando es < threshold por 0.5s, vuelve a POSITIONING.</td>
+                <td>No (rueda libre)</td>
+                <td>Velocidad < 0.05 por 0.5s → POSITIONING</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="bocha-gd">5. bocha.gd (Nodo Raiz)</h2>
+    <div class="description">
+        <strong>Responsabilidad:</strong> Orquestador. Cachea referencias a hijos, inyecta referencias cruzadas, y expone señales al exterior.
+    </div>
+
+    <h3>Variables exportables (se ven en el inspector del nodo Bocha)</h3>
+    <table>
+        <thead>
+            <tr><th>Variable</th><th>Tipo</th><th>Default</th><th>Que controla</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>lateral_speed</code></td><td>float</td><td>3.0</td><td>Velocidad de movimiento lateral (unidades/segundo)</td></tr>
+            <tr><td><code>lateral_bounds</code></td><td>Vector2</td><td>(-2.0, 2.0)</td><td>Limites laterales en Z (min, max)</td></tr>
+            <tr><td><code>max_throw_power</code></td><td>float</td><td>15.0</td><td>Potencia maxima del lanzamiento (fuerza del impulso)</td></tr>
+            <tr><td><code>throw_sensitivity</code></td><td>float</td><td>1.0</td><td>Sensibilidad del efecto de curva</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Senales (para comunicacion con la escena padre)</h3>
+    <table>
+        <thead>
+            <tr><th>Señal</th><th>Parametros</th><th>Cuando se emite</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>bocha_thrown</code></td><td>(power: float, direction: Vector3)</td><td>Cuando se aplica el impulso en ThrowingState</td></tr>
+            <tr><td><code>bocha_stopped</code></td><td>(ninguno)</td><td>Cuando la bocha se detiene completamente en RollingState</td></tr>
+            <tr><td><code>state_changed</code></td><td>(new_state: String)</td><td>Cada vez que cambia de estado</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Flujo de _ready()</h3>
+    <pre><code><span class="keyword">func</span> <span class="func">_ready</span>() -> <span class="type">void</span>:
+    <span class="comment"># 1. Cachear referencias a hijos por nombre</span>
+    physics_body = $PhysicsBody
+    state_machine = $StateMachine
+    position_controller = $PositionController
+    throw_controller = $ThrowController
+    input_handler = $InputHandler
+    visual_effects = $VisualEffects
+
+    <span class="comment"># 2. Inyectar referencia al raiz en los controladores</span>
+    position_controller.bocha_root = <span class="keyword">self</span>
+    throw_controller.bocha_root = <span class="keyword">self</span>
+    input_handler.bocha_root = <span class="keyword">self</span>
+
+    <span class="comment"># 3. Conectar señal del StateMachine</span>
+    state_machine.state_changed.connect(_on_state_changed)</code></pre>
+
+    <h3>Como modificar</h3>
+    <div class="description ok">
+        <ul>
+            <li><strong>Cambiar velocidad lateral:</strong> ajustá <code>lateral_speed</code> en el inspector o en el codigo.</li>
+            <li><strong>Cambiar limites laterales:</strong> ajustá <code>lateral_bounds</code>. El valor X es el limite minimo (derecha), Y es el maximo (izquierda).</li>
+            <li><strong>Cambiar potencia maxima:</strong> ajustá <code>max_throw_power</code>. Afecta directamente la fuerza del impulso.</li>
+            <li><strong>Agregar logica global:</strong> este es el lugar correcto para cualquier logica que necesite acceso a todos los componentes.</li>
+        </ul>
+    </div>
+
+    <h2 id="statemachine-gd">6. StateMachine.gd (Orquestador de Estados)</h2>
+    <div class="description">
+        <strong>Responsabilidad:</strong> Gestionar cual estado esta activo y delegar los ciclos de frame (<code>_process</code>, <code>_physics_process</code>, <code>_input</code>) al estado correspondiente.
+    </div>
+
+    <h3>Como funciona</h3>
+    <pre><code><span class="comment"># Los estados se crean en codigo con .new() (Opcion A)</span>
+states[BochaState.POSITIONING] = PositioningState.new()
+states[BochaState.AIMING] = AimingState.new()
+states[BochaState.THROWING] = ThrowingState.new()
+states[BochaState.ROLLING] = RollingState.new()
+
+<span class="comment"># Cada ciclo de frame, delega al estado activo:</span>
+<span class="keyword">func</span> <span class="func">_process</span>(delta):
+    states[current_state].update(delta)
+
+<span class="keyword">func</span> <span class="func">_physics_process</span>(delta):
+    states[current_state].physics_update(delta)
+
+<span class="keyword">func</span> <span class="func">_input</span>(event):
+    states[current_state].handle_input(event)</code></pre>
+
+    <h3>Por que usa call_deferred</h3>
+    <div class="description warn">
+        En Godot, los hijos se inicializan <strong>antes</strong> que el padre. <code>StateMachine._ready()</code> se ejecuta antes que <code>Bocha._ready()</code>. Si el StateMachine intentara acceder a <code>bocha.physics_body</code> en su <code>_ready()</code> directo, seria <code>null</code> porque Bocha todavia no cacheo las referencias.
+        <br><br>
+        <code>call_deferred("_init_states")</code> programa la inicializacion para el <strong>siguiente frame</strong>, cuando todos los <code>_ready()</code> ya completaron.
+    </div>
+
+    <h3>Como funciona transition_to()</h3>
+    <pre><code><span class="keyword">func</span> <span class="func">transition_to</span>(new_state: <span class="type">BochaState</span>) -> <span class="type">void</span>:
+    <span class="comment"># 1. Salir del estado actual (llama a exit())</span>
+    states[current_state].exit()
+
+    <span class="comment"># 2. Cambiar el estado activo</span>
+    current_state = new_state
+
+    <span class="comment"># 3. Entrar al nuevo estado (llama a enter())</span>
+    states[current_state].enter()
+
+    <span class="comment"># 4. Emitir señal para que el raiz se entere</span>
+    state_changed.emit(BochaState.keys()[current_state])</code></pre>
+
+    <h3>Como modificar</h3>
+    <div class="description ok">
+        <ul>
+            <li><strong>Agregar un nuevo estado:</strong> Crear un nuevo script que extienda <code>RefCounted</code> con los 5 metodos (<code>init</code>, <code>enter</code>, <code>exit</code>, <code>update</code>, <code>physics_update</code>, <code>handle_input</code>). Agregarlo al enum <code>BochaState</code> y crearlo con <code>.new()</code> en <code>_init_states()</code>.</li>
+            <li><strong>Cambiar el estado inicial:</strong> Modificar <code>current_state = BochaState.X</code>.</li>
+            <li><strong>Agregar logging:</strong> Los prints ya estan en <code>transition_to()</code> y <code>_input()</code>.</li>
+        </ul>
+    </div>
+
+    <h2 id="positioncontroller-gd">7. PositionController.gd (Movimiento Lateral)</h2>
+    <div class="description">
+        <strong>Responsabilidad:</strong> Mover la bocha en el eje Z (izquierda/derecha) mientras esta en estado POSITIONING.
+    </div>
+
+    <h3>Logica</h3>
+    <pre><code><span class="keyword">func</span> <span class="func">update_position</span>() -> <span class="type">void</span>:
+    <span class="comment"># 1. Leer input de A/D o flechas</span>
+    <span class="keyword">var</span> direction = <span class="number">0.0</span>
+    <span class="keyword">if</span> Input.is_action_pressed(<span class="string">"move_left"</span>): direction += <span class="number">1.0</span>
+    <span class="keyword">if</span> Input.is_action_pressed(<span class="string">"move_right"</span>): direction -= <span class="number">1.0</span>
+
+    <span class="comment"># 2. Calcular nueva posicion en Z</span>
+    <span class="keyword">var</span> speed = bocha_root.lateral_speed * direction
+    <span class="keyword">var</span> new_z = bocha_root.physics_body.position.z + speed * get_process_delta_time()
+
+    <span class="comment"># 3. Respetar limites laterales</span>
+    new_z = clamp(new_z, bocha_root.lateral_bounds.x, bocha_root.lateral_bounds.y)
+
+    <span class="comment"># 4. Aplicar solo en Z, mantener X e Y</span>
+    <span class="keyword">var</span> new_pos = bocha_root.physics_body.position
+    new_pos.z = new_z
+    bocha_root.physics_body.position = new_pos</code></pre>
+
+    <h3>Como modificar</h3>
+    <div class="description ok">
+        <ul>
+            <li><strong>Cambiar eje de movimiento:</strong> Cambiar <code>position.z</code> por <code>position.x</code> si tu escena usa ejes distintos.</li>
+            <li><strong>Cambiar las teclas:</strong> Modificar <code>"move_left"</code> y <code>"move_right"</code> por otras acciones del Input Map.</li>
+            <li><strong>Agregar aceleracion:</strong> En vez de mover directamente, acumular velocidad y aplicar con inercia.</li>
+            <li><strong>Cambiar limites:</strong> Se controlan desde <code>lateral_bounds</code> en el nodo raiz Bocha.</li>
+        </ul>
+    </div>
+
+    <h2 id="throwcontroller-gd">8. ThrowController.gd (Gesto de Lanzamiento)</h2>
+    <div class="description">
+        <strong>Responsabilidad:</strong> Detectar el gesto del mouse (click → arrastrar → soltar) y calcular la potencia y curva del lanzamiento.
+    </div>
+
+    <h3>Gesto: "Pull & Release" (estilo tirachinas)</h3>
+    <div class="flow">
+        <div class="flow-steps">
+            <div class="flow-item">Click DOWN</div>
+            <span class="arrow">→</span>
+            <div class="flow-item">Arrastrar mouse</div>
+            <span class="arrow">→</span>
+            <div class="flow-item">Click UP (soltar)</div>
+            <span class="arrow">→</span>
+            <div class="flow-item">RELEASED</div>
+        </div>
+    </div>
+
+    <h3>Como se calcula la potencia</h3>
+    <pre><code><span class="comment"># Distancia arrastrada (en pixeles de pantalla)</span>
+<span class="keyword">var</span> delta = drag_current_pos - drag_start_pos
+<span class="keyword">var</span> drag_distance = delta.length()
+
+<span class="comment"># Normalizar entre 0.0 y 1.0</span>
+<span class="keyword">var</span> normalized = clamp(drag_distance / max_drag_distance, <span class="number">0.0</span>, <span class="number">1.0</span>)
+
+<span class="comment"># Potencia final = normalizado * maxima potencia configurable</span>
+data.power = normalized * bocha_root.max_throw_power</code></pre>
+
+    <h3>Como se calcula la curva</h3>
+    <pre><code><span class="comment"># Componente X de la direccion del arrastre (lateral en pantalla)</span>
+<span class="keyword">var</span> lateral = drag_direction.x
+
+<span class="comment"># Curva va de -1.0 a 1.0, multiplicada por sensibilidad</span>
+data.curve = clamp(lateral * sensitivity, -<span class="number">1.0</span>, <span class="number">1.0</span>)</code></pre>
+
+    <h3>Variables de configuracion</h3>
+    <table>
+        <thead>
+            <tr><th>Variable</th><th>Default</th><th>Que controla</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>min_drag_distance</code></td><td>20.0</td><td>Pixeles minimos de arrastre para considerar un lanzamiento valido</td></tr>
+            <tr><td><code>max_drag_distance</code></td><td>400.0</td><td>Pixeles de arrastre para potencia maxima (100%)</td></tr>
+            <tr><td><code>sensitivity</code></td><td>1.0</td><td>Multiplicador del efecto de curva</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Como modificar</h3>
+    <div class="description ok">
+        <ul>
+            <li><strong>Hacer mas sensible:</strong> Bajar <code>max_drag_distance</code> a 200. Con menos arrastre se llega a potencia maxima.</li>
+            <li><strong>Hacer menos sensible:</strong> Subir <code>max_drag_distance</code> a 600. Necesitas arrastrar mas.</li>
+            <li><strong>Requerir arrastre minimo:</strong> Subir <code>min_drag_distance</code> para evitar lanzamientos accidentales con clicks cortos.</li>
+            <li><strong>Mas curva:</strong> Subir <code>sensitivity</code> a 2.0 o 3.0.</li>
+            <li><strong>Sin curva:</strong> Poner <code>sensitivity = 0.0</code> o <code>apply_curve = false</code> en ThrowingState.</li>
+            <li><strong>Cambiar direccion de lanzamiento:</strong> Modificar <code>data.direction = Vector3(-1, 0, 0)</code> en <code>get_throw_data()</code>.</li>
+        </ul>
+    </div>
+
+    <h2 id="states-detail">9. Los 4 Estados (Scripts de Estado)</h2>
+    <div class="description info">
+        Todos los estados extienden <code>RefCounted</code> (no son nodos). Comparten la misma interfaz de 5 metodos. Se crean con <code>.new()</code> en el StateMachine.
+    </div>
+
+    <h3>Interfaz comun de cada estado</h3>
+    <table>
+        <thead>
+            <tr><th>Metodo</th><th>Cuando se llama</th><th>Que debe hacer</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>init(root)</code></td><td>Una vez, al crear el estado</td><td>Guardar referencia al nodo raiz Bocha</td></tr>
+            <tr><td><code>enter()</code></td><td>Cada vez que se entra al estado</td><td>Configurar el entorno (freeze, resetear datos, mostrar UI)</td></tr>
+            <tr><td><code>update(delta)</code></td><td>Cada frame (_process) mientras activo</td><td>Logica no-fisica (input, UI, logica de juego)</td></tr>
+            <tr><td><code>physics_update(delta)</code></td><td>Cada physics frame mientras activo</td><td>Logica de fisica (chequear velocidad, aplicar fuerzas)</td></tr>
+            <tr><td><code>handle_input(event)</code></td><td>Cada evento de input mientras activo</td><td>Procesar input y decidir si transicionar</td></tr>
+            <tr><td><code>exit()</code></td><td>Cada vez que se sale del estado</td><td>Cleanup (ocultar UI, limpiar datos)</td></tr>
+        </tbody>
+    </table>
+
+    <h3>9.1 PositioningState.gd</h3>
+    <div class="description">
+        <strong>Que hace:</strong> Permite mover la bocha lateralmente con A/D. Al hacer click, transiciona a AIMING.
+        <br><br>
+        <strong>enter():</strong> Freeza el PhysicsBody (para que no caiga) y resetea velocidad a cero.
+        <br><br>
+        <strong>exit():</strong> <strong>NO hace nada.</strong> No unfreeza porque el siguiente estado (AimingState) maneja su propio freeze. Si unfreezara aca, la bocha caeria por gravedad antes de que AimingState entre.
+        <br><br>
+        <strong>update():</strong> Delega al PositionController el movimiento lateral.
+        <br><br>
+        <strong>handle_input():</strong> Cualquier click izquierdo → transiciona a AIMING. No usa raycast.
+    </div>
+
+    <h3>9.2 AimingState.gd</h3>
+    <div class="description">
+        <strong>Que hace:</strong> Detecta el gesto del mouse (click→arrastrar→soltar) y calcula potencia/curva.
+        <br><br>
+        <strong>enter():</strong> Freeza el PhysicsBody, inicia el ThrowController, muestra indicador de potencia.
+        <br><br>
+        <strong>exit():</strong> Oculta el indicador de potencia. <strong>NO llama a stop_aiming()</strong> porque ThrowingState necesita los datos del gesto.
+        <br><br>
+        <strong>update():</strong> Llama a <code>throw_controller.update_aim()</code> para rastrear el arrastre. Si el gesto llego a <code>RELEASED</code> y la potencia es suficiente, transiciona a THROWING. Si la potencia es insuficiente, reinicia el gesto para intentar de nuevo.
+        <br><br>
+        <strong>handle_input():</strong> Pasa todos los eventos al <code>throw_controller.handle_input(event)</code>. Este es el canal por donde el ThrowController recibe los clicks del usuario.
+    </div>
+
+    <h3>9.3 ThrowingState.gd</h3>
+    <div class="description">
+        <strong>Que hace:</strong> Aplica el impulso de lanzamiento al PhysicsBody. Dura solo 1-2 frames.
+        <br><br>
+        <strong>enter():</strong> Resetea el flag <code>throw_applied = false</code>.
+        <br><br>
+        <strong>update():</strong> Solo efectos visuales (particulas). NO aplica fisica aca.
+        <br><br>
+        <strong>physics_update():</strong>
+        <ol>
+            <li>Unfreeza el PhysicsBody (<code>freeze = false</code>)</li>
+            <li>Lee los datos del lanzamiento del ThrowController</li>
+            <li>Aplica impulso central: <code>apply_central_impulse(direction * power)</code></li>
+            <li>Aplica curva: <code>angular_velocity.y = curve * multiplier</code></li>
+            <li>Emite señal <code>bocha_thrown</code></li>
+            <li>Transiciona a ROLLING</li>
+        </ol>
+        <br><br>
+        <strong>exit():</strong> Llama a <code>throw_controller.stop_aiming()</code> para limpiar los datos del gesto.
+    </div>
+
+    <h3>9.4 RollingState.gd</h3>
+    <div class="description">
+        <strong>Que hace:</strong> Monitorea la bocha mientras rueda. Cuando se detiene, vuelve a POSITIONING.
+        <br><br>
+        <strong>enter():</strong> Resetea el timer de detencion, asegura que el PhysicsBody no este freezeado.
+        <br><br>
+        <strong>update():</strong> Actualiza el trail de particulas segun la velocidad.
+        <br><br>
+        <strong>physics_update():</strong> Chequea si la velocidad es menor a <code>stop_threshold</code> (0.05). Si lo es por mas de <code>required_stop_time</code> (0.5 segundos), detiene completamente la bocha y transiciona a POSITIONING.
+        <br><br>
+        <strong>handle_input():</strong> Ignora todo input.
+    </div>
+
+    <h2 id="inputhandler-gd">10. InputHandler.gd (Reservado)</h2>
+    <div class="description info">
+        <strong>Estado actual:</strong> Este script tiene un metodo <code>is_clicking_on_bocha()</code> que usa raycast para detectar si el click fue sobre la bocha. <strong>NO se usa actualmente</strong> porque PositioningState acepta cualquier click.
+        <br><br>
+        <strong>Para que sirve en el futuro:</strong> Si queres que solo se pueda iniciar el lanzamiento haciendo click <strong>directamente sobre la bocha</strong> (no en cualquier parte de la pantalla), descomenta el raycast en PositioningState y usalo.
+        <br><br>
+        <strong>Requisitos para que funcione:</strong> Necesita una camara activa en la escena y un CollisionShape3D con tamaño apropiado en el PhysicsBody.
+    </div>
+
+    <h2 id="visualeffects-gd">11. VisualEffects.gd (Efectos Visuales)</h2>
+    <div class="description">
+        <strong>Responsabilidad:</strong> Manejar efectos visuales como el trail de particulas y el indicador de potencia.
+    </div>
+
+    <h3>Metodos disponibles</h3>
+    <table>
+        <thead>
+            <tr><th>Metodo</th><th>Que hace</th><th>Quien lo llama</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>show_power_indicator()</code></td><td>Muestra indicador de potencia (actualmente vacio)</td><td>AimingState.enter()</td></tr>
+            <tr><td><code>hide_power_indicator()</code></td><td>Oculta indicador de potencia</td><td>AimingState.exit()</td></tr>
+            <tr><td><code>update_power_indicator(progress)</code></td><td>Actualiza barra de potencia (0.0 a 1.0)</td><td>No se llama actualmente</td></tr>
+            <tr><td><code>play_throw_effect()</code></td><td>Activa las particulas del trail</td><td>ThrowingState.update()</td></tr>
+            <tr><td><code>update_trail(speed)</code></td><td>Ajusta velocidad de particulas segun velocidad de la bocha</td><td>RollingState.update()</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Como modificar</h3>
+    <div class="description ok">
+        <ul>
+            <li><strong>Agregar barra de potencia:</strong> Implementar <code>show_power_indicator()</code> creando un ProgressBar 2D o un mesh 3D. Llamar <code>update_power_indicator(throw_controller.get_drag_progress())</code> desde AimingState.update().</li>
+            <li><strong>Agregar sonido:</strong> Agregar un AudioStreamPlayer3D como hijo de VisualEffects y reproducir sonidos en <code>play_throw_effect()</code>.</li>
+            <li><strong>Mejorar trail:</strong> Configurar el GPUParticles3D con un material de particulas apropiado.</li>
+        </ul>
+    </div>
+
+    <h2 id="flow">12. Flujo Completo Paso a Paso</h2>
+    <div class="description">
+        Este es el recorrido completo desde que se inicia la escena hasta que la bocha se detiene.
+    </div>
+
+    <h3>Fase 1: Inicializacion</h3>
+    <pre><code><span class="comment"># Frame 0:</span>
+1. Bocha._ready()
+   → Cachea referencias a hijos
+   → Inyecta bocha_root en controladores
+   → Conecta señal state_changed
+
+2. StateMachine._ready()
+   → Programa call_deferred("_init_states")
+
+3. call_deferred se ejecuta (StateMachine._init_states)
+   → Crea 4 estados con .new()
+   → Inicializa cada estado con init(bocha_root)
+   → Entra a POSITIONING (llama a enter())
+   → POSITIONING freeza el PhysicsBody</code></pre>
+
+    <h3>Fase 2: Posicionamiento</h3>
+    <pre><code><span class="comment"># Cada frame mientras en POSITIONING:</span>
+1. StateMachine._process() → PositioningState.update()
+   → PositionController.update_position()
+   → Lee A/D, mueve en Z
+
+2. StateMachine._input() → PositioningState.handle_input()
+   → Si click izquierdo → transition_to(AIMING)
+
+<span class="comment"># Transicion a AIMING:</span>
+3. PositioningState.exit() → no hace nada
+4. AimingState.enter() → freeza PhysicsBody, inicia ThrowController</code></pre>
+
+    <h3>Fase 3: Apuntado (Gesto)</h3>
+    <pre><code><span class="comment"># Cada frame mientras en AIMING:</span>
+1. StateMachine._process() → AimingState.update()
+   → ThrowController.update_aim()
+   → Si DRAGGING: calcula distancia y direccion del arrastre
+   → Si RELEASED: lee datos del lanzamiento
+   → Si power >= min_power_to_throw → transition_to(THROWING)
+
+2. StateMachine._input() → AimingState.handle_input()
+   → ThrowController.handle_input(event)
+   → Si mouse DOWN → DRAGGING, registra posicion inicial
+   → Si mouse UP → RELEASED
+
+<span class="comment"># Transicion a THROWING:</span>
+3. AimingState.exit() → oculta indicador de potencia (NO limpia datos)</code></pre>
+
+    <h3>Fase 4: Lanzamiento</h3>
+    <pre><code><span class="comment"># Frame de THROWING:</span>
+1. ThrowingState.enter() → throw_applied = false
+
+2. ThrowingState.update() → efectos visuales, throw_applied = true
+
+3. ThrowingState.physics_update()
+   → Si throw_applied: transiciona a ROLLING
+   → Si no throw_applied:
+     a. unfreeza PhysicsBody
+     b. lee datos del ThrowController
+     c. aplica impulso central
+     d. aplica curva angular
+     e. emite señal bocha_thrown
+     f. throw_applied = true
+
+<span class="comment"># Transicion a ROLLING:</span>
+4. ThrowingState.exit() → stop_aiming() (limpia datos del gesto)</code></pre>
+
+    <h3>Fase 5: Rodado</h3>
+    <pre><code><span class="comment"># Cada physics frame mientras en ROLLING:</span>
+1. RollingState.physics_update()
+   → Lee velocidad del PhysicsBody
+   → Si velocidad < 0.05 por 0.5 segundos:
+     a. Detiene completamente (velocity = 0, angular = 0)
+     b. Emite señal bocha_stopped
+     c. transition_to(POSITIONING)
+
+2. RollingState.update()
+   → Actualiza trail de particulas segun velocidad</code></pre>
+
+    <h2 id="debug">13. Guia de Debugging</h2>
+    <div class="description info">
+        Todos los scripts tienen prints con el formato <code>[NombreClase] mensaje</code>. El Output del editor muestra el flujo completo.
+    </div>
+
+    <h3>Output esperado al iniciar</h3>
+    <pre><code>[Bocha] _ready() iniciado
+[Bocha] physics_body: PhysicsBody:&lt;...&gt;
+[Bocha] _ready() completado. Estado inicial: POSITIONING
+[StateMachine] _ready() - programando init diferido
+[StateMachine] Inicializando estados...
+[StateMachine] 4 estados creados
+[StateMachine] Estados inicializados
+[PositioningState] enter()
+[PositioningState] PhysicsBody freezeado
+[StateMachine] Estado inicial POSITIONING activado</code></pre>
+
+    <h3>Output esperado al lanzar</h3>
+    <pre><code>[StateMachine] Input recibido: pressed= button=1
+[PositioningState] Click izquierdo detectado -> transicion a AIMING
+[StateMachine] Transicion: POSITIONING -> AIMING
+[PositioningState] exit()
+[AimingState] enter()
+[ThrowController] start_aiming() - listo para gesto
+[Bocha] Estado cambiado a: AIMING
+[ThrowController] Mouse DOWN -> inicio arrastre
+[ThrowController] Mouse UP -> RELEASED (distancia: 150)
+[ThrowController] throw_data: power=5.625 curve=0.2 drag_dist=150 drag_dir=(0.3, 0.95)
+[AimingState] Gesto RELEASED. Power: 5.625 Direction: (-1, 0, 0)
+[AimingState] Transicion a THROWING
+[StateMachine] Transicion: AIMING -> THROWING
+[AimingState] exit()
+[ThrowingState] enter()
+[Bocha] Estado cambiado a: THROWING
+[ThrowingState] PhysicsBody unfreezeado
+[ThrowingState] Aplicando impulso: (-5.625, 0, 0)
+[ThrowingState] Transicion a ROLLING
+[StateMachine] Transicion: THROWING -> ROLLING
+[ThrowingState] exit()
+[RollingState] enter()
+[Bocha] Estado cambiado a: ROLLING</code></pre>
+
+    <h3>Como diagnosticar problemas</h3>
+    <table>
+        <thead>
+            <tr><th>Sintoma</th><th>Que buscar en el Output</th><th>Posible causa</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>No se mueve con A/D</td>
+                <td>No hay prints de PositionController</td>
+                <td>Acciones "move_left"/"move_right" no configuradas en Input Map</td>
+            </tr>
+            <tr>
+                <td>No entra a AIMING al hacer click</td>
+                <td>No aparece "Click izquierdo detectado"</td>
+                <td>StateMachine no inicializado (initialized = false)</td>
+            </tr>
+            <tr>
+                <td>Entra a AIMING pero no lanza</td>
+                <td>Aparece "Mouse UP -> RELEASED" pero power = 0</td>
+                <td>No arrastro el mouse, solo hizo click rapido</td>
+            </tr>
+            <tr>
+                <td>Lanza pero no se mueve</td>
+                <td>"Aplicando impulso: (0, 0, 0)"</td>
+                <td>Los datos del gesto se perdieron (stop_aiming() llamado antes de tiempo)</td>
+            </tr>
+            <tr>
+                <td>La bocha cae al suelo</td>
+                <td>No hay "PhysicsBody freezeado" o aparece "unfreezeado" antes de tiempo</td>
+                <td>El freeze no se esta aplicando correctamente en el estado actual</td>
+            </tr>
+            <tr>
+                <td>Nunca vuelve a POSITIONING</td>
+                <td>No aparece "Bocha detenida"</td>
+                <td>La bocha nunca se detiene (friccion muy baja) o threshold muy bajo</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="customize">14. Como Personalizar</h2>
+
+    <h3>Cambiar la velocidad de movimiento lateral</h3>
+    <pre><code><span class="comment"># En el inspector del nodo Bocha:</span>
+Lateral Speed: 5.0  <span class="comment"># Mas rapido</span>
+Lateral Speed: 1.0  <span class="comment"># Mas lento</span>
+
+<span class="comment"># O en codigo, en bocha.gd:</span>
+<span class="keyword">@export</span> <span class="keyword">var</span> lateral_speed: <span class="type">float</span> = <span class="number">5.0</span></code></pre>
+
+    <h3>Cambiar los limites de movimiento lateral</h3>
+    <pre><code><span class="comment"># En el inspector del nodo Bocha:</span>
+Lateral Bounds: X = -3.0, Y = 3.0  <span class="comment"># Mas amplio</span>
+Lateral Bounds: X = -1.0, Y = 1.0  <span class="comment"># Mas estrecho</span></code></pre>
+
+    <h3>Cambiar la sensibilidad del lanzamiento</h3>
+    <pre><code><span class="comment"># En el inspector del nodo ThrowController:</span>
+Max Drag Distance: 200.0  <span class="comment"># Mas sensible (menos arrastre = mas potencia)</span>
+Max Drag Distance: 600.0  <span class="comment"># Menos sensible (mas arrastre necesario)</span>
+Min Drag Distance: 50.0   <span class="comment"># Evita lanzamientos accidentales</span></code></pre>
+
+    <h3>Cambiar la potencia maxima del lanzamiento</h3>
+    <pre><code><span class="comment"># En el inspector del nodo Bocha:</span>
+Max Throw Power: 25.0  <span class="comment"># Mas fuerte</span>
+Max Throw Power: 8.0   <span class="comment"># Mas suave</span></code></pre>
+
+    <h3>Cambiar la friccion de la bocha</h3>
+    <pre><code><span class="comment"># En bocha.tscn, el PhysicsMaterial del PhysicsBody:</span>
+friction = 0.5  <span class="comment"># Mas friccion, se detiene mas rapido</span>
+friction = 0.1  <span class="comment"># Menos friccion, rueda mas lejos</span>
+bounce = 0.0    <span class="comment"># Sin rebote</span>
+bounce = 0.5    <span class="comment"># Con rebote</span></code></pre>
+
+    <h3>Cambiar cuando se considera "detenida"</h3>
+    <pre><code><span class="comment"># En RollingState.gd (o como @export):</span>
+<span class="keyword">@export</span> <span class="keyword">var</span> stop_threshold: <span class="type">float</span> = <span class="number">0.1</span>    <span class="comment"># Se detecta antes como detenida</span>
+<span class="keyword">@export</span> <span class="keyword">var</span> required_stop_time: <span class="type">float</span> = <span class="number">0.2</span> <span class="comment"># Menos tiempo de espera</span></code></pre>
+
+    <h3>Cambiar la direccion de lanzamiento</h3>
+    <pre><code><span class="comment"># En ThrowController.gd, metodo get_throw_data():</span>
+<span class="comment"># Si tu escena usa ejes distintos, cambia esta linea:</span>
+data.direction = <span class="type">Vector3</span>(-<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>)  <span class="comment"># -X = adelante</span>
+
+<span class="comment"># Otras opciones:</span>
+data.direction = <span class="type">Vector3</span>(<span class="number">0</span>, <span class="number">0</span>, -<span class="number">1</span>)  <span class="comment"># -Z = adelante</span>
+data.direction = <span class="type">Vector3</span>(<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>)   <span class="comment"># +X = adelante</span></code></pre>
+
+    <h2 id="common-issues">15. Problemas Comunes y Soluciones</h2>
+
+    <h3>La bocha no se mueve con A/D</h3>
+    <div class="description warn">
+        <strong>Causa:</strong> Las acciones <code>move_left</code> y <code>move_right</code> no estan configuradas en el Input Map del proyecto.
+        <br><br>
+        <strong>Solucion:</strong> Ir a <code>Project → Project Settings → Input Map</code>. Agregar las acciones <code>move_left</code> (tecla A o flecha izquierda) y <code>move_right</code> (tecla D o flecha derecha).
+    </div>
+
+    <h3>La bocha cae al suelo inmediatamente</h3>
+    <div class="description warn">
+        <strong>Causa:</strong> El PhysicsBody no esta freezeado durante POSITIONING o AIMING.
+        <br><br>
+        <strong>Verificar:</strong> En el Output, buscar <code>[PositioningState] PhysicsBody freezeado</code>. Si no aparece, el estado no esta entrando correctamente. Si aparece pero la bocha igual se mueve, verificar que <code>freeze = true</code> se este aplicando antes de que la fisica procese el frame.
+    </div>
+
+    <h3>El lanzamiento no tiene fuerza</h3>
+    <div class="description warn">
+        <strong>Causa 1:</strong> El arrastre del mouse es muy corto (menos de <code>min_drag_distance</code>).
+        <br><br>
+        <strong>Solucion:</strong> Arrastrar mas lejos al hacer el gesto, o bajar <code>min_drag_distance</code>.
+        <br><br>
+        <strong>Causa 2:</strong> <code>max_throw_power</code> es muy bajo.
+        <br><br>
+        <strong>Solucion:</strong> Subir <code>max_throw_power</code> en el inspector del nodo Bocha.
+    </div>
+
+    <h3>La bocha nunca se detiene</h3>
+    <div class="description warn">
+        <strong>Causa:</strong> La friccion del PhysicsMaterial es muy baja o el <code>stop_threshold</code> es muy bajo.
+        <br><br>
+        <strong>Solucion:</strong> Subir <code>friction</code> del PhysicsMaterial a 0.5 o mas, o subir <code>stop_threshold</code> en RollingState a 0.1.
+    </div>
+
+    <h3>El impulso es (0, 0, 0)</h3>
+    <div class="description danger">
+        <strong>Causa:</strong> Los datos del gesto se resetearon antes de ser leidos. Esto pasaba cuando <code>AimingState.exit()</code> llamaba a <code>stop_aiming()</code>.
+        <br><br>
+        <strong>Solucion:</strong> Ya esta fixeado. <code>AimingState.exit()</code> NO llama a <code>stop_aiming()</code>. <code>ThrowingState.exit()</code> lo llama despues de usar los datos. Si ves este problema de nuevo, verificar que <code>AimingState.exit()</code> no limpie los datos del gesto.
+    </div>
+
+    <h3>Los estados no se inicializan</h3>
+    <div class="description warn">
+        <strong>Causa:</strong> <code>call_deferred</code> no se ejecuto o fallo.
+        <br><br>
+        <strong>Verificar:</strong> Buscar en el Output <code>[StateMachine] Inicializando estados...</code>. Si no aparece, el StateMachine no se inicializo. Verificar que el nodo StateMachine tenga el script StateMachine.gd asignado.
+    </div>
+
+    <hr>
+    <div class="description ok">
+        <strong>Resumen:</strong> Esta escena usa composicion pura con 7 nodos hijos + 4 estados como Resources. Cada componente tiene una responsabilidad unica. La comunicacion es por referencias inyectadas y señales. El flujo es: POSITIONING → AIMING → THROWING → ROLLING → POSITIONING (ciclo).
+    </div>
+    </div>
+</body>
+</html>

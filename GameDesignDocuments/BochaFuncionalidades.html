@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bocha.tscn - Documentación Funcional</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --card: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --heading: #58a6ff;
+            --accent: #f0883e;
+            --green: #3fb950;
+            --red: #f85149;
+            --yellow: #d29922;
+            --code-bg: #0d1117;
+            --diagram-bg: #1a1f2b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: var(--heading);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        h2 {
+            font-size: 1.6rem;
+            color: var(--accent);
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent);
+            padding-left: 0.75rem;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: var(--green);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        p { margin-bottom: 1rem; }
+        code {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.15em 0.4em;
+            font-size: 0.9em;
+            font-family: 'Fira Code', 'Consolas', monospace;
+        }
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        pre code { background: none; border: none; padding: 0; }
+        .diagram {
+            background: var(--diagram-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        th, td {
+            border: 1px solid var(--border);
+            padding: 0.6rem 0.8rem;
+            text-align: left;
+        }
+        th {
+            background: var(--card);
+            color: var(--heading);
+            font-weight: 600;
+        }
+        .param-table td:first-child { font-family: 'Fira Code', monospace; color: var(--accent); }
+        .param-table td:last-child { color: var(--text); }
+        .note {
+            background: rgba(210, 153, 34, 0.1);
+            border-left: 4px solid var(--yellow);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .warning {
+            background: rgba(248, 81, 73, 0.1);
+            border-left: 4px solid var(--red);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .tip {
+            background: rgba(63, 185, 80, 0.1);
+            border-left: 4px solid var(--green);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Bocha.tscn — Documentación Funcional</h1>
+<p>Escena principal de la bocha para el juego <strong>Bochazo</strong> (Bocce Argentino 3D). Godot 4.6, arquitectura por composición.</p>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>1. Arquitectura General</h2>
+
+<p>La escena <code>Bocha.tscn</code> sigue un patrón de <strong>composición sobre herencia</strong>. El nodo raíz (<code>Bocha</code>) actúa como orquestador; cada hijo es un componente autocontenido con responsabilidad única.</p>
+
+<div class="diagram">
+┌─────────────────────────────────────────────────┐
+│              Bocha (Node3D)                      │
+│         Nodo Raíz / Orquestador                  │
+│                                                  │
+│  ┌──────────┐  ┌──────────────┐  ┌────────────┐ │
+│  │Physics   │  │ StateMachine │  │ Position   │ │
+│  │Body      │  │              │  │Controller   │ │
+│  │(Rigid)   │  │              │  │             │ │
+│  │          │  │              │  │             │ │
+│  │ ├Mesh    │  │ ├Positioning │  │             │ │
+│  │ ├Collision│ │ ├Aiming      │  │             │ │
+│  │          │  │ ├Throwing    │  │             │ │
+│  │          │  │ └Rolling     │  │             │ │
+│  └──────────┘  └──────────────┘  └────────────┘ │
+│                                                  │
+│  ┌──────────────┐  ┌──────────────┐ ┌─────────┐  │
+│  │ThrowController│ │BochaAnimator │ │VisualFx │  │
+│  │              │  │              │ │         │  │
+│  │ • Drag 2 fases│ │ • Mesh offset│ │ •Trail  │  │
+│  │ • Raycast    │  │ • Color shift│ │ •Decal  │  │
+│  │ • Power calc │  │ • Arrow dir  │ │         │  │
+│  └──────────────┘  └──────────────┘ └─────────┘  │
+│                                                  │
+│  ┌──────────────┐                                │
+│  │InputHandler  │                                │
+│  │ • Raycast    │                                │
+│  │ • Click check│                                │
+│  └──────────────┘                                │
+└──────────────────────────────────────────────────┘
+</div>
+
+<div class="tip">
+<strong>Principio clave:</strong> El nodo <code>Bocha</code> solo cachea referencias en <code>_ready()</code> y las inyecta en los hijos. Cada hijo opera de forma autónoma y se comunica a través de la referencia compartida a <code>bocha_root</code>.
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>2. Árbol de Nodos</h2>
+
+<div class="diagram">
+Bocha (Node3D)
+│
+├── PhysicsBody (RigidBody3D)
+│   ├── MeshInstance3D        ← Modelo 3D de la bocha (bocha_azul.obj)
+│   └── CollisionShape3D      ← SphereShape3D (radio = 1.0)
+│       └── PhysicsMaterial: friction=0.3, bounce=0.2
+│
+├── StateMachine (Node)       ← Máquina de estados
+│
+├── PositionController (Node) ← Movimiento lateral A/D
+├── ThrowController (Node)    ← Gesto de lanzamiento (drag 2 fases)
+├── InputHandler (Node)       ← Raycast de validación de click
+├── BochaAnimator (Node)      ← Feedback visual (offset, color, flecha)
+└── VisualEffects (Node3D)    ← Partículas y efectos
+    ├── TrailParticles (GPUParticles3D)
+    └── ImpactDecal (Decal)
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>3. Sistema de Estados</h2>
+
+<h3>3.1 Diagrama de Transiciones</h3>
+
+<div class="diagram">
+                    ┌─────────────┐
+                    │ POSITIONING │ ← Estado inicial
+                    │             │
+                    │ • Mover A/D │
+                    │ • Click →   │
+                    └──────┬──────┘
+                           │ Click izquierdo
+                           ▼
+                    ┌─────────────┐
+                    │   AIMING    │
+                    │             │
+                    │ • Drag back │
+                    │ • Push fwd  │
+                    │ • Soltar →  │
+                    └──────┬──────┘
+                           │ Mouse UP (power ≥ min)
+                           ▼
+                    ┌─────────────┐
+                    │  THROWING   │
+                    │             │
+                    │ • Impulso   │
+                    │ • Curva     │
+                    └──────┬──────┘
+                           │ physics_update (1 frame)
+                           ▼
+                    ┌─────────────┐
+                    │  ROLLING    │
+                    │             │
+                    │ • Física    │
+                    │ • Vel < 0.05│
+                    │   por 0.5s →│
+                    └──────┬──────┘
+                           │ Bocha detenida
+                           ▼
+                    ┌─────────────┐
+                    │ POSITIONING │ ← Ciclo reinicia
+                    └─────────────┘
+</div>
+
+<h3>3.2 Descripción de Cada Estado</h3>
+
+<table>
+    <tr><th>Estado</th><th>Responsabilidad</th><th>Física</th><th>Input</th></tr>
+    <tr>
+        <td><code>POSITIONING</code></td>
+        <td>Movimiento lateral con A/D dentro de límites. Click izquierdo inicia AIMING.</td>
+        <td>Freeze = true</td>
+        <td>A/D + Click</td>
+    </tr>
+    <tr>
+        <td><code>AIMING</code></td>
+        <td>Detecta gesto de 2 fases: PULL_BACK → PUSH_FORWARD. Feedback visual en tiempo real.</td>
+        <td>Freeze = true</td>
+        <td>Mouse drag</td>
+    </tr>
+    <tr>
+        <td><code>THROWING</code></td>
+        <td>Aplica impulso central y velocidad angular (curva). Dura 1 physics frame.</td>
+        <td>Freeze = false → impulse</td>
+        <td>Ninguno</td>
+    </tr>
+    <tr>
+        <td><code>ROLLING</code></td>
+        <td>Monitorea velocidad. Cuando cae debajo del umbral por tiempo configurable, vuelve a POSITIONING.</td>
+        <td>Freeze = false (libre)</td>
+        <td>Ninguno</td>
+    </tr>
+</table>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>4. Mecánica de Lanzamiento (ThrowController)</h2>
+
+<h3>4.1 Gesto de Dos Fases</h3>
+
+<div class="diagram">
+Fase 1: PULL_BACK (Cargar)
+════════════════════════════
+  Click en bocha
+       │
+       ▼
+  ┌─────────┐
+  │  BOCHA  │ ←── Arrastrar mouse HACIA ATRÁS
+  └─────────┘         (offset crece, color → rojo)
+       │
+       │ drag_distance aumenta
+       ▼
+  Punto máximo alcanzado (max_pull_distance)
+
+Fase 2: PUSH_FORWARD (Apuntar/Soltar)
+══════════════════════════════════════
+       │
+       ▼
+  ┌─────────┐
+  │  BOCHA  │ ←── Mover mouse HACIA ADELANTE
+  └─────────┘         (push_offset calcula fuerza y dirección)
+       │
+       │ push_distance crece
+       ▼
+  Mouse UP → RELEASED → Lanzamiento
+
+DIAGRAMA DE FLUJO COMPLETO:
+════════════════════════════
+
+  IDLE
+   │
+   │ Click sobre bocha (raycast valida)
+   ▼
+  PULL_BACK ──────────────────────────────┐
+   │                                       │
+   │ drag_offset crece                     │ Suelta sin
+   │ max_pull_distance se actualiza        │ hacer pull-back
+   │                                       │ (offset.x > 0)
+   │ ¿Se acercó al punto                   │ → IDLE (ignora)
+   │ de inicio > 0.15m?                    │
+   │                                       │
+   ▼                                       │
+  PUSH_FORWARD                              │
+   │                                       │
+   │ push_offset calcula                   │
+   │ dirección y potencia                  │
+   │                                       │
+   ▼                                       │
+  RELEASED (Mouse UP) ─────────────────────┘
+   │
+   ▼
+  get_throw_data() → { power, direction, curve }
+</div>
+
+<h3>4.2 Cálculo de Potencia</h3>
+
+<div class="diagram">
+  push_distance
+  ───────────── = normalized (0.0 → 1.0)
+  max_drag_distance (4.0m)
+
+  power = lerpf(min_throw_power, max_throw_power, normalized)
+
+  Ejemplo:
+    min_throw_power = 3.0
+    max_throw_power = 15.0
+
+    push = 0m  → power = 3.0  (mínimo)
+    push = 2m  → power = 9.0  (50%)
+    push = 4m  → power = 15.0 (máximo)
+</div>
+
+<h3>4.3 Cálculo de Dirección</h3>
+
+<div class="diagram">
+  direction = push_offset.normalized()
+
+  push_offset = current_world_pos - push_start_pos
+
+  +X = adelante (dirección de lanzamiento)
+  +Z = derecha
+  -Z = izquierda
+
+  La curva se calcula del desvío lateral (eje Z) del push:
+    curve = clamp(push_offset.z / max_drag_distance * sensitivity, -1.0, 1.0)
+
+  Esto permite "efecto" lateral natural: si el push no es
+  perfectamente recto, la bocha curva.
+</div>
+
+<h3>4.4 Prevención de Tiros hacia Atrás</h3>
+
+<div class="warning">
+<strong>Regla crítica:</strong> Si el usuario suelta durante <code>PULL_BACK</code> pero movió el mouse hacia adelante (<code>drag_offset.x > 0</code>), el lanzamiento se ignora y se resetea a <code>IDLE</code>. Esto evita que un movimiento accidental hacia adelante al hacer click resulte en un tiro hacia atrás.
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>5. Proyección 3D del Mouse</h2>
+
+<p>El <code>ThrowController</code> no trabaja con píxeles de pantalla. Proyecta la posición del mouse a un <strong>plano horizontal</strong> en el mundo 3D:</p>
+
+<div class="diagram">
+  Cámara
+    │
+    │  ray_origin + ray_dir * t
+    ▼
+    ╱
+   ╱  ← Rayo desde cámara
+  ╱
+ ┌───────────────────────── ← Plano horizontal (drag_plane_normal = UP)
+ │         · ← hit_pos     │  a la altura de la bocha
+ │    ┌─────────┐          │
+ │    │  BOCHA  │          │
+ │    └─────────┘          │
+ └─────────────────────────┘
+
+  Intersección rayo-plano:
+    t = (normal · (plane_point - ray_origin)) / (normal · ray_dir)
+    world_pos = ray_origin + ray_dir * t
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>6. Feedback Visual (BochaAnimator)</h2>
+
+<div class="diagram">
+  Durante PULL_BACK:
+  ┌─────────┐
+  │  BOCHA  │ → Mesh se desplaza hacia atrás (drag_offset)
+  └─────────┘    Color: blanco → rojo (según progress)
+                 Flecha roja: indica dirección del arrastre
+
+  Durante PUSH_FORWARD:
+  ┌─────────┐
+  │  BOCHA  │ → Mesh vuelve hacia adelante (-push_offset)
+  └─────────┘    Color: se aclara (progress decrece)
+                 Flecha: dirección del push
+
+  RELEASED / IDLE:
+  ┌─────────┐
+  │  BOCHA  │ → Mesh vuelve a posición original
+  └─────────┘    Color: material original
+                 Flecha: oculta
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>7. Guía de Balanceo del Juego</h2>
+
+<p>Esta sección detalla <strong>cada parámetro ajustable</strong>, dónde se encuentra, qué afecta en la jugabilidad y qué valores recomendamos para diferentes estilos de juego.</p>
+
+<h3>7.1 Parámetros de Lanzamiento (bocha.gd)</h3>
+
+<table class="param-table">
+    <tr><th>Parámetro</th><th>Default</th><th>Efecto</th><th>Rango sugerido</th></tr>
+    <tr>
+        <td><code>min_throw_power</code></td>
+        <td>3.0</td>
+        <td>Fuerza mínima del lanzamiento. Si el push fue muy corto, la bocha sale con esta fuerza.</td>
+        <td>2.0 – 5.0</td>
+    </tr>
+    <tr>
+        <td><code>max_throw_power</code></td>
+        <td>15.0</td>
+        <td>Fuerza máxima con push completo. Determina qué tan lejos puede llegar la bocha.</td>
+        <td>10.0 – 25.0</td>
+    </tr>
+    <tr>
+        <td><code>lateral_speed</code></td>
+        <td>3.0</td>
+        <td>Velocidad de movimiento lateral (A/D) durante POSITIONING.</td>
+        <td>2.0 – 6.0</td>
+    </tr>
+    <tr>
+        <td><code>lateral_bounds</code></td>
+        <td>(-2.0, 2.0)</td>
+        <td>Límites min/max del movimiento lateral en eje Z. Define el ancho de la "zona de tiro".</td>
+        <td>(-3.0, 3.0) para cancha ancha</td>
+    </tr>
+    <tr>
+        <td><code>throw_sensitivity</code></td>
+        <td>1.0</td>
+        <td>Multiplicador del efecto curva. Valores altos hacen que pequeños desvíos laterales generen mucha curva.</td>
+        <td>0.5 – 2.0</td>
+    </tr>
+</table>
+
+<h3>7.2 Parámetros del Gesto (ThrowController.gd)</h3>
+
+<table class="param-table">
+    <tr><th>Parámetro</th><th>Default</th><th>Efecto</th><th>Rango sugerido</th></tr>
+    <tr>
+        <td><code>min_drag_distance</code></td>
+        <td>0.1</td>
+        <td>Distancia mínima (metros) para considerar que hubo un pull-back real. Si es muy bajo, movimientos mínimos activan el lanzamiento.</td>
+        <td>0.05 – 0.3</td>
+    </tr>
+    <tr>
+        <td><code>max_drag_distance</code></td>
+        <td>4.0</td>
+        <td>Distancia máxima para potencia 100%. Define cuánto debe empujar el usuario para lograr el tiro más fuerte. <strong>Este es el parámetro más importante para la sensación de control.</strong></td>
+        <td>2.0 – 6.0</td>
+    </tr>
+    <tr>
+        <td><code>direction_change_threshold</code></td>
+        <td>0.15</td>
+        <td>Cuánto debe "volver" el mouse hacia el punto de inicio para detectar el cambio PULL_BACK → PUSH_FORWARD. Bajo = transición rápida (puede ser accidental). Alto = requiere un retorno claro.</td>
+        <td>0.1 – 0.4</td>
+    </tr>
+</table>
+
+<h3>7.3 Parámetros de Física (bocha.tscn — PhysicsMaterial)</h3>
+
+<table class="param-table">
+    <tr><th>Parámetro</th><th>Default</th><th>Efecto</th><th>Rango sugerido</th></tr>
+    <tr>
+        <td><code>friction</code></td>
+        <td>0.3</td>
+        <td>Fricción de la bocha contra el suelo. Más alto = frena más rápido. Más bajo = la bocha desliza más lejos.</td>
+        <td>0.1 – 0.6</td>
+    </tr>
+    <tr>
+        <td><code>bounce</code></td>
+        <td>0.2</td>
+        <td>Rebote al chocar con otras bochas o la cancha. Más alto = más rebote.</td>
+        <td>0.0 – 0.5</td>
+    </tr>
+</table>
+
+<div class="note">
+<strong>Nota:</strong> Estos valores están en el <code>PhysicsMaterial</code> inline dentro de <code>bocha.tscn</code>, no en un archivo <code>.tres</code> separado. Para modificarlos, editá directamente la escena o creá un recurso externo.
+</div>
+
+<h3>7.4 Parámetros de Rolling (RollingState.gd)</h3>
+
+<table class="param-table">
+    <tr><th>Parámetro</th><th>Default</th><th>Efecto</th><th>Rango sugerido</th></tr>
+    <tr>
+        <td><code>stop_threshold</code></td>
+        <td>0.05</td>
+        <td>Velocidad por debajo de la cual se considera que la bocha "casi paró". Muy alto = la bocha se detiene prematuramente. Muy bajo = tarda demasiado en reconocer que paró.</td>
+        <td>0.02 – 0.1</td>
+    </tr>
+    <tr>
+        <td><code>required_stop_time</code></td>
+        <td>0.5</td>
+        <td>Tiempo (segundos) que la bocha debe mantenerse por debajo del threshold para considerar que paró completamente.</td>
+        <td>0.3 – 1.0</td>
+    </tr>
+    <tr>
+        <td><code>trail_min_speed</code></td>
+        <td>0.5</td>
+        <td>Velocidad mínima para mostrar el efecto de trail/partículas.</td>
+        <td>0.3 – 1.0</td>
+    </tr>
+</table>
+
+<h3>7.5 Parámetros Visuales (BochaAnimator.gd)</h3>
+
+<table class="param-table">
+    <tr><th>Parámetro</th><th>Default</th><th>Efecto</th><th>Rango sugerido</th></tr>
+    <tr>
+        <td><code>max_visual_offset</code></td>
+        <td>1.5</td>
+        <td>Distancia máxima que el mesh se separa de su posición original durante el aiming. No afecta la física, solo el feedback visual.</td>
+        <td>1.0 – 2.5</td>
+    </tr>
+</table>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>8. Perfiles de Jugabilidad Recomendados</h2>
+
+<h3>Perfil: Realista (Bocce tradicional)</h3>
+<div class="diagram">
+  min_throw_power       = 2.0
+  max_throw_power       = 12.0
+  max_drag_distance     = 5.0    ← Push largo para máxima potencia
+  friction              = 0.4    ← Frena relativamente rápido
+  bounce                = 0.15   ← Poco rebote
+  lateral_speed         = 2.5    ← Movimiento lateral lento
+  direction_change_thr  = 0.25   ← Requiere gesto claro
+  throw_sensitivity     = 0.8    ← Curva sutil
+</div>
+
+<h3>Perfil: Arcade (Más rápido y permisivo)</h3>
+<div class="diagram">
+  min_throw_power       = 4.0
+  max_throw_power       = 20.0
+  max_drag_distance     = 2.5    ← Push corto para máxima potencia
+  friction              = 0.15   ← Desliza mucho
+  bounce                = 0.4    ← Rebote notable
+  lateral_speed         = 5.0    ← Movimiento lateral rápido
+  direction_change_thr  = 0.1    ← Transición rápida
+  throw_sensitivity     = 1.5    ← Curva exagerada
+</div>
+
+<h3>Perfil: Competitivo (Precisión y control)</h3>
+<div class="diagram">
+  min_throw_power       = 3.0
+  max_throw_power       = 15.0
+  max_drag_distance     = 4.0    ← Balanceado
+  friction              = 0.3    ← Estándar
+  bounce                = 0.2    ← Estándar
+  lateral_speed         = 3.0    ← Estándar
+  direction_change_thr  = 0.15   ← Requiere intención clara
+  throw_sensitivity     = 1.0    ← Curva natural
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>9. Diagrama de Flujo de Datos</h2>
+
+<div class="diagram">
+  Input (Mouse)
+       │
+       ▼
+  ┌─────────────────┐
+  │  InputHandler    │ ← Raycast valida click en bocha
+  └────────┬────────┘
+           │ válido
+           ▼
+  ┌─────────────────┐
+  │ ThrowController  │ ← Proyecta mouse a plano 3D
+  │                  │
+  │ PULL_BACK:       │
+  │   drag_offset    │──┐
+  │   max_pull_dist  │  │
+  │                  │  │
+  │ PUSH_FORWARD:    │  │
+  │   push_offset    │  │ Calcula
+  │   push_distance  │──┘
+  └────────┬────────┘
+           │ get_throw_data()
+           ▼
+  ┌─────────────────┐
+  │  ThrowingState   │ ← Aplica impulse
+  │                  │
+  │ impulse = dir * power
+  │ angular_vel.y = curve * multiplier
+  └────────┬────────┘
+           │
+           ▼
+  ┌─────────────────┐
+  │  Physics Engine  │ ← RigidBody3D simula
+  │  (Godot)         │
+  └────────┬────────┘
+           │ linear_velocity
+           ▼
+  ┌─────────────────┐
+  │  RollingState    │ ← Monitorea velocidad
+  │                  │
+  │ vel < threshold  │──┐
+  │ por X segundos   │  │ → POSITIONING
+  └─────────────────┘  └── (ciclo reinicia)
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>10. Sistema de Coordenadas</h2>
+
+<div class="diagram">
+         Y (arriba)
+         │
+         │
+         │
+         │
+         └────── X (adelante, +X = dirección de lanzamiento)
+        ╱
+       ╱
+      Z (derecha, +Z = derecha del jugador)
+
+  Perspectiva del jugador (mirando hacia +X):
+
+         +X (adelante / cancha)
+          │
+          │
+  -Z ←────┼────→ +Z
+  (izq)   │   (der)
+          │
+          │
+     (jugador está en -X)
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>11. Comunicación entre Componentes</h2>
+
+<div class="diagram">
+  Todos los componentes comparten referencia a bocha_root
+
+  bocha_root
+  ├── physics_body      ← RigidBody3D (acceso directo a física)
+  ├── state_machine     ← Transiciones de estado
+  ├── position_controller ← Movimiento lateral
+  ├── throw_controller  ← Datos del gesto
+  ├── visual_effects    ← Partículas y efectos
+  └── bocha_animator    ← Feedback visual
+
+  Señales emitidas por Bocha.gd:
+  ├── bocha_thrown(power, direction)  → Externo (UI, GameManager)
+  ├── bocha_stopped                   → Externo (turno siguiente)
+  └── state_changed(new_state)        → Debug, UI
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>12. Checklist de Balanceo</h2>
+
+<p>Cuando ajustes la jugabilidad, seguí este orden:</p>
+
+<ol style="margin-left: 1.5rem; margin-bottom: 1rem;">
+    <li><strong>Definir la cancha:</strong> Ajustá <code>lateral_bounds</code> según el ancho real de tu escena de cancha.</li>
+    <li><strong>Definir la distancia máxima de tiro:</strong> Ajustá <code>max_throw_power</code> para que la bocha llegue al final de la cancha con un push completo.</li>
+    <li><strong>Ajustar la sensibilidad del gesto:</strong> Si el lanzamiento se siente "muy sensible", subí <code>max_drag_distance</code> (requiere más movimiento del mouse). Si se siente "pesado", bajalo.</li>
+    <li><strong>Ajustar la fricción:</strong> Si la bocha frena muy rápido, bajá <code>friction</code>. Si no frena nunca, subilo.</li>
+    <li><strong>Ajustar la curva:</strong> Si los tiros curvan demasiado, bajá <code>throw_sensitivity</code> y <code>curve_multiplier</code>.</li>
+    <li><strong>Ajustar el rebote:</strong> Si las colisiones entre bochas son muy elásticas, bajá <code>bounce</code>.</li>
+    <li><strong>Pulir el gesto:</strong> Ajustá <code>direction_change_threshold</code> para que la transición PULL_BACK → PUSH_FORWARD se sienta natural.</li>
+</ol>
+
+<div class="tip">
+<strong>Tip de testing:</strong> Usá la escena <code>TestGian.tscn</code> con <code>DebugHUD.gd</code> para ver en tiempo real: estado actual, velocidad, posición, potencia, curva y fase del gesto. Esto es esencial para calibrar los valores.
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>13. Archivos Relevantes</h2>
+
+<table>
+    <tr><th>Archivo</th><th>Responsabilidad</th></tr>
+    <tr><td><code>BochaGian/bocha.tscn</code></td><td>Escena raíz, define estructura de nodos y PhysicsMaterial</td></tr>
+    <tr><td><code>BochaGian/bocha.gd</code></td><td>Orquestador: cachea referencias, conecta señales, exporta configuración global</td></tr>
+    <tr><td><code>BochaGian/StateMachine.gd</code></td><td>Gestiona ciclo de vida de estados (enter/update/exit/transition)</td></tr>
+    <tr><td><code>BochaGian/States/PositioningState.gd</code></td><td>Movimiento lateral A/D, transición a AIMING con click</td></tr>
+    <tr><td><code>BochaGian/States/AimingState.gd</code></td><td>Coordina ThrowController + BochaAnimator, transición a THROWING</td></tr>
+    <tr><td><code>BochaGian/States/ThrowingState.gd</code></td><td>Aplica impulso y curva, transición a ROLLING</td></tr>
+    <tr><td><code>BochaGian/States/RollingState.gd</code></td><td>Monitorea velocidad, transición a POSITIONING cuando se detiene</td></tr>
+    <tr><td><code>BochaGian/ThrowController.gd</code></td><td>Detección de gesto 2 fases, proyección 3D, cálculo de throw_data</td></tr>
+    <tr><td><code>BochaGian/PositionController.gd</code></td><td>Movimiento lateral en eje Z con límites</td></tr>
+    <tr><td><code>BochaGian/BochaAnimator.gd</code></td><td>Offset de mesh, cambio de color, flecha direccional</td></tr>
+    <tr><td><code>BochaGian/VisualEffects.gd</code></td><td>Trail de partículas, decal de impacto (placeholder)</td></tr>
+    <tr><td><code>BochaGian/InputHandler.gd</code></td><td>Raycast para validar click sobre la bocha</td></tr>
+    <tr><td><code>TestSceneGian/TestGian.tscn</code></td><td>Escena de prueba con DebugHUD</td></tr>
+    <tr><td><code>TestSceneGian/DebugHUD.gd</code></td><td>Overlay de debug en tiempo real</td></tr>
+</table>
+
+</body>
+</html>

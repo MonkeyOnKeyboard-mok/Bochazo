@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bochazo - Fixing Bocha: Log Completo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #e0e0e0; line-height: 1.6; padding: 2rem; }
+        h1 { color: #4ecdc4; text-align: center; margin-bottom: 0.5rem; font-size: 2rem; }
+        h2 { color: #00d4ff; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #00d4ff33; padding-bottom: 0.5rem; }
+        h3 { color: #ffd93d; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        h4 { color: #a855f7; margin-top: 1rem; margin-bottom: 0.5rem; }
+        .subtitle { text-align: center; color: #888; margin-bottom: 2rem; font-style: italic; }
+        code { background: #0f3460; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.9rem; color: #e0e0e0; }
+        pre { background: #0f3460; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 0.5rem 0; }
+        pre code { background: none; padding: 0; color: #c9d1d9; }
+        .comment { color: #8b949e; }
+        .keyword { color: #ff7b72; }
+        .type { color: #79c0ff; }
+        .string { color: #a5d6ff; }
+        .func { color: #d2a8ff; }
+        .var { color: #ffa657; }
+        .number { color: #79c0ff; }
+        .error { color: #ff6b6b; font-weight: bold; }
+        .fix { color: #4ecdc4; font-weight: bold; }
+        .description { background: #16213e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border-left: 4px solid #ff6b6b; }
+        .description.ok { border-left-color: #4ecdc4; }
+        .description.warn { border-left-color: #ffd93d; }
+        .description.info { border-left-color: #00d4ff; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #333; }
+        th { background: #0f3460; color: #00d4ff; }
+        tr:hover { background: #16213e; }
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+        .badge-critical { background: #ff6b6b; color: #fff; }
+        .badge-warning { background: #ffd93d; color: #000; }
+        .badge-info { background: #00d4ff; color: #000; }
+        .badge-ok { background: #4ecdc4; color: #000; }
+        .tree { background: #16213e; border-radius: 8px; padding: 1.5rem; margin: 1rem 0; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.95rem; }
+        .tree .indent { margin-left: 2rem; }
+        .tree .indent2 { margin-left: 4rem; }
+        .flow { background: #16213e; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+        .flow-item { padding: 0.5rem; margin: 0.3rem 0; background: #0f3460; border-radius: 4px; display: inline-block; }
+        .arrow { color: #00d4ff; margin: 0 0.5rem; }
+        ol, ul { margin-left: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <h1>Fixing Bocha - Log Completo</h1>
+    <p class="subtitle">BochaGian/ - Fix de ejes + gesto simplificado + bug de datos</p>
+
+    <h2>Cambios Aplicados en esta Iteracion</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Fix</th>
+                <th>Archivo</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>ThrowController redisenado: gesto simple de "pull & release"</td>
+                <td>ThrowController.gd</td>
+                <td><span class="badge badge-ok">APLICADO</span></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>AimingState ya NO llama stop_aiming() en exit() (bug de datos perdidos)</td>
+                <td>AimingState.gd</td>
+                <td><span class="badge badge-ok">APLICADO</span></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>ThrowingState llama stop_aiming() en exit() (despues de usar los datos)</td>
+                <td>ThrowingState.gd</td>
+                <td><span class="badge badge-ok">APLICADO</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Bug Critico: Los Datos del Lanzamiento se Perdia</h2>
+    <div class="description">
+        <strong>Problema:</strong> El log mostraba <code>power=2.93</code> pero el impulso era <code>(0, 0, 0)</code>.
+        <br><br>
+        <strong>Causa:</strong> <code>AimingState.exit()</code> llamaba a <code>throw_controller.stop_aiming()</code> que reseteaba TODOS los datos del gesto (potencia, direccion, curva) a cero. Cuando <code>ThrowingState</code> intentaba leer los datos, ya estaban reseteados.
+        <br><br>
+        <strong>Secuencia del bug:</strong>
+        <ol>
+            <li>AimingState detecta RELEASED → calcula potencia = 2.93</li>
+            <li>AimingState llama <code>transition_to(THROWING)</code></li>
+            <li>StateMachine llama <code>AimingState.exit()</code> → <code>stop_aiming()</code> → datos = 0</li>
+            <li>StateMachine llama <code>ThrowingState.enter()</code></li>
+            <li>ThrowingState llama <code>get_throw_data()</code> → devuelve {power: 0, direction: 0, curve: 0}</li>
+            <li>Impulso = (0, 0, 0) → la bocha no se mueve</li>
+        </ol>
+        <br>
+        <strong>Fix:</strong> <code>AimingState.exit()</code> ya NO llama a <code>stop_aiming()</code>. <code>ThrowingState.exit()</code> lo llama despues de usar los datos.
+    </div>
+
+    <h2>Gesto Simplificado: "Pull & Release"</h2>
+    <div class="description info">
+        El gesto anterior requeria 3 fases (click → arrastrar abajo → arrastrar arriba → soltar). Era demasiado complejo y poco intuitivo.
+        <br><br>
+        <strong>Nuevo gesto (estilo tirachinas):</strong>
+        <ol>
+            <li><strong>Click y mantené presionado</strong> en cualquier parte de la pantalla</li>
+            <li><strong>Arrastra el mouse</strong> en cualquier direccion (la distancia = potencia)</li>
+            <li><strong>Soltá el boton</strong> → la bocha se lanza</li>
+        </ol>
+        <br>
+        <strong>Como funciona:</strong>
+        <ul>
+            <li><strong>Distancia arrastrada</strong> → potencia del lanzamiento (0 a max_throw_power)</li>
+            <li><strong>Direccion del arrastre</strong> → siempre lanza hacia adelante (-X)</li>
+            <li><strong>Componente lateral del arrastre</strong> → efecto de curva (izquierda/derecha)</li>
+        </ul>
+        <br>
+        <strong>Configuracion:</strong>
+        <ul>
+            <li><code>min_drag_distance = 20px</code> → arrastre minimo para lanzar</li>
+            <li><code>max_drag_distance = 400px</code> → arrastre para potencia maxima</li>
+        </ul>
+    </div>
+
+    <h2>Como Probar</h2>
+    <div class="description ok">
+        <ol>
+            <li>Corre la escena (F6)</li>
+            <li>Presioná <code>A</code> o <code>D</code> para mover la bocha lateralmente</li>
+            <li>Hacé <strong>click izquierdo</strong> en cualquier lado → entra a AIMING</li>
+            <li><strong>Mantené presionado</strong> el boton y <strong>arrastrá el mouse</strong> unos centimetros</li>
+            <li><strong>Soltá</strong> → la bocha se lanza hacia adelante</li>
+        </ol>
+        <br>
+        <strong>Output esperado:</strong>
+        <pre><code>[ThrowController] Mouse DOWN -> inicio arrastre
+[ThrowController] Mouse UP -> RELEASED (distancia: 150)
+[ThrowController] throw_data: power=5.625 curve=0.2 drag_dist=150 drag_dir=(0.3, 0.95)
+[AimingState] Gesto RELEASED. Power: 5.625 Direction: (-1, 0, 0)
+[ThrowingState] PhysicsBody unfreezeado
+[ThrowingState] Aplicando impulso: (-5.625, 0, 0)</code></pre>
+    </div>
+
+    <h2>Resumen de Ejes en el Juego</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Accion</th>
+                <th>Eje</th>
+                <th>Direccion positiva</th>
+                <th>Direccion negativa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Movimiento lateral</td><td><strong>Z</strong></td><td>Izquierda</td><td>Derecha</td></tr>
+            <tr><td>Lanzamiento</td><td><strong>X</strong></td><td>Atras</td><td>Adelante (-X)</td></tr>
+            <tr><td>Gravedad</td><td><strong>Y</strong></td><td>Arriba</td><td>Abajo (-Y)</td></tr>
+            <tr><td>Curva/efecto</td><td><strong>angular Y</strong></td><td>Giro a derecha</td><td>Giro a izquierda</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Archivos Modificados (Historial Completo)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Archivo</th>
+                <th>Cambios Totales</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>bocha.gd</code></td>
+                <td>Debug prints en _ready() y _on_state_changed()</td>
+            </tr>
+            <tr>
+                <td><code>StateMachine.gd</code></td>
+                <td>call_deferred("_init_states"), guards en todos los metodos, debug prints</td>
+            </tr>
+            <tr>
+                <td><code>PositionController.gd</code></td>
+                <td>Movimiento en eje Z (no X)</td>
+            </tr>
+            <tr>
+                <td><code>ThrowController.gd</code></td>
+                <td>Redisenado completo: gesto simple pull & release, sin fases complejas</td>
+            </tr>
+            <tr>
+                <td><code>PositioningState.gd</code></td>
+                <td>exit() no unfreeza, cualquier click inicia aiming (sin raycast)</td>
+            </tr>
+            <tr>
+                <td><code>AimingState.gd</code></td>
+                <td>exit() NO llama stop_aiming(), handle_input() pasa eventos al ThrowController, auto-detecta RELEASED</td>
+            </tr>
+            <tr>
+                <td><code>ThrowingState.gd</code></td>
+                <td>exit() llama stop_aiming(), unfreeze + impulso en physics_update()</td>
+            </tr>
+            <tr>
+                <td><code>RollingState.gd</code></td>
+                <td>Debug prints</td>
+            </tr>
+            <tr>
+                <td><code>bocha.tscn</code></td>
+                <td>Borrados PositionInputHandler y SignalsBus, radius = 1.0</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

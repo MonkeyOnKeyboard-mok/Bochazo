@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://khh2to667k2u"]
+
+[ext_resource type="Script" uid="uid://du8hh60ems57p" path="res://scenes/04_game/components/balls/bocce_ball.gd" id="1_qnnu0"]
+[ext_resource type="Resource" uid="uid://bk2osp5qyya1y" path="res://resources/game_config/bocce_ball.tres" id="2_wm8ks"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_wm8ks"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_67rmk"]
+
+[node name="BocceBall" type="RigidBody3D" unique_id=357459484]
+script = ExtResource("1_qnnu0")
+physics_config = ExtResource("2_wm8ks")
+
+[node name="BallMesh" type="MeshInstance3D" parent="." unique_id=1727884702]
+mesh = SubResource("SphereMesh_wm8ks")
+
+[node name="BallCollision" type="CollisionShape3D" parent="." unique_id=2072604333]
+shape = SubResource("SphereShape3D_67rmk")

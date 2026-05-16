@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://cfvars3nwg0x2"]
+
+[ext_resource type="Script" uid="uid://bc8qyx45be5cn" path="res://scenes/01_main_menu/main_menu.gd" id="1_lkjtg"]
+[ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="2_eefsq"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_11rdk"]
+size = Vector2(100, 100)
+
+[sub_resource type="GDScript" id="GDScript_11rdk"]
+resource_name = "PlayButton"
+script/source = "extends TextureButton
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+
+func _on_pressed() -> void:
+	print(\"[MainMenu] PLAY\") # Replace with function body.
+"
+
+[sub_resource type="GDScript" id="GDScript_eefsq"]
+resource_name = "OptionsButton"
+script/source = "extends TextureButton
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+
+func _on_pressed() -> void:
+	print(\"[MainMenu] OPCIONES\")
+"
+
+[sub_resource type="GDScript" id="GDScript_lkjtg"]
+resource_name = "ExitButton"
+script/source = "extends TextureButton
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+
+func _on_pressed() -> void:
+	print(\"[MainMenu] EXIT\")
+"
+
+[node name="MainMenu" type="Control" unique_id=1520225919]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_lkjtg")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=250303958]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=2142617792]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.93982077, 0.9975416, 0.9695396, 1)
+
+[node name="Play" type="TextureButton" parent="." unique_id=1941315225]
+layout_mode = 0
+offset_left = 960.0
+offset_top = 263.0
+offset_right = 1060.0
+offset_bottom = 363.0
+texture_normal = SubResource("PlaceholderTexture2D_11rdk")
+script = SubResource("GDScript_11rdk")
+
+[node name="Options" type="TextureButton" parent="." unique_id=51707731]
+layout_mode = 0
+offset_left = 960.0
+offset_top = 417.0
+offset_right = 1060.0
+offset_bottom = 517.0
+texture_normal = SubResource("PlaceholderTexture2D_11rdk")
+script = SubResource("GDScript_eefsq")
+
+[node name="Exit" type="TextureButton" parent="." unique_id=1623928210]
+layout_mode = 0
+offset_left = 960.0
+offset_top = 558.0
+offset_right = 1060.0
+offset_bottom = 658.0
+texture_normal = SubResource("PlaceholderTexture2D_11rdk")
+script = SubResource("GDScript_lkjtg")
+
+[node name="FadeTransition" parent="." unique_id=188914972 instance=ExtResource("2_eefsq")]
+
+[connection signal="pressed" from="Play" to="Play" method="_on_pressed"]
+[connection signal="pressed" from="Options" to="Options" method="_on_pressed"]
+[connection signal="pressed" from="Exit" to="Exit" method="_on_pressed"]

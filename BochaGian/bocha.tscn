@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://dfuk75fjpbsfb"]
+
+[ext_resource type="Script" uid="uid://ctly5si63smhh" path="res://BochaGian/bocha.gd" id="1_hlxds"]
+[ext_resource type="ArrayMesh" uid="uid://cqk3k0m31hl30" path="res://BochaBase/bocha_azul.obj" id="1_o0b62"]
+[ext_resource type="Script" uid="uid://kkbnx5jh576j" path="res://BochaGian/InputHandler.gd" id="3_7ueeb"]
+[ext_resource type="Script" uid="uid://b4p56fg2gwmmk" path="res://BochaGian/StateMachine.gd" id="4_62ltd"]
+[ext_resource type="Script" uid="uid://cyqjchfw5pwv3" path="res://BochaGian/PositionController.gd" id="4_yovm1"]
+[ext_resource type="Script" uid="uid://bcv8168hv665x" path="res://BochaGian/ThrowController.gd" id="5_bcqfj"]
+[ext_resource type="Script" uid="uid://cpaxi2cv16rnf" path="res://BochaGian/VisualEffects.gd" id="7_bcqfj"]
+[ext_resource type="Script" uid="uid://dlxni223gi26c" path="res://BochaGian/BochaAnimator.gd" id="8_animator"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_bcqfj"]
+friction = 0.3
+bounce = 0.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_vgtef"]
+
+[node name="Bocha" type="Node3D" unique_id=153898579]
+script = ExtResource("1_hlxds")
+
+[node name="PhysicsBody" type="RigidBody3D" parent="." unique_id=385109230]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00041615963)
+physics_material_override = SubResource("PhysicsMaterial_bcqfj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsBody" unique_id=1847529736]
+transform = Transform3D(30, 0, 0, 0, 30, 0, 0, 0, 30, -0.09313655, -0.4785031, -0.08602846)
+mesh = ExtResource("1_o0b62")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsBody" unique_id=331246434]
+shape = SubResource("SphereShape3D_vgtef")
+
+[node name="InputHandler" type="Node" parent="." unique_id=575565588]
+script = ExtResource("3_7ueeb")
+
+[node name="PositionController" type="Node" parent="." unique_id=743283206]
+script = ExtResource("4_yovm1")
+
+[node name="ThrowController" type="Node" parent="." unique_id=1008486937]
+script = ExtResource("5_bcqfj")
+
+[node name="StateMachine" type="Node" parent="." unique_id=1943538505]
+script = ExtResource("4_62ltd")
+
+[node name="VisualEffects" type="Node3D" parent="." unique_id=1985276700]
+script = ExtResource("7_bcqfj")
+
+[node name="TrailParticles" type="GPUParticles3D" parent="VisualEffects" unique_id=1380965466]
+
+[node name="ImpactDecal" type="Decal" parent="VisualEffects" unique_id=883488384]
+
+[node name="BochaAnimator" type="Node" parent="." unique_id=2000000001]
+script = ExtResource("8_animator")
