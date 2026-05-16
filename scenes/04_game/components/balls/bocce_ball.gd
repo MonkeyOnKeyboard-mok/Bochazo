@@ -28,6 +28,7 @@ func _physics_process(_delta):
 		stopped_moving.emit(self)
 		if debug_verbose: print("[BocceBall] 🛑 Se detuvo")
 		freeze = false
+		
 
 func _apply_physics():
 	if physics_config:

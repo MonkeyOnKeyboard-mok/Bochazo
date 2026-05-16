@@ -2,17 +2,28 @@
 
 [ext_resource type="Script" uid="uid://du8hh60ems57p" path="res://scenes/04_game/components/balls/bocce_ball.gd" id="1_qnnu0"]
 [ext_resource type="Resource" uid="uid://bk2osp5qyya1y" path="res://resources/game_config/bocce_ball.tres" id="2_wm8ks"]
+[ext_resource type="Texture2D" uid="uid://xfmrgcxj627g" path="res://assets/textures/texture_bocha_rosa.png" id="3_kkogd"]
+[ext_resource type="ArrayMesh" uid="uid://bbpt6xowpny6i" path="res://assets/models/bocce/bocha_azul.obj" id="4_fdqj5"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_wm8ks"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_67rmk"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohoyt"]
+albedo_texture = ExtResource("3_kkogd")
 
 [node name="BocceBall" type="RigidBody3D" unique_id=357459484]
 script = ExtResource("1_qnnu0")
 physics_config = ExtResource("2_wm8ks")
 
 [node name="BallMesh" type="MeshInstance3D" parent="." unique_id=1727884702]
+visible = false
 mesh = SubResource("SphereMesh_wm8ks")
 
 [node name="BallCollision" type="CollisionShape3D" parent="." unique_id=2072604333]
 shape = SubResource("SphereShape3D_67rmk")
+
+[node name="BochaAzul" type="MeshInstance3D" parent="." unique_id=62210876]
+transform = Transform3D(33, 0, 0, 0, 33, 0, 0, 0, 33, -0.09630102, -0.5300509, -0.10585368)
+material_override = SubResource("StandardMaterial3D_ohoyt")
+mesh = ExtResource("4_fdqj5")

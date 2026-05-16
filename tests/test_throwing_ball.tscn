@@ -9,9 +9,16 @@
 [ext_resource type="PackedScene" uid="uid://khh2to667k2u" path="res://scenes/04_game/components/balls/bocce_ball.tscn" id="7_mb33v"]
 [ext_resource type="PackedScene" uid="uid://4qe83ntmmj7w" path="res://scenes/04_game/components/balls/bochin.tscn" id="8_b6v23"]
 
-[sub_resource type="Environment" id="Environment_oyrge"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b6v23"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_pay8p"]
+[sub_resource type="Sky" id="Sky_kybjp"]
+sky_material = SubResource("ProceduralSkyMaterial_b6v23")
+
+[sub_resource type="Environment" id="Environment_oyrge"]
+background_mode = 2
+sky = SubResource("Sky_kybjp")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_b6v23"]
 viewport_path = NodePath("SubViewport")
 
 [node name="TestThrowingBall" type="Node3D" unique_id=1398608785]
@@ -55,6 +62,9 @@ power_bar = NodePath("../CanvasLayer/PowerBar")
 dir_module = NodePath("../CanvasLayer/GestureDirection")
 spin_module = NodePath("../GestureSpin")
 ball = NodePath("../BocceBall")
+steer_strength = 0.5
+spin_hz = 1000.0
+min_curve_threshold = 0.5
 
 [node name="BocceBall" parent="." unique_id=357459484 instance=ExtResource("7_mb33v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.015383, 1.0616543, 0.074545436)
@@ -73,7 +83,7 @@ offset_left = 1511.0
 offset_top = 18.0
 offset_right = 1852.0
 offset_bottom = 233.0
-texture = SubResource("ViewportTexture_pay8p")
+texture = SubResource("ViewportTexture_b6v23")
 
 [node name="BocceBall2" parent="." unique_id=854889355 instance=ExtResource("7_mb33v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.79998, 0.6806338, 0.066963926)
