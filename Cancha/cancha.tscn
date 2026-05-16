@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://rirhhk5svoiv"]
+[gd_scene load_steps=3 format=4 uid="uid://rirhhk5svoiv"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_isq64"]
 _surfaces = [{
@@ -34,5 +34,5 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_isq64")
 
 [node name="Cube" type="MeshInstance3D" unique_id=127404517]
-transform = Transform3D(31.383944, 0, 0, 0, 0.19734377, 0, 0, 0, 4.9250145, 0, 0, 0)
+transform = Transform3D(31.383944, 0, 0, 0, 0.19734377, 0, 0, 0, 4.9250145, 0.3007517, 1.4214678, -0.6446686)
 mesh = SubResource("ArrayMesh_gxe4d")

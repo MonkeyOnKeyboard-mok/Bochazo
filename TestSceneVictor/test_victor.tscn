@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3 uid="uid://ww6tb718oou4"]
+
+[ext_resource type="PackedScene" uid="uid://bqmvwo3hl8oyt" path="res://Cancha/cancha_posta.tscn" id="1_u0xti"]
+[ext_resource type="PackedScene" uid="uid://d06em422bftb7" path="res://BochaBase/bocha_base.tscn" id="2_4as6y"]
+[ext_resource type="PackedScene" uid="uid://c1mrvb8qnud4t" path="res://Camera/camera.tscn" id="3_4as6y"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4as6y"]
+sky_top_color = Color(0, 0.49608076, 0.6246699, 1)
+sky_horizon_color = Color(0.9999997, 0.3231792, 0.92586726, 1)
+ground_bottom_color = Color(0.64065737, 0, 0.27105764, 1)
+
+[sub_resource type="Sky" id="Sky_aa16h"]
+sky_material = SubResource("ProceduralSkyMaterial_4as6y")
+
+[sub_resource type="Environment" id="Environment_jupsd"]
+background_mode = 2
+background_energy_multiplier = 2.0
+sky = SubResource("Sky_aa16h")
+ambient_light_source = 3
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4as6y"]
+size = Vector3(63.233643, 2.6622314, 1)
+
+[node name="TestVictor" type="Node3D" unique_id=1941042007]
+
+[node name="Cancha" parent="." unique_id=1254177911 instance=ExtResource("1_u0xti")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0.65)
+
+[node name="BochaBase" parent="." unique_id=1173345595 node_paths=PackedStringArray("camera") instance=ExtResource("2_4as6y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 3, 0)
+camera = NodePath("../CameraPivot")
+
+[node name="CameraPivot" parent="." unique_id=1744960144 instance=ExtResource("3_4as6y")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1755246899]
+environment = SubResource("Environment_jupsd")
+
+[node name="Walls" type="Node3D" parent="." unique_id=1424284405]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Walls" unique_id=1382522811]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/StaticBody3D" unique_id=5494326]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01574707, 0.8576401, 5.479231)
+shape = SubResource("BoxShape3D_4as6y")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="Walls" unique_id=645586743]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11.00664)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/StaticBody3D2" unique_id=2111913555]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01574707, 0.8576401, 5.479231)
+shape = SubResource("BoxShape3D_4as6y")
+
+[editable path="CameraPivot"]

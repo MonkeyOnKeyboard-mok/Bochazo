@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bqmvwo3hl8oyt"]
+[gd_scene load_steps=5 format=3 uid="uid://bqmvwo3hl8oyt"]
 
 [ext_resource type="PackedScene" uid="uid://rirhhk5svoiv" path="res://Cancha/cancha.tscn" id="1_sju1p"]
 [ext_resource type="Shader" uid="uid://dq7xafmtk2cmq" path="res://Cancha/cancha_bochas.gdshader" id="2_8nnev"]
@@ -20,5 +20,5 @@ material_override = SubResource("ShaderMaterial_bibos")
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1934368048]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1080970821]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07287598, 0.01194033, -0.032104492)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3131199, 1.4697297, -0.64506376)
 shape = SubResource("BoxShape3D_sju1p")

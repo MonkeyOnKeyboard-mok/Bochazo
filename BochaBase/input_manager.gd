@@ -4,12 +4,13 @@ class_name BochaInputManager
 @export var speed : float = 5.0
 @export var throw_speed : float = 10.0
 @export var bocha_rb: RigidBody3D
+signal action_completed
 
 var throwed : bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -32,5 +33,6 @@ func _throw() -> void:
 	var direction := 0.0
 	if Input.is_action_pressed("start_throw"):
 		throwed = true
-		direction -= 1.0
+		direction = -1.0
 		bocha_rb.linear_velocity.x = direction * throw_speed
+	action_completed.emit()
