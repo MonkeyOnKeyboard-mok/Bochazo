@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dkyifd84b2ot3"]
+
+[ext_resource type="Script" uid="uid://8lew35oniajs" path="res://scenes/04_game/components/throw_system/gesture_power.gd" id="1_jl66n"]
+
+[node name="GesturePower" type="Node" unique_id=1819727909]
+script = ExtResource("1_jl66n")

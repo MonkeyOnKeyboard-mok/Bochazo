@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cs64uyt8f6gbp"]
+
+[ext_resource type="Script" uid="uid://7afp5nnsh1mk" path="res://scenes/04_game/components/throw_system/gesture_direction.gd" id="1_esb5g"]
+
+[node name="GestureDirection" type="Node" unique_id=1350806008 node_paths=PackedStringArray("preview_line")]
+script = ExtResource("1_esb5g")
+preview_line = NodePath("PreviewLine")
+
+[node name="PreviewLine" type="Line2D" parent="." unique_id=860581027]

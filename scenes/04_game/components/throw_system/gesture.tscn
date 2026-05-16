@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://b2lg6crseks0w"]
+
+[ext_resource type="PackedScene" uid="uid://dkyifd84b2ot3" path="res://scenes/04_game/components/throw_system/gesture_power.tscn" id="1_nujbd"]
+[ext_resource type="PackedScene" uid="uid://d1yqc4qlsi0kg" path="res://scenes/04_game/components/throw_system/gesture_tracker.tscn" id="2_kqg8m"]
+[ext_resource type="PackedScene" uid="uid://cs64uyt8f6gbp" path="res://scenes/04_game/components/throw_system/gesture_direction.tscn" id="3_kqg8m"]
+[ext_resource type="PackedScene" uid="uid://bm7yb3ywo436" path="res://scenes/04_game/components/throw_system/gesture_spin.tscn" id="4_bidko"]
+
+[node name="Gesture" type="Node2D" unique_id=592947206]
+
+[node name="GesturePower" parent="." unique_id=168146323 node_paths=PackedStringArray("tracker", "bar") instance=ExtResource("1_nujbd")]
+tracker = NodePath("../GestureTracker")
+bar = NodePath("../PowerBar")
+
+[node name="GestureTracker" parent="." unique_id=109403965 instance=ExtResource("2_kqg8m")]
+
+[node name="PowerBar" type="ProgressBar" parent="." unique_id=1438837921]
+offset_left = 572.0
+offset_top = 180.0
+offset_right = 576.0
+offset_bottom = 207.0
+
+[node name="GestureDirection" parent="." unique_id=778773952 node_paths=PackedStringArray("tracker") instance=ExtResource("3_kqg8m")]
+position = Vector2(943, 224)
+tracker = NodePath("../GestureTracker")
+
+[node name="GestureSpin" parent="." unique_id=92245189 instance=ExtResource("4_bidko")]

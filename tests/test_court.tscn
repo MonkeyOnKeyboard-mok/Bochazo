@@ -51,7 +51,7 @@ func _spawn_and_throw(scene_path: String, name_prefix: String):
 	var cam_pos = test_camera.global_position
 	var cam_dir = test_camera.global_transform.basis.z
 	ball.global_position = cam_pos - (cam_dir * 10.0) + Vector3(0, spawn_height, 0)
-
+	
 	# Conectar señales para debug
 	if ball.has_signal(\"stopped_moving\"):
 		ball.stopped_moving.connect(_on_ball_stopped)

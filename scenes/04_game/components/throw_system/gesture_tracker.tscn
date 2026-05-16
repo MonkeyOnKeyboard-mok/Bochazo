@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://d1yqc4qlsi0kg"]
+
+[ext_resource type="Script" uid="uid://wk3ac5wbffdk" path="res://scenes/04_game/components/throw_system/gesture_tracker.gd" id="1_rlwoi"]
+
+[node name="GestureTracker" type="Node" unique_id=638050222]
+script = ExtResource("1_rlwoi")
+
+[node name="DebugLine" type="Line2D" parent="." unique_id=2110230879]

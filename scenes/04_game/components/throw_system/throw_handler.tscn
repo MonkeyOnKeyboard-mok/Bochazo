@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dqf2tj02ghfra"]
+
+[ext_resource type="Script" uid="uid://oi4520bobv4i" path="res://scenes/04_game/components/throw_system/throw_handler.gd" id="1_bmhle"]
+
+[node name="ThrowHandler" type="Node" unique_id=114444530]
+script = ExtResource("1_bmhle")

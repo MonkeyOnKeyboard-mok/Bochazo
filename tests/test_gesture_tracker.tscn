@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://blbwyms6m7dy0"]
+
+[ext_resource type="PackedScene" uid="uid://b2lg6crseks0w" path="res://scenes/04_game/components/throw_system/gesture.tscn" id="1_m8ofy"]
+
+[node name="TestGestureTracker" type="Node2D" unique_id=204025478]
+
+[node name="Gesture" parent="." unique_id=592947206 instance=ExtResource("1_m8ofy")]
