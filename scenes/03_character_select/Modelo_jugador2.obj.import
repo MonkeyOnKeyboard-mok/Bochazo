@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dt2q8300627vh"
+path="res://.godot/imported/Modelo_jugador2.obj-ec836103a04597a83a73089f0580e311.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Modelo_jugador2.obj-ec836103a04597a83a73089f0580e311.mesh"]
+
+source_file="res://scenes/03_character_select/Modelo_jugador2.obj"
+dest_files=["res://.godot/imported/Modelo_jugador2.obj-ec836103a04597a83a73089f0580e311.mesh", "res://.godot/imported/Modelo_jugador2.obj-ec836103a04597a83a73089f0580e311.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

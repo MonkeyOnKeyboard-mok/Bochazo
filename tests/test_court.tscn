@@ -101,7 +101,16 @@ func _impulse_last_ball() -> void:
 	print(\"[TestCourt] 🚀 Impulso a %s | Fuerza: %.1f\" % [ball.name, push_force])
 "
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ksdrd"]
+sky_top_color = Color(1.7808378e-06, 0.50226086, 0.5956363, 1)
+sky_horizon_color = Color(0.63859993, 0.646526, 0.66237944, 1)
+
+[sub_resource type="Sky" id="Sky_ym8ln"]
+sky_material = SubResource("ProceduralSkyMaterial_ksdrd")
+
 [sub_resource type="Environment" id="Environment_ym8ln"]
+background_mode = 2
+sky = SubResource("Sky_ym8ln")
 
 [node name="TestCourt" type="Node3D" unique_id=98594765]
 script = SubResource("GDScript_ksdrd")

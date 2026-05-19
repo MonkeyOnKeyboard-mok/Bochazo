@@ -20,7 +20,7 @@ sky = SubResource("Sky_aa16h")
 ambient_light_source = 3
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_s87nx"]
-size = Vector3(63.233643, 2.6622314, 1)
+size = Vector3(63.233643, 7.218292, 1)
 
 [node name="Test" type="Node3D" unique_id=1690715140]
 
@@ -40,14 +40,14 @@ environment = SubResource("Environment_np5ak")
 [node name="StaticBody3D" type="StaticBody3D" parent="Walls" unique_id=1250326063]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/StaticBody3D" unique_id=2090334193]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01574707, 0.8576401, 5.479231)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01574707, 2.0019119, 5.479231)
 shape = SubResource("BoxShape3D_s87nx")
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="Walls" unique_id=147439803]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11.00664)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/StaticBody3D2" unique_id=659649121]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01574707, 0.8576401, 5.479231)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01574707, 1.9913986, 5.479231)
 shape = SubResource("BoxShape3D_s87nx")
 
 [editable path="CameraPivot"]

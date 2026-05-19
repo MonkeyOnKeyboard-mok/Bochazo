@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PlayerData" format=3 uid="uid://cyubjqxs4x1gx"]
+
+[ext_resource type="Script" uid="uid://dgypgrm7fkoc3" path="res://scenes/04_game/components/players/player_resource.gd" id="1_64y5k"]
+[ext_resource type="ArrayMesh" uid="uid://dt2q8300627vh" path="res://scenes/03_character_select/Modelo_jugador2.obj" id="1_x7ob1"]
+[ext_resource type="Texture2D" uid="uid://cb0g74xqi36rm" path="res://scenes/03_character_select/texture.png" id="3_lpe56"]
+
+[resource]
+script = ExtResource("1_64y5k")
+mesh = ExtResource("1_x7ob1")
+texture = ExtResource("3_lpe56")
+name = "Raul"
+metadata/_custom_type_script = "uid://dgypgrm7fkoc3"
