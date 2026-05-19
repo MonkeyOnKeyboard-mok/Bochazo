@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dt06jewgboam6" path="res://assets/textures/texture_bocha_blue.png" id="1_g2vae"]
 [ext_resource type="ArrayMesh" uid="uid://ixxa5g06lv45" path="res://assets/models/court/CanchaBochas.obj" id="1_rdb0n"]
+[ext_resource type="PackedScene" uid="uid://iqyyiwjjil2g" path="res://Cancha/CanchaBochas.glb" id="3_vijbr"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vijbr"]
 albedo_texture = ExtResource("1_g2vae")
@@ -13,8 +14,13 @@ data = PackedVector3Array(-23.538, 0.6681, 4.9249997, -23.538, -0.1973, 4.924999
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
 
 [node name="CanchaBochas" type="MeshInstance3D" parent="." unique_id=361475757]
+visible = false
 material_override = SubResource("StandardMaterial3D_vijbr")
 mesh = ExtResource("1_rdb0n")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=66602452]
 shape = SubResource("ConcavePolygonShape3D_g2vae")
+
+[node name="CanchaBochas2" parent="." unique_id=1424698623 instance=ExtResource("3_vijbr")]
+
+[editable path="CanchaBochas2"]

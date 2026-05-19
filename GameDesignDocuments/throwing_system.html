@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Throw System — Diseño del Sistema de Lanzamiento</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  :root { --bg: #0f1117; --card: #181b24; --border: #2a2d3a; --text: #d4d4d8; --accent: #7c3aed; --accent2: #a78bfa; --dim: #6b7280; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.65; }
+  .wrap { max-width:960px; margin:0 auto; padding:2rem 1.5rem; }
+  h1 { font-size:2rem; color:#fff; margin-bottom:0.25rem; }
+  h2 { font-size:1.35rem; color:var(--accent2); margin:2.5rem 0 0.75rem; border-bottom:1px solid var(--border); padding-bottom:0.35rem; }
+  h3 { font-size:1.05rem; color:#fff; margin:1.5rem 0 0.5rem; }
+  p, li { color:var(--text); }
+  p { margin-bottom:0.75rem; }
+  ul { padding-left:1.25rem; margin-bottom:0.75rem; }
+  li { margin-bottom:0.3rem; }
+  code { background:var(--border); padding:0.15rem 0.4rem; border-radius:4px; font-size:0.9em; color:#e5e7eb; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem; margin:1rem 0; }
+  .card h3 { margin:0 0 0.5rem; }
+  .signal-tag { display:inline-block; background:var(--accent); color:#fff; padding:0.1rem 0.5rem; border-radius:12px; font-size:0.8rem; margin:0.15rem 0.2rem; }
+  .param { color:var(--accent2); font-weight:600; }
+  .diagram-wrap { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1rem; margin:1.25rem 0; overflow-x:auto; }
+  .diagram-wrap pre { margin:0; }
+  .note { background:rgba(124,58,237,0.12); border-left:3px solid var(--accent); padding:0.75rem 1rem; border-radius:0 8px 8px 0; margin:1rem 0; }
+  .note strong { color:var(--accent2); }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media(max-width:640px){ .grid{grid-template-columns:1fr;} }
+  table { width:100%; border-collapse:collapse; margin:0.75rem 0; }
+  th,td { text-align:left; padding:0.4rem 0.6rem; border-bottom:1px solid var(--border); }
+  th { color:var(--accent2); font-size:0.85rem; text-transform:uppercase; letter-spacing:0.04em; }
+  td { font-size:0.9rem; }
+  .scene-tag { color:#34d399; }
+  .fade { color:var(--dim); font-size:0.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Throw System</h1>
+<p class="fade">Sistema de lanzamiento de bochas — arquitectura, lógica y flujo de datos</p>
+
+<!-- ============================================================ -->
+<h2>Visión General</h2>
+
+<p>El sistema convierte un <strong>gesture del mouse</strong> (click &amp; drag) en un lanzamiento 3D de una bocha con dirección, potencia y efecto (spin). Se divide en cinco componentes desacoplados conectados por señales.</p>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+graph LR
+  subgraph Entrada
+    A[GestureTracker] -->|gesture_started| B[GesturePower]
+    A -->|gesture_dragging| B
+    A -->|flick_detected| C[GestureDirection]
+    A -->|gesture_ended| D[GestureSpin]
+  end
+
+  B -->|ProgressBar.value| E[ThrowHandler]
+  C -->|direction_calculated| E
+  D -->|spin_profile_calculated| E
+
+  E -->|apply_central_impulse| F[RigidBody3D: BocceBall]
+  E -->|linear_velocity.rotated| F
+</pre>
+</div>
+
+<p>El flujo es unidireccional: de la entrada del usuario hacia la física. Un solo <code>GestureTracker</code> alimenta los tres módulos de cálculo, y <code>ThrowHandler</code> orquesta el resultado final.</p>
+
+<!-- ============================================================ -->
+<h2>Arquitectura de Escenas</h2>
+
+<h3>Escena compuesta <code>gesture.tscn</code></h3>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+graph TD
+  G["<b>Gesture</b> (Node2D)"]
+  G --> GP["GesturePower (Node)"]
+  G --> GT["GestureTracker (Node)"]
+  G --> PB["PowerBar (ProgressBar)"]
+  G --> GD["GestureDirection (Node2D)"]
+  G --> GS["GestureSpin (Node)"]
+
+  GT --> DL["DebugLine (Line2D)"]
+  GD --> PL["PreviewLine (Line2D)"]
+
+  GP -.->|tracker| GT
+  GP -.->|bar| PB
+  GD -.->|tracker| GT
+</pre>
+</div>
+
+<p>Los módulos se instancian en un <code>Node2D</code> raíz y se conectan por <code>NodePath</code> relativos (hermanos en la jerarquía). <code>GesturePower</code> y <code>GestureDirection</code> referencian al mismo <code>GestureTracker</code>.</p>
+
+<h3>Escena de test <code>test_throwing_ball.tscn</code></h3>
+
+<h4>Árbol de nodos</h4>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+graph TD
+  ROOT["TestThrowingBall<br><i>Node3D</i>"]
+  ROOT --> AMBIENT["ambient:<br>Court · TestCamera ·<br>WorldEnvironment · Light"]
+  ROOT --> CL["CanvasLayer"]
+  ROOT --> SYS["system:<br>GesturePower · GestureSpin ·<br>ThrowHandler"]
+
+  CL --> UI["ui:<br>PowerBar · GestureTracker ·<br>GestureDirection"]
+  ROOT --> BALLS["balls:<br>BocceBall · BocceBall2 · Bochin"]
+  ROOT --> PREVIEW["preview:<br>SubViewport · Camera3D ·<br>TextureRect"]
+</pre>
+</div>
+
+<h4>Nodos detallados por grupo</h4>
+
+<div class="grid">
+<div class="card">
+<h3>CanvasLayer (UI 2D)</h3>
+<ul>
+  <li><strong>PowerBar</strong> — ProgressBar</li>
+  <li><strong>GestureTracker</strong> — instancia del componente</li>
+  <li><strong>GestureDirection</strong> — instancia del componente</li>
+</ul>
+</div>
+<div class="card">
+<h3>Raíz (3D / lógica)</h3>
+<ul>
+  <li><strong>GesturePower</strong> — instancia, referencia <code>../CanvasLayer/GestureTracker</code></li>
+  <li><strong>GestureSpin</strong> — instancia, referencia <code>../CanvasLayer/GestureTracker</code></li>
+  <li><strong>ThrowHandler</strong> — instancia, referencia los 4 módulos + BocceBall</li>
+</ul>
+</div>
+</div>
+
+<h4>Conexiones de ThrowHandler</h4>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+graph LR
+  TH["ThrowHandler"] -->|tracker| GT["GestureTracker<br><i>CanvasLayer</i>"]
+  TH -->|power_bar| PB["PowerBar<br><i>CanvasLayer</i>"]
+  TH -->|dir_module| GD["GestureDirection<br><i>CanvasLayer</i>"]
+  TH -->|spin_module| GS["GestureSpin<br><i>raíz</i>"]
+  TH -->|ball| BALL["BocceBall<br><i>raíz</i>"]
+</pre>
+</div>
+
+<p class="note"><strong>Detalle importante:</strong> Los nodos de gesture están <strong>repartidos entre CanvasLayer y la raíz</strong>. UI (<code>GestureTracker</code>, <code>GestureDirection</code>, <code>PowerBar</code>) dentro de <code>CanvasLayer</code>; lógica (<code>GesturePower</code>, <code>GestureSpin</code>, <code>ThrowHandler</code>) en la raíz. Los <code>NodePath</code> cruzan fronteras con rutas como <code>../CanvasLayer/GestureTracker</code>.</p>
+
+<p>Overrides del ThrowHandler en el test:</p>
+<table>
+  <tr><th>Parámetro</th><th>Valor default</th><th>Valor test</th></tr>
+  <tr><td><code>steer_strength</code></td><td>3.0</td><td>0.5</td></tr>
+  <tr><td><code>spin_hz</code></td><td>8.0</td><td>1000.0</td></tr>
+  <tr><td><code>min_curve_threshold</code></td><td>0.08</td><td>0.5</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>Componentes — Lógica Detallada</h2>
+
+<!-- ─── GestureTracker ─── -->
+<h3>GestureTracker</h3>
+
+<div class="card">
+  <p>Archivo: <code>gesture_tracker.gd</code> &middot; Nodo base: <code>Node</code></p>
+  <p>Captura la entrada cruda del mouse y emite señales para los demás módulos.</p>
+</div>
+
+<h4>Señales</h4>
+<p>
+  <span class="signal-tag">gesture_started(start_pos: Vector2)</span>
+  <span class="signal-tag">gesture_dragging(current: Vector2, start: Vector2)</span>
+  <span class="signal-tag">flick_detected(dir: Vector2)</span>
+  <span class="signal-tag">gesture_ended(points: PackedVector2Array)</span>
+</p>
+
+<h4>Máquina de estados implícita</h4>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Tracking : click izquierdo (pressed)
+  Tracking --> Tracking : mouse motion
+  Tracking --> Flick : dy pasa de +2 a -2
+  Tracking --> Idle : soltar click (released)
+  Flick --> Idle : soltar click (released)
+
+  note right of Tracking: acumula points[]\nactualiza DebugLine\nemite gesture_dragging
+  note right of Flick: emite flick_detected\n(con la dirección normalizada)
+</pre>
+</div>
+
+<h4>Detección de Flick</h4>
+<p>El flick se detecta cuando el usuario <strong>baja y luego sube</strong> rápidamente durante el mismo drag:</p>
+<ol>
+  <li>Se marca <code class="param">was_moving_down = true</code> cuando <code>dy > 2</code> px (el cursor baja).</li>
+  <li>Cuando <code>was_moving_down</code> es true y <code>dy < -2</code> px (el cursor sube), se emite <code>flick_detected</code> con <code>Vector2(pos.x - prev_pos.x, dy).normalized()</code>.</li>
+  <li>Se usa el flag <code class="param">flick_emitted</code> para emitir solo una vez por gesto.</li>
+</ol>
+
+<p class="note"><strong>Por qué importa:</strong> El flick representa el "latigazo" del lanzamiento. La dirección del flick alimenta directamente a <code>GestureDirection</code>.</p>
+
+<h4>Variables clave</h4>
+<table>
+  <tr><th>Variable</th><th>Tipo</th><th>Propósito</th></tr>
+  <tr><td><code>points</code></td><td>PackedVector2Array</td><td>Todos los puntos del gesto actual</td></tr>
+  <tr><td><code>prev_pos</code></td><td>Vector2</td><td>Posición del frame anterior (para calcular dy)</td></tr>
+  <tr><td><code>was_moving_down</code></td><td>bool</td><td>Se bajó en algún momento del gesto</td></tr>
+  <tr><td><code>flick_emitted</code></td><td>bool</td><td>Evita múltiples flicks por gesto</td></tr>
+</table>
+
+<!-- ─── GesturePower ─── -->
+<h3>GesturePower</h3>
+
+<div class="card">
+  <p>Archivo: <code>gesture_power.gd</code> &middot; Nodo base: <code>Node</code></p>
+  <p>Convierte la distancia vertical del drag en un porcentaje de potencia (0–100).</p>
+</div>
+
+<h4>Lógica</h4>
+<div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TD
+  A[gesture_started] --> B["bar.value = 0\npeak_value = 0"]
+  C[gesture_dragging] --> D["current = clamp((cur.y - start.y) / max_drag_px, 0, 1) * 100"]
+  D --> E["peak_value = max(peak_value, current)"]
+  E --> F["bar.value = peak_value"]
+</pre>
+</div>
+
+<p>La potencia <strong>solo sube, nunca baja</strong>. El jugador arrastra hacia abajo y la barra sube; si suelta un poco y arrastra menos, la barra se queda en el máximo alcanzado. Esto modela el esfuerzo acumulado de un lanzamiento real.</p>
+
+<table>
+  <tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr>
+  <tr><td><code>max_drag_px</code></td><td>300</td><td>Píxeles de drag vertical = 100% potencia</td></tr>
+</table>
+
+<p class="note"><strong>Observación:</strong> La dirección del drag es <strong>solo hacia abajo</strong> (Y positivo en pantalla). Si el usuario arrastra hacia arriba, el valor queda en 0. Esto asume que el gesto natural es tirar hacia abajo para "cargar" el lanzamiento.</p>
+
+<!-- ─── GestureDirection ─── -->
+<h3>GestureDirection</h3>
+
+<div class="card">
+  <p>Archivo: <code>gesture_direction.gd</code> &middot; Nodo base: <code>Node</code></p>
+  <p>Traduce la dirección del flick a una dirección 2D y muestra una preview visual.</p>
+</div>
+
+<h4>Lógica</h4>
+<ol>
+  <li>Se conecta a <code>flick_detected</code> del tracker.</li>
+  <li>Al recibir el vector de dirección, dibuja una línea <strong>invertida</strong> en <code>PreviewLine</code>: <code>dir * -preview_length</code> apuntando desde el origen hacia donde "tirarías".</li>
+  <li>Emite <code>direction_calculated(dir: Vector2)</code>.</li>
+</ol>
+
+<p>La inversión visual es porque en pantalla el flick va hacia abajo, pero la bola va hacia adelante — la línea preview apunta en la dirección opuesta al gesto, mostrando hacia dónde saldrá la bola.</p>
+
+<table>
+  <tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr>
+  <tr><td><code>preview_length</code></td><td>150</td><td>Largo en px de la línea de preview</td></tr>
+</table>
+
+<!-- ─── GestureSpin ─── -->
+<h3>GestureSpin</h3>
+
+<div class="card">
+  <p>Archivo: <code>gesture_spin.gd</code> &middot; Nodo base: <code>Node</code></p>
+  <p>Calcula el perfil de desviación lateral del gesto — cuánto se curvó el trazo a cada lado.</p>
+</div>
+
+<h4>Algoritmo</h4>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TD
+  A[gesture_ended: points] --> B{points.size &lt; 3?}
+  B -->|Sí| C["emit spin_profile_calculated([])"]
+  B -->|No| D["dir = (end - start).normalized()"]
+  D --> E["perp = Vector2(-dir.y, dir.x)"]
+  E --> F["Para cada punto p:"]
+  F --> G["lateral = (p - start) · perp / sensitivity"]
+  G --> H["clamp(lateral, -1, 1)"]
+  H --> I["emit spin_profile_calculated(profile)"]
+</pre>
+</div>
+
+<p>El algoritmo proyecta cada punto del gesto sobre el eje <strong>perpendicular</strong> a la dirección general del trazo. El resultado es un array de valores entre -1 y 1 que describe <strong>cómo se curva el gesto</strong> a lo largo de su recorrido.</p>
+
+<p class="note"><strong>Intuición:</strong> Si el gesto es una línea recta, todos los valores son cercanos a 0 (sin efecto). Si el gesto se curva hacia un lado, los valores suben hacia +1; si se curva hacia el otro, bajan hacia -1.</p>
+
+<table>
+  <tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr>
+  <tr><td><code>sensitivity</code></td><td>100</td><td>Divisor de la desviación lateral. Menor = efecto más amplio por menos curva.</td></tr>
+</table>
+
+<!-- ─── ThrowHandler ─── -->
+<h3>ThrowHandler</h3>
+
+<div class="card">
+  <p>Archivo: <code>throw_handler.gd</code> &middot; Nodo base: <code>Node</code></p>
+  <p>Orquestador final: recibe dirección, potencia y perfil de spin, y los aplica al <code>RigidBody3D</code> de la bocha.</p>
+</div>
+
+<h4>Conexiones de señales</h4>
+<div class="diagram-wrap">
+<pre class="mermaid">
+flowchart LR
+  TK[GestureTracker] -->|gesture_ended| TH[ThrowHandler._on_throw]
+  DM[GestureDirection] -->|direction_calculated| TH
+  SM[GestureSpin] -->|spin_profile_calculated| TH
+
+  TH -->|_physics_process| RIGID["RigidBody3D.linear_velocity"]
+</pre>
+</div>
+
+<h4>Cálculo de dirección 3D</h4>
+
+<p>Cuando <code>GestureDirection</code> emite una dirección 2D <code>(dx, dy)</code>, <code>ThrowHandler</code> la convierte a 3D:</p>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TD
+  A["Vector2(dir.x, dir.y) del flick"] --> B["raw = Vector3(-dir.y, 0, dir.x)"]
+  B --> C["raw.x = max(raw.x, 0.01)  // siempre hacia adelante"]
+  C --> D["limit_z = raw.x * max_tangent"]
+  D --> E["raw.z = clamp(raw.z, -limit_z, limit_z)"]
+  E --> F["dir = raw.normalized()"]
+</pre>
+</div>
+
+<p>El mapeo convierte las coordenadas de pantalla al espacio 3D:</p>
+<ul>
+  <li><strong>-dir.y (pantalla)</strong> → componente X (3D): hacia adelante en la pista. Se fuerza ≥ 0.01 para que siempre haya componente frontal.</li>
+  <li><strong>dir.x (pantalla)</strong> → componente Z (3D): izquierda/derecha.</li>
+  <li>El eje Y (3D) es siempre 0: el lanzamiento es plano.</li>
+</ul>
+
+<p>El <strong>cono de tiro</strong> limita la desviación lateral: <code>max_tangent = tan(max_spread_deg)</code>. La componente Z nunca puede superar <code>X * max_tangent</code>, creando un cono angular que impide que la bocha se escape de la pista.</p>
+
+<h4>Ejecución del lanzamiento</h4>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TD
+  A[gesture_ended] --> B{power_bar existe?}
+  B -->|No| Z[return]
+  B -->|Sí| C["power = clamp(bar.value / 100, 0, 1)"]
+  C --> D{power &lt; 0.05?}
+  D -->|Sí| Z
+  D -->|No| E["ball.apply_central_impulse(dir * power * max_force)"]
+  E --> F{spin_profile no vacío?}
+  F -->|No| G["is_applying_spin = false"]
+  F -->|Sí| H["avg_dev = promedio(abs(values))"]
+  H --> I{avg_dev &gt; min_curve_threshold?}
+  I -->|No| G
+  I -->|Sí| J["is_applying_spin = true\nspin_idx = 0\nspin_timer = 0.0"]
+</pre>
+</div>
+
+<p><strong>Umbral de curvatura mínima</strong> (<code>min_curve_threshold</code>): filtra gestos que son prácticamente rectos. Si el promedio de desviación lateral es menor al umbral, no se aplica spin — evitando micro-temblores o gestos puramente verticales.</p>
+
+<h4>Aplicación del Spin en tiempo de ejecución</h4>
+
+<p>Durante <code>_physics_process</code>, si <code>is_applying_spin</code> es true:</p>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TD
+  A[_physics_process] --> B{is_applying_spin && spin_profile no vacío?}
+  B -->|No| Z[return]
+  B -->|Sí| C["spin_timer += delta"]
+  C --> D{spin_timer >= 1/spin_hz?}
+  D -->|No| FIN[esperar]
+  D -->|Sí| E["spin_timer = 0"]
+  E --> F{spin_idx &lt; spin_profile.size?}
+  F -->|No| G["is_applying_spin = false"]
+  F -->|Sí| H["curve = spin_profile[spin_idx]"]
+  H --> I["steer_angle = curve * steer_strength * delta"]
+  I --> J{vel.length &gt; 0.1?}
+  J -->|No| K["spin_idx += 1"]
+  J -->|Sí| L["ball.linear_velocity = vel.rotated(Vector3.UP, steer_angle)"]
+  L --> K
+</pre>
+</div>
+
+<p>El spin funciona <strong>rotando el vector velocidad</strong> sin agregar energía:</p>
+<ul>
+  <li>Cada tick (a frecuencia <code>spin_hz</code>), se consume un valor del perfil.</li>
+  <li>El valor (-1 a 1) se multiplica por <code>steer_strength</code> y <code>delta</code>, generando un ángulo de rotación.</li>
+  <li>Se rota <code>linear_velocity</code> alrededor de <code>Vector3.UP</code> por ese ángulo.</li>
+  <li>Esto curva la trayectoria sin cambiar la velocidad — simula el <strong>efecto Magnus</strong>.</li>
+</ul>
+
+<p class="note"><strong>Frecuencia <code>spin_hz</code>:</strong> Con el valor default de 8 Hz, la curva es progresiva y suave. En el test usa 1000 Hz (casi cada frame), lo que hace que la curva responda inmediatamente al perfil.</p>
+
+<h4>Parámetros GameSense</h4>
+<table>
+  <tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr>
+  <tr><td><code>max_force</code></td><td>75.0</td><td>Fuerza máxima del impulso. Controla la distancia máxima del tiro.</td></tr>
+  <tr><td><code>steer_strength</code></td><td>3.0</td><td>Intensidad del giro lateral. Más alto = curva más cerrada.</td></tr>
+  <tr><td><code>spin_hz</code></td><td>8.0</td><td>Frecuencia de aplicación del perfil. Menor = curva suave; mayor = respuesta inmediata.</td></tr>
+  <tr><td><code>max_spread_deg</code></td><td>5.0°</td><td>Ángulo máximo del cono de tiro. Limita la dispersión lateral.</td></tr>
+  <tr><td><code>min_curve_threshold</code></td><td>0.08</td><td>Desviación mínima promedio para activar spin. Filtra gestos rectos.</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>Flujo Completo de un Lanzamiento</h2>
+
+<div class="diagram-wrap">
+<pre class="mermaid>
+sequenceDiagram
+  participant U as Jugador
+  participant GT as GestureTracker
+  participant GP as GesturePower
+  participant GD as GestureDirection
+  participant GS as GestureSpin
+  participant TH as ThrowHandler
+  participant B as BocceBall
+
+  U->>GT: click (presiona)
+  GT->>GP: gesture_started
+  Note over GP: Reset bar = 0, peak = 0
+
+  loop Cada frame del drag
+    U->>GT: arrastra mouse
+    GT->>GP: gesture_dragging(cur, start)
+    Note over GP: power sube si dy > 0 (baja)
+    GT->>GT: Verifica flick (baja → sube)
+  end
+
+  Note over GT: Detecta flick: baja y luego sube
+  GT->>GD: flick_detected(dir)
+  GD->>TH: direction_calculated(dir)
+  Note over TH: Convierte dir 2D → 3D con cono
+
+  Note over U: Suelta el botón
+  U->>GT: click (suelta)
+  GT->>GS: gesture_ended(points)
+  GS->>TH: spin_profile_calculated(profile)
+
+  GT->>TH: gesture_ended(points)
+  Note over TH: power = bar.value / 100
+  TH->>B: apply_central_impulse(dir * power * max_force)
+
+  alt spin_profile promedio > min_curve_threshold
+    Note over TH: is_applying_spin = true
+    loop Cada tick (1/spin_hz)
+      TH->>B: linear_velocity.rotated(UP, curve * steer * delta)
+    end
+  else sin curvatura significativa
+    Note over TH: is_applying_spin = false (tiro recto)
+  end
+</pre>
+</div>
+
+<!-- ============================================================ -->
+<h2>Jerarquía de Señales</h2>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+graph TD
+  GT["<b>GestureTracker</b><br>entrada cruda"] -->|"gesture_started(start)"| GP["<b>GesturePower</b><br>resetea barra"]
+  GT -->|"gesture_dragging(cur, start)"| GP
+  GT -->|"flick_detected(dir)"| GD["<b>GestureDirection</b><br>calcula dirección"]
+  GT -->|"gesture_ended(points)"| GS["<b>GestureSpin</b><br>calcula perfil"]
+
+  GP -->|"ProgressBar.value"| TH["<b>ThrowHandler</b><br>aplica al RigidBody"]
+  GD -->|"direction_calculated(dir)"| TH
+  GS -->|"spin_profile_calculated(profile)"| TH
+</pre>
+</div>
+
+<p><code>GestureTracker</code> es el único productor de eventos. Los tres módulos de procesamiento (<code>GesturePower</code>, <code>GestureDirection</code>, <code>GestureSpin</code>) son consumidores puros y no se comunican entre sí. <code>ThrowHandler</code> es el único consumidor final — no emite señales.</p>
+
+<!-- ============================================================ -->
+<h2>Transformaciones de Coordenadas</h2>
+
+<div class="diagram-wrap">
+<pre class="mermaid>
+graph LR
+  subgraph "Pantalla (2D)"
+    SX["Mouse X → lateral"]
+    SY["Mouse Y ↓ → cargar potencia"]
+    SF["Flick Y ↑ → dirección adelante"]
+  end
+
+  subgraph "3D (Pista)"
+    TX["X+ → adelante (lanzamiento)"]
+    TZ["Z → izquierda/derecha"]
+    TY["Y → siempre 0 (plano)"]
+  end
+
+  SX -->|"dir.x"| TZ
+  SY -->|"-"| TX
+  SF -->|"-(flick.y)"| TX
+</pre>
+</div>
+
+<h3>Mapeo flick → dirección 3D</h3>
+<table>
+  <tr><th>Flick 2D</th><th>Resultado 3D</th></tr>
+  <tr><td><code>flick.y &lt; 0</code> (arriba en pantalla)</td><td><code>raw.x &gt; 0</code> → hacia adelante</td></tr>
+  <tr><td><code>flick.x &gt; 0</code> (derecha en pantalla)</td><td><code>raw.z &gt; 0</code> → hacia un lado</td></tr>
+  <tr><td><code>flick.y &gt; 0</code> (abajo en pantalla)</td><td><code>raw.x &lt; 0</code> → forzado a 0.01</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>Restricciones y Conos de Seguridad</h2>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+graph TD
+  A["max_tangent = tan(5°) ≈ 0.0875"] --> B["limit_z = raw.x * max_tangent"]
+  B --> C["Z nunca supera X * 8.75%"]
+  C --> D["La bocha nunca supera ~5° de desviación lateral"]
+</pre>
+</div>
+
+<ul>
+  <li><strong>Cono de tiro</strong>: La dirección Z se limita a <code>X * tan(max_spread_deg)</code>. Con 5°, la bocha solo puede desviarse ~8.75% de su distancia recorrida lateralmente.</li>
+  <li><strong>Potencia mínima</strong>: Si <code>power &lt; 0.05</code>, el lanzamiento se ignora (evita tiros accidentales).</li>
+  <li><strong>Umbral de curvatura</strong>: <code>min_curve_threshold = 0.08</code> evita que gestos rectos o temblorosos generen efecto.</li>
+  <li><strong>Velocidad mínima para spin</strong>: <code>vel.length() &gt; 0.1</code> — no se aplica spin si la bocha casi se detuvo.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>Posibles Mejoras</h2>
+
+<div class="grid">
+<div class="card">
+<h3>Potencia degradada</h3>
+<p>Actualmente <code>peak_value</code> solo sube. Se podría agregar un decaimiento temporal para que si el jugador hace pausa antes de soltar, la potencia baje ligeramente — modelando fatiga o indecisión.</p>
+</div>
+
+<div class="card">
+<h3>Dirección desde el trazo completo</h3>
+<p>La dirección se calcula solo del flick (último segmento). Podría ser mejor usar un promedio ponderado de los últimos N puntos del gesto, suavizando el resultado y reduciendo ruido.</p>
+</div>
+
+<div class="card">
+<h3>Spin con aceleración angular</h3>
+<p>El spin actual rota la velocidad uniformemente. Se podría agregar una curva de decaimiento para que el efecto se atenúe con la distancia — las bochas reales pierden efecto con el roce.</p>
+</div>
+
+<div class="card">
+<h3>Anticipación visual</h3>
+<p>Mostrar la trayectoria predicha (parábola + curva) antes de soltar, actualizada en tiempo real durante el drag. Esto le daría al jugador feedback continuo.</p>
+</div>
+
+<div class="card">
+<h3>Estado de lanzamiento explícito</h3>
+<p>El sistema no tiene un state machine explícito. Agregar estados (<code>IDLE</code>, <code>AIMING</code>, <code>THROWING</code>, <code>ROLLING</code>) facilitaría agregar lógica como reset, cámaras, y transiciones.</p>
+</div>
+
+<div class="card">
+<h3>Flick bidireccional</h3>
+<p>El flick solo detecta "bajo → sube". Se podría soportar también "sube → baja" para lanzamientos con estilos diferentes, o gestos circulares para efectos especiales.</p>
+</div>
+</div>
+
+</div>
+
+<script>mermaid.initialize({startOnLoad:true, theme:'dark', themeVariables:{primaryColor:'#7c3aed',primaryTextColor:'#e5e7eb',primaryBorderColor:'#7c3aed',lineColor:'#a78bfa',secondaryColor:'#181b24',tertiaryColor:'#181b24'}});</script>
+</body>
+</html>
