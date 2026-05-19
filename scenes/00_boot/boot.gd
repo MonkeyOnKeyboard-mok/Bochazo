@@ -5,5 +5,5 @@ extends Node
 
 func _ready():
 	await get_tree().process_frame # Dar tiempo a Autoloads
-	await fade.fade_out()
+	#await fade.fade_out()
 	get_tree().change_scene_to_file(next_scene)

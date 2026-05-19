@@ -40,6 +40,7 @@ func move_left() -> void:
 func move_right() -> void:
 	if Input.is_action_just_pressed("move_right"):
 		if index-1 <= -1: return
+		if moving == true: return
 		_handle_movement(Vector3(2,0,0),Vector3(0, deg_to_rad(-90), 0),"right")
 
 func choose() -> void:

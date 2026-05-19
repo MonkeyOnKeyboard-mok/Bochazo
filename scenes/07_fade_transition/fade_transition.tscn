@@ -2,12 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dwsd8ef884mbl" path="res://scenes/07_fade_transition/fade_transition.gd" id="1_2m6dd"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2m6dd"]
-albedo_color = Color(0, 0, 0, 1)
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_4hqox"]
-size = Vector2(1920, 1080)
-
 [sub_resource type="Animation" id="Animation_2m6dd"]
 length = 0.001
 tracks/0/type = "value"
@@ -72,9 +66,7 @@ _data = {
 &"fade_out": SubResource("Animation_3vjol")
 }
 
-[node name="FadeTransition" type="MeshInstance3D" unique_id=1499653565]
-material_override = SubResource("StandardMaterial3D_2m6dd")
-mesh = SubResource("PlaneMesh_4hqox")
+[node name="FadeTransition" type="CanvasLayer" unique_id=242637826]
 script = ExtResource("1_2m6dd")
 
 [node name="FadeRect" type="AnimationPlayer" parent="." unique_id=688823060]
