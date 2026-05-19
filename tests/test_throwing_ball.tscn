@@ -75,7 +75,7 @@ size = Vector2i(256, 256)
 render_target_update_mode = 3
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=845160978]
-transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, 25.921082, 12.090761, 0)
+transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, 26.705826, 12.090761, 0)
 current = true
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1639613537]
