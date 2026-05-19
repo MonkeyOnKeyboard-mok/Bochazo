@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="PhysicsConfig" format=3 uid="uid://bk2osp5qyya1y"]
-
-[ext_resource type="Script" uid="uid://brw7ud0cmgli0" path="res://resources/game_config/physics_config.gd" id="1_plr4y"]
-
-[resource]
-script = ExtResource("1_plr4y")
-ball_friction = 1.0
-metadata/_custom_type_script = "uid://brw7ud0cmgli0"

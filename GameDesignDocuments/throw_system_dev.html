@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Throw System — Guía de Desarrollo v4</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  :root { --bg:#0f1117; --card:#181b24; --border:#2a2d3a; --text:#d4d4d8; --accent:#7c3aed; --accent2:#a78bfa; --dim:#6b7280; --green:#34d399; --red:#f87171; --amber:#fbbf24; --cyan:#22d3ee; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.65; }
+  .wrap { max-width:940px; margin:0 auto; padding:2rem 1.5rem; }
+  h1 { font-size:2rem; color:#fff; margin-bottom:0.25rem; }
+  h2 { font-size:1.4rem; color:var(--accent2); margin:2rem 0 0.5rem; border-bottom:1px solid var(--border); padding-bottom:0.3rem; }
+  h3 { font-size:1.1rem; color:#fff; margin:1.2rem 0 0.4rem; }
+  h4 { font-size:0.95rem; color:var(--accent2); margin:1rem 0 0.3rem; }
+  p { margin-bottom:0.6rem; }
+  ul { padding-left:1.2rem; margin-bottom:0.6rem; }
+  li { margin-bottom:0.25rem; }
+  code { background:var(--border); padding:0.1rem 0.35rem; border-radius:4px; font-size:0.9em; color:#e5e7eb; }
+  .diagram { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1rem; margin:1rem 0; overflow-x:auto; }
+  .diagram pre { margin:0; }
+  .note { background:rgba(124,58,237,0.1); border-left:3px solid var(--accent); padding:0.6rem 1rem; border-radius:0 8px 8px 0; margin:0.8rem 0; font-size:0.92rem; }
+  .note.important { background:rgba(248,113,113,0.1); border-left-color:var(--red); }
+  .note.important strong { color:var(--red); }
+  .note strong { color:var(--accent2); }
+  .tag { display:inline-block; padding:0.1rem 0.5rem; border-radius:12px; font-size:0.75rem; margin:0.1rem 0.15rem; font-weight:600; }
+  .tag-new { background:var(--green); color:#0f1117; }
+  .tag-mod { background:var(--amber); color:#0f1117; }
+  .tag-fix { background:var(--red); color:#0f1117; }
+  .tag-cfg { background:var(--cyan); color:#0f1117; }
+  .signal { background:var(--accent); color:#fff; padding:0.1rem 0.5rem; border-radius:12px; font-size:0.75rem; display:inline-block; margin:0.1rem 0.15rem; }
+  details { background:var(--card); border:1px solid var(--border); border-radius:10px; margin:0.75rem 0; }
+  details summary { padding:0.8rem 1.1rem; cursor:pointer; font-weight:600; color:#fff; list-style:none; display:flex; align-items:center; gap:0.5rem; }
+  details summary::before { content:'▸'; transition:transform 0.2s; display:inline-block; }
+  details[open] summary::before { transform:rotate(90deg); }
+  details summary:hover { color:var(--accent2); }
+  details > .body { padding:0 1.1rem 1rem; }
+  details > .body p { margin-top:0; }
+  pre.code { background:#111320; border:1px solid var(--border); border-radius:8px; padding:1rem; overflow-x:auto; font-family:'Cascadia Code','Fira Code',monospace; font-size:0.82rem; line-height:1.6; color:#c9d1d9; margin:0.75rem 0; white-space:pre; }
+  pre.code .kw { color:#ff7b72; }
+  pre.code .fn { color:#d2a8ff; }
+  pre.code .str { color:#a5d6ff; }
+  pre.code .cm { color:#6b7280; font-style:italic; }
+  pre.code .num { color:#79c0ff; }
+  pre.code .tp { color:#7ee787; }
+  pre.code .exp { color:#fbbf24; }
+  table { width:100%; border-collapse:collapse; margin:0.6rem 0; }
+  th,td { text-align:left; padding:0.35rem 0.6rem; border-bottom:1px solid var(--border); }
+  th { color:var(--accent2); font-size:0.82rem; text-transform:uppercase; letter-spacing:0.04em; }
+  td { font-size:0.88rem; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+  @media(max-width:640px){ .grid2{grid-template-columns:1fr;} }
+  .tree { background:#111320; border:1px solid var(--border); border-radius:8px; padding:1rem; font-family:monospace; font-size:0.85rem; line-height:1.8; margin:0.75rem 0; }
+  .tree .msg { color:var(--dim); }
+  .t-scene { color:var(--green); }
+  .t-node { color:#e5e7eb; }
+  .t-ref { color:var(--accent2); }
+  .sep { border:0; border-top:1px solid var(--border); margin:2rem 0; }
+  .throw-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1rem 1.1rem; margin:0.5rem 0; }
+  .throw-card h4 { margin:0 0 0.3rem; }
+  .diff { background:rgba(52,211,153,0.08); border:1px solid rgba(52,211,153,0.2); border-radius:6px; padding:0.3rem 0.6rem; font-size:0.85rem; margin:0.2rem 0; }
+  .diff del { color:var(--red); opacity:0.7; }
+  .diff ins { color:var(--green); }
+  .cfg-group { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1rem; margin:0.75rem 0; }
+  .cfg-group h4 { margin:0 0 0.3rem; color:var(--cyan); }
+  .cfg-row { display:flex; justify-content:space-between; padding:0.2rem 0; border-bottom:1px solid var(--border); font-size:0.88rem; }
+  .cfg-row:last-child { border-bottom:none; }
+  .cfg-row code { background:none; padding:0; font-size:0.88rem; }
+  .cfg-row .val { color:var(--green); font-weight:600; font-family:monospace; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Throw System v4 <span style="font-size:1rem;color:var(--dim);font-weight:400;">Config · Balance · Debug</span></h1>
+
+<!-- ============================================================ -->
+<h2>Cambios v4 vs v3</h2>
+
+<div class="throw-card">
+<h4><span class="tag tag-fix">FIX</span> Diagonales demasiado fuertes</h4>
+<p>Con 12° de spread, la L se convierte en un tiro diagonal. Reducido a <strong>3°</strong>: la dirección ahora es casi siempre frontal, y el efecto lateral viene del spin, no del aim.</p>
+<div class="diff"><del>max_spread_deg = 12.0</del> → <ins>max_spread_deg = 3.0</ins></div>
+</div>
+
+<div class="throw-card">
+<h4><span class="tag tag-fix">FIX</span> Bola no llega por fricción del suelo</h4>
+<p>Se agrega <code>launch_angle_deg</code> que da un componente Y al impulso, generando un pequeño salto inicial que evita la fricción del suelo. Aumentado <code>max_force</code> a 35.</p>
+<div class="diff"><del>max_force = 30.0, launch_angle = 0</del> → <ins>max_force = 35.0, launch_angle_deg = 3.0</ins></div>
+</div>
+
+<div class="throw-card">
+<h4><span class="tag tag-new">NEW</span> ThrowConfig — Config centralizada</h4>
+<p>Todos los parámetros de game sense en un solo <code>Resource</code>. Permite crear perfiles de personajes: uno con más fuerza, otro con mejor curva, etc.</p>
+</div>
+
+<div class="throw-card">
+<h4><span class="tag tag-new">NEW</span> Debug de tipo de tiro</h4>
+<p>ThrowHandler imprime el tipo de tiro en consola: <code>knuckleball</code>, <code>gentle_curve</code>, <code>curve</code>, <code>strong_curve</code>.</p>
+</div>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Tipos de Tiro (con valores v4)</h2>
+
+<p>Con <code>max_spread_deg = 3°</code> la dirección lateral es sutil. El movimiento lateral real viene del <strong>spin/curvatura</strong>, no del aim. Esto significa:</p>
+
+<table>
+  <tr><th>Gesto</th><th>aim_x</th><th>curve</th><th>Resultado</th></tr>
+  <tr><td>&darr; recto</td><td>≈ 0 (~0°)</td><td>|c| &lt; 0.2</td><td>Knuckleball: recto + wobble sutil</td></tr>
+  <tr><td>&darr; + &rarr; (L)</td><td>≈ 0.3 (~1°)</td><td>|c| ≥ 0.2</td><td>Casi recto + curva lateral suave</td></tr>
+  <tr><td>&darr; + &uarr;</td><td>≈ 0</td><td>|c| &lt; 0.2</td><td>Recto preciso (wobble leve)</td></tr>
+  <tr><td>&darr; + &nearr;</td><td>≈ 0.5 (~1.5°)</td><td>|c| ≥ 0.2</td><td>Ligeramente diagonal + curva</td></tr>
+  <tr><td>&darr; + &rarr; + &uarr; + &larr;</td><td>≈ 0</td><td>|c| alta</td><td>Recto + curva pronunciada</td></tr>
+</table>
+
+<div class="note"><strong>Clave:</strong> El aim lateral (<code>max_spread_deg</code>) solo da una mínima inclinación. La curvatura real siempre viene del spin. Un gesto en L ya no sale disparado en diagonal — sale recto con curva.</div>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>ThrowConfig <span class="tag tag-cfg">RESOURCE</span></h2>
+
+<p>Recurso centralizado con todos los parámetros de game sense. Se asigna a <code>ThrowHandler</code> y se distribuye a los componentes. Permite crear diferentes perfiles para distintos personajes.</p>
+
+<div class="cfg-group">
+<h4>power — Potencia</h4>
+<div class="cfg-row"><code>max_force</code> <span class="val">35.0</span></div>
+<div class="cfg-row"><code>max_drag_px</code> <span class="val">300.0</span></div>
+<div class="cfg-row"><code>min_power</code> <span class="val">0.05</span></div>
+</div>
+
+<div class="cfg-group">
+<h4>aim — Dirección</h4>
+<div class="cfg-row"><code>max_spread_deg</code> <span class="val">3.0</span></div>
+<div class="cfg-row"><code>aim_sensitivity</code> <span class="val">300.0</span></div>
+</div>
+
+<div class="cfg-group">
+<h4>spin — Efecto</h4>
+<div class="cfg-row"><code>steer_force</code> <span class="val">0.3</span></div>
+<div class="cfg-row"><code>min_curve_threshold</code> <span class="val">0.2</span></div>
+<div class="cfg-row"><code>spin_sensitivity</code> <span class="val">100.0</span></div>
+</div>
+
+<div class="cfg-group">
+<h4>wobble — Knuckleball</h4>
+<div class="cfg-row"><code>wobble_speed</code> <span class="val">8.0</span></div>
+<div class="cfg-row"><code>wobble_force</code> <span class="val">0.12</span></div>
+</div>
+
+<div class="cfg-group">
+<h4>physics — Física</h4>
+<div class="cfg-row"><code>launch_angle_deg</code> <span class="val">3.0</span></div>
+</div>
+
+<div class="cfg-group">
+<h4>drawing — Dibujo</h4>
+<div class="cfg-row"><code>max_draw_points</code> <span class="val">60</span></div>
+</div>
+
+<details>
+<summary>Código completo — ThrowConfig</summary>
+<div class="body">
+<pre class="code">class_name ThrowConfig
+extends Resource
+
+@export_group("Power")
+@export var max_force: float = 35.0
+@export var max_drag_px: float = 300.0
+@export var min_power: float = 0.05
+
+@export_group("Aim")
+@export var max_spread_deg: float = 3.0
+@export var aim_sensitivity: float = 300.0
+
+@export_group("Spin")
+@export var steer_force: float = 0.3
+@export var min_curve_threshold: float = 0.2
+@export var spin_sensitivity: float = 100.0
+
+@export_group("Wobble")
+@export var wobble_speed: float = 8.0
+@export var wobble_force: float = 0.12
+
+@export_group("Physics")
+@export var launch_angle_deg: float = 3.0
+
+@export_group("Drawing")
+@export var max_draw_points: int = 60</pre>
+</div>
+</details>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Componentes</h2>
+
+<!-- ─── ThrowConfig ─── -->
+<details>
+<summary>0. ThrowConfig <span class="tag tag-new">NUEVO</span> <span class="tag tag-cfg">RESOURCE</span></summary>
+<div class="body">
+
+<p>Recurso con todos los parámetros de game sense. Se crea como <code>.tres</code> y se asigna a <code>ThrowHandler.config</code>.</p>
+
+<h4>Ejemplo: personaje fuerte con poca curva</h4>
+<pre class="code">max_force = 45.0
+steer_force = 0.2
+wobble_force = 0.15
+launch_angle_deg = 5.0</pre>
+
+<h4>Ejemplo: personaje técnico con buenas curvas</h4>
+<pre class="code">max_force = 28.0
+steer_force = 0.5
+min_curve_threshold = 0.15
+wobble_force = 0.08</pre>
+
+<h4>Distribución de valores</h4>
+<div class="diagram">
+<pre class="mermaid">
+graph TD
+  TC["ThrowConfig (.tres)"] --> TH["ThrowHandler"]
+  TH -->|config.max_force| TH
+  TH -->|config.min_power| TH
+  TH -->|config.launch_angle_deg| TH
+  TH -->|config.max_drag_px| GP["GesturePower"]
+  TH -->|config.max_draw_points| GT["GestureTracker"]
+  TH -->|"config.aim_sensitivity"| GD["GestureDirection"]
+  TH -->|"config.spin_sensitivity"| GS["GestureSpin"]
+  TH -->|"config.max_spread_deg"| TA["ThrowAim"]
+  TH -->|"config.steer_force"| TS["ThrowSpin"]
+  TH -->|"config.min_curve_threshold"| TS
+  TH -->|"config.wobble_speed"| TS
+  TH -->|"config.wobble_force"| TS
+</pre>
+</div>
+
+<p>Los componentes tienen sus propios <code>@export</code> como defaults. ThrowHandler los sobrescribe con los valores de <code>ThrowConfig</code> en <code>_ready()</code>.</p>
+
+</div>
+</details>
+
+<!-- ─── 1. GestureTracker ─── -->
+<details>
+<summary>1. GestureTracker — Entrada del mouse</summary>
+<div class="body">
+<p>Sin cambios respecto a v3.</p>
+<pre class="code">extends Node
+class_name GestureTracker
+
+@export var debug_enabled: bool = true
+@export var max_draw_points: int = 60
+@onready var debug_line: Line2D = $DebugLine
+
+var start_pos: Vector2
+var points: PackedVector2Array = []
+var is_tracking: bool = false
+
+signal gesture_started(start_pos: Vector2)
+signal gesture_dragging(current: Vector2, start: Vector2)
+signal gesture_ended(points: PackedVector2Array)
+
+func _input(event):
+    if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+        is_tracking = event.pressed
+        if is_tracking:
+            start_pos = event.position
+            points.clear()
+            points.append(start_pos)
+            debug_line.clear_points()
+            gesture_started.emit(start_pos)
+        else:
+            gesture_ended.emit(points)
+    elif is_tracking and event is InputEventMouseMotion:
+        var pos = event.position
+        points.append(pos)
+        if debug_enabled and debug_line:
+            debug_line.add_point(pos)
+        if max_draw_points &gt; 0 and points.size() &gt;= max_draw_points:
+            is_tracking = false
+            gesture_ended.emit(points)
+        else:
+            gesture_dragging.emit(pos, start_pos)</pre>
+</div>
+</details>
+
+<!-- ─── 2. GesturePower ─── -->
+<details>
+<summary>2. GesturePower — Potencia (peak)</summary>
+<div class="body">
+<p>Sin cambios respecto a v3.</p>
+<pre class="code">extends Node
+class_name GesturePower
+
+@export var tracker: GestureTracker
+@export var max_drag_px: float = 300.0
+@export var bar: ProgressBar
+
+var peak_value: float = 0.0
+
+func _ready():
+    if not tracker or not bar: return
+    tracker.gesture_started.connect(_reset)
+    tracker.gesture_dragging.connect(_update)
+
+func _reset(_s):
+    bar.value = 0.0
+    peak_value = 0.0
+
+func _update(cur, start):
+    var current = clampf((cur.y - start.y) / max_drag_px, 0.0, 1.0) * 100.0
+    peak_value = maxf(peak_value, current)
+    bar.value = peak_value</pre>
+</div>
+</details>
+
+<!-- ─── 3. GestureDirection ─── -->
+<details>
+<summary>3. GestureDirection — Aim lateral</summary>
+<div class="body">
+<p>Sin cambios respecto a v3.</p>
+<pre class="code">extends Node
+class_name GestureDirection
+
+@export var tracker: GestureTracker
+@export var preview_line: Line2D
+@export var preview_length: float = 150.0
+@export var aim_sensitivity: float = 300.0
+
+signal aim_calculated(aim_x: float)
+
+func _ready():
+    if not tracker: return
+    tracker.gesture_dragging.connect(_on_dragging)
+    tracker.gesture_ended.connect(_on_gesture_ended)
+
+func _on_dragging(cur, start):
+    if not preview_line: return
+    var aim_x = clampf((cur.x - start.x) / aim_sensitivity, -1.0, 1.0)
+    preview_line.clear_points()
+    preview_line.add_point(Vector2.ZERO)
+    preview_line.add_point(Vector2(aim_x * preview_length, 0))
+
+func _on_gesture_ended(points):
+    if points.size() &lt; 2: return
+    var aim_x = clampf((points[points.size() - 1].x - points[0].x) / aim_sensitivity, -1.0, 1.0)
+    preview_line.clear_points()
+    aim_calculated.emit(aim_x)</pre>
+</div>
+</details>
+
+<!-- ─── 4. GestureSpin ─── -->
+<details>
+<summary>4. GestureSpin — Curvatura</summary>
+<div class="body">
+<p>Sin cambios respecto a v3.</p>
+<pre class="code">extends Node
+class_name GestureSpin
+
+@export var tracker: GestureTracker
+@export var sensitivity: float = 100.0
+
+signal spin_calculated(curve: float)
+
+func _ready():
+    if not tracker: return
+    tracker.gesture_ended.connect(_calc_curve)
+
+func _calc_curve(points: PackedVector2Array):
+    if points.size() &lt; 3:
+        spin_calculated.emit(0.0)
+        return
+    var start = points[0]
+    var end = points[points.size() - 1]
+    var dir = (end - start).normalized()
+    if dir.length() &lt; 0.1: dir = Vector2(0, 1)
+    var perp = Vector2(-dir.y, dir.x)
+    var total = 0.0
+    for p in points:
+        var lateral = (p - start).dot(perp) / sensitivity
+        total += clampf(lateral, -1.0, 1.0)
+    spin_calculated.emit(clampf(total / points.size(), -1.0, 1.0))</pre>
+</div>
+</details>
+
+<!-- ─── 5. ThrowAim ─── -->
+<details>
+<summary>5. ThrowAim — Dirección 2D → 3D <span class="tag tag-fix">FIX: 3° + launch_angle</span></summary>
+<div class="body">
+
+<p>Convierte aim_x en dirección 3D. El spread es mínimo (3°) — la dirección es casi siempre hacia adelante. El componente Y da un pequeño salto inicial para evitar fricción.</p>
+
+<div class="diff"><del>max_spread_deg = 12.0, Y = 0</del> → <ins>max_spread_deg = 3.0, launch_angle_deg = 3.0</ins></div>
+
+<h4>@export</h4>
+<table>
+  <tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr>
+  <tr><td><code>dir_module</code></td><td>—</td><td>Referencia al GestureDirection</td></tr>
+  <tr><td><code>max_spread_deg</code></td><td><strong>3.0</strong></td><td>Ángulo máximo del cono de tiro. Sutil.</td></tr>
+</table>
+
+<h4>Dirección calculada</h4>
+<div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["aim_calculated(aim_x)"] --> B["max_tan = tan(3°) ≈ 0.0524"]
+  B --> C["launch_y = sin(3°) ≈ 0.0523"]
+  C --> D["dir = Vector3(cos(3°), launch_y, aim_x * max_tan)"]
+  D --> E["dir = dir.normalized()"]
+</pre>
+</div>
+
+<div class="note"><strong>3° de spread</strong> = máximo ~1.8° lateral. Casi imperceptible. El movimiento lateral real viene del <strong>spin</strong>.<br><strong>3° de launch angle</strong> = la bola levanta ~5% de su fuerza hacia arriba, generando un pequeño salto inicial que evita la fricción del suelo.</div>
+
+<h4>Código completo</h4>
+<pre class="code">extends Node
+class_name ThrowAim
+
+@export var dir_module: GestureDirection
+@export var max_spread_deg: float = <span class="exp">3.0</span>
+
+var dir: Vector3 = Vector3(1.0, 0.0, 0.0)
+var max_tangent: float
+<span class="exp">var launch_cos: float
+var launch_sin: float
+var launch_angle_rad: float</span>
+
+func _ready():
+    max_tangent = tan(deg_to_rad(max_spread_deg))
+    <span class="exp">launch_angle_rad = 0.0  # set by ThrowHandler from config</span>
+    _update_launch()
+    if dir_module:
+        dir_module.aim_calculated.connect(_on_aim)
+
+<span class="exp">func _update_launch():
+    launch_cos = cos(launch_angle_rad)
+    launch_sin = sin(launch_angle_rad)</span>
+
+func _on_aim(aim_x: float):
+    var raw = Vector3(<span class="exp">launch_cos, launch_sin</span>, aim_x * max_tangent)
+    dir = raw.normalized()</pre>
+
+</div>
+</details>
+
+<!-- ─── 6. ThrowSpin ─── -->
+<details>
+<summary>6. ThrowSpin — Efecto + Knuckleball</summary>
+<div class="body">
+<p>Sin cambios respecto a v3.</p>
+
+<h4>Código completo</h4>
+<pre class="code">extends Node
+class_name ThrowSpin
+
+@export var ball: RigidBody3D
+@export var spin_module: GestureSpin
+@export var steer_force: float = 0.3
+@export var min_curve_threshold: float = 0.2
+@export var wobble_speed: float = 8.0
+@export var wobble_force: float = 0.12
+
+var spin_curve: float = 0.0
+var active: bool = false
+var is_wobble: bool = false
+var wobble_time: float = 0.0
+var wobble_phase: float = 0.0
+
+func _ready():
+    if spin_module:
+        spin_module.spin_calculated.connect(_on_spin)
+
+func _on_spin(curve: float):
+    wobble_time = 0.0
+    if absf(curve) &gt;= min_curve_threshold:
+        spin_curve = curve
+        active = true
+        is_wobble = false
+    else:
+        spin_curve = 0.0
+        active = true
+        is_wobble = true
+        wobble_phase = randf_range(0.0, TAU)
+
+func _physics_process(delta):
+    if not active: return
+    var vel = ball.linear_velocity
+    if vel.length() &lt; 0.1:
+        active = false
+        return
+    if is_wobble:
+        wobble_time += delta
+        ball.linear_velocity = vel.rotated(Vector3.UP, sin(wobble_time * wobble_speed + wobble_phase) * wobble_force * delta)
+    else:
+        ball.linear_velocity = vel.rotated(Vector3.UP, -spin_curve * steer_force * delta)</pre>
+</div>
+</details>
+
+<!-- ─── 7. ThrowHandler ─── -->
+<details>
+<summary>7. ThrowHandler — Orquestador <span class="tag tag-new">CONFIG</span> <span class="tag tag-new">DEBUG</span></summary>
+<div class="body">
+
+<p>Orquesta el lanzamiento. Ahora recibe <code>ThrowConfig</code> y distribuye los valores a los componentes. Imprime el tipo de tiro en consola.</p>
+
+<h4>Nuevo: distribución de config</h4>
+<div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["_ready()"] --> B{"config != null?"}
+  B -->|Sí| C["Aplicar config a componentes"]
+  B -->|No| D["Usar defaults (@export)"]
+
+  C --> C1["tracker.max_draw_points = config.max_draw_points"]
+  C --> C2["power.max_drag_px = config.max_drag_px"]
+  C --> C3["aim.max_spread_deg = config.max_spread_deg"]
+  C --> C4["aim.launch_angle_rad = deg_to_rad(config.launch_angle_deg)"]
+  C --> C5["direction.aim_sensitivity = config.aim_sensitivity"]
+  C --> C6["spin_module.sensitivity = config.spin_sensitivity"]
+  C --> C7["spin.steer_force = config.steer_force"]
+  C --> C8["spin.min_curve_threshold = config.min_curve_threshold"]
+  C --> C9["spin.wobble_speed = config.wobble_speed"]
+  C --> C10["spin.wobble_force = config.wobble_force"]
+  C --> C11["max_force = config.max_force"]
+  C --> C12["min_power = config.min_power"]
+</pre>
+</div>
+
+<h4>Nuevo: debug de tipo de tiro</h4>
+<pre class="code">func _get_throw_type() -> String:
+    if not spin: return "basic"
+    if spin.is_wobble: return "knuckleball"
+    var c = absf(spin.spin_curve)
+    if c &gt; 0.6: return "strong_curve"
+    if c &gt; 0.3: return "curve"
+    return "gentle_curve"</pre>
+
+<p>Ejemplo de output en consola:</p>
+<pre style="background:#111320;border:1px solid var(--border);border-radius:6px;padding:0.5rem 1rem;font-family:monospace;font-size:0.85rem;color:#a5d6ff;">[ThrowHandler] gentle_curve | power: 72% | aim: 0.03 | curve: 0.35</pre>
+
+<h4>@export</h4>
+<table>
+  <tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr>
+  <tr><td><code>tracker</code></td><td>—</td><td>Referencia al GestureTracker</td></tr>
+  <tr><td><code>power_bar</code></td><td>—</td><td>ProgressBar de potencia</td></tr>
+  <tr><td><code>aim</code></td><td>—</td><td>Referencia al ThrowAim</td></tr>
+  <tr><td><code>spin</code></td><td>—</td><td>Referencia al ThrowSpin</td></tr>
+  <tr><td><code>ball</code></td><td>—</td><td>RigidBody3D de la bocha</td></tr>
+  <tr><td><code>power</code></td><td>—</td><td>Referencia al GesturePower</td></tr>
+  <tr><td><code>direction</code></td><td>—</td><td>Referencia al GestureDirection</td></tr>
+  <tr><td><code>spin_module_ref</code></td><td>—</td><td>Referencia al GestureSpin</td></tr>
+  <tr><td><code>config</code></td><td>—</td><td>ThrowConfig resource</td></tr>
+  <tr><td><code>max_force</code></td><td><strong>35.0</strong></td><td>Fuerza máxima del impulso</td></tr>
+  <tr><td><code>min_power</code></td><td>0.05</td><td>Potencia mínima para lanzar</td></tr>
+</table>
+
+<h4>Código completo</h4>
+<pre class="code">extends Node
+class_name ThrowHandler
+
+@export var tracker: GestureTracker
+@export var power_bar: ProgressBar
+@export var aim: ThrowAim
+@export var spin: ThrowSpin
+@export var ball: RigidBody3D
+<span class="exp">@export var power: GesturePower
+@export var direction: GestureDirection
+@export var spin_module_ref: GestureSpin
+@export var config: ThrowConfig</span>
+
+@export var max_force: float = 35.0
+@export var min_power: float = 0.05
+
+func _ready():
+    if not tracker: return
+    tracker.gesture_ended.connect(_on_throw)
+    <span class="exp">_apply_config()</span>
+
+<span class="exp">func _apply_config():
+    if not config: return
+    if tracker: tracker.max_draw_points = config.max_draw_points
+    if power: power.max_drag_px = config.max_drag_px
+    if direction: direction.aim_sensitivity = config.aim_sensitivity
+    if aim:
+        aim.max_spread_deg = config.max_spread_deg
+        aim.launch_angle_rad = deg_to_rad(config.launch_angle_deg)
+        aim._update_launch()
+    if spin_module_ref: spin_module_ref.sensitivity = config.spin_sensitivity
+    if spin:
+        spin.steer_force = config.steer_force
+        spin.min_curve_threshold = config.min_curve_threshold
+        spin.wobble_speed = config.wobble_speed
+        spin.wobble_force = config.wobble_force
+    max_force = config.max_force
+    min_power = config.min_power</span>
+
+func _on_throw(_pts):
+    if not power_bar: return
+    var p = clampf(power_bar.value / 100.0, 0.0, 1.0)
+    if p &lt; min_power: return
+    <span class="exp">var throw_type = _get_throw_type()
+    print("[ThrowHandler] %s | power: %d%% | aim_x: %.2f | curve: %.2f" % [throw_type, int(p * 100), aim.dir.z, spin.spin_curve if spin else 0.0])</span>
+    ball.apply_central_impulse(aim.dir * p * max_force)
+
+<span class="exp">func _get_throw_type() -> String:
+    if not spin: return "basic"
+    if spin.is_wobble: return "knuckleball"
+    var c = absf(spin.spin_curve)
+    if c &gt; 0.6: return "strong_curve"
+    if c &gt; 0.3: return "curve"
+    return "gentle_curve"</span></pre>
+
+</div>
+</details>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Escenas Compuestas</h2>
+
+<details>
+<summary>throw_handler.tscn — Componente de lanzamiento</summary>
+<div class="body">
+<div class="tree">
+<span class="t-scene">ThrowHandler</span> <span class="t-node">(Node)</span>
+  &boxvr;&boxh;&boxh; <span class="t-node">ThrowAim</span> <span class="t-ref">(instancia)</span>
+  &boxur;&boxh;&boxh; <span class="t-node">ThrowSpin</span> <span class="t-ref">(instancia)</span>
+</div>
+<p>ThrowHandler ahora tiene referencias a <code>power</code>, <code>direction</code>, y <code>spin_module_ref</code> para poder distribuir la config.</p>
+</div>
+</details>
+
+<details>
+<summary>test_throwing_ball.tscn — Escena de test</summary>
+<div class="body">
+<div class="tree">
+<span class="t-scene">TestThrowingBall</span> <span class="t-node">(Node3D)</span>
+  &boxvr;&boxh;&boxh; ...
+  &boxvr;&boxh;&boxh; <span class="t-scene">CanvasLayer</span>
+  &boxur;&boxh;&boxh;   &boxvr;&boxh;&boxh; PowerBar, GestureTracker, GestureDirection
+  &boxvr;&boxh;&boxh; GesturePower <span class="t-msg">→ tracker, bar</span>
+  &boxvr;&boxh;&boxh; GestureSpin <span class="t-msg">→ tracker</span>
+  &boxvr;&boxh;&boxh; <span class="t-scene">ThrowHandler</span> <span class="t-msg">+ config: ThrowConfig</span>
+  &boxur;&boxh;&boxh;   &boxvr;&boxh;&boxh; ThrowAim, ThrowSpin
+  &boxvr;&boxh;&boxh; BocceBall, BocceBall2, Bochin
+  &boxur;&boxh;&boxh; ...
+</div>
+<p>Nuevas @export en ThrowHandler:</p>
+<table>
+  <tr><th>@export</th><th>Apunta a</th></tr>
+  <tr><td><code>power</code></td><td>GesturePower</td></tr>
+  <tr><td><code>direction</code></td><td>GestureDirection (CanvasLayer)</td></tr>
+  <tr><td><code>spin_module_ref</code></td><td>GestureSpin</td></tr>
+  <tr><td><code>config</code></td><td>ThrowConfig (.tres resource)</td></tr>
+</table>
+</div>
+</details>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Parámetros — Cambios v3 → v4</h2>
+
+<table>
+  <tr><th>Parámetro</th><th>v3</th><th>v4</th><th>Razón</th></tr>
+  <tr><td><code>max_force</code></td><td>30.0</td><td><strong>35.0</strong></td><td>Compensar componente Y del salto</td></tr>
+  <tr><td><code>max_spread_deg</code></td><td>12.0</td><td><strong>3.0</strong></td><td>Diagonales demasiado fuertes</td></tr>
+  <tr><td><code>launch_angle_deg</code></td><td>—</td><td><strong>3.0</strong></td><td>Salto inicial para evitar fricción</td></tr>
+  <tr><td><code>steer_force</code></td><td>0.3</td><td>0.3</td><td>Sin cambio</td></tr>
+  <tr><td><code>min_curve_threshold</code></td><td>0.2</td><td>0.2</td><td>Sin cambio</td></tr>
+  <tr><td><code>wobble_speed</code></td><td>8.0</td><td>8.0</td><td>Sin cambio</td></tr>
+  <tr><td><code>wobble_force</code></td><td>0.12</td><td>0.12</td><td>Sin cambio</td></tr>
+</table>
+
+<h3>Nuevo: ThrowConfig resource</h3>
+<p>Todos los parámetros editables en un solo lugar. Crear como <code>.tres</code> en Godot y asignar a <code>ThrowHandler.config</code>.</p>
+
+<pre class="code"># Ejemplo: throw_config_default.tres
+[gd_resource type="Resource" script_class="ThrowConfig" load_steps=2]
+
+[ext_resource type="Script" path="res://throw_config.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+max_force = 35.0
+max_drag_px = 300.0
+min_power = 0.05
+max_spread_deg = 3.0
+aim_sensitivity = 300.0
+steer_force = 0.3
+min_curve_threshold = 0.2
+spin_sensitivity = 100.0
+wobble_speed = 8.0
+wobble_force = 0.12
+launch_angle_deg = 3.0
+max_draw_points = 60</pre>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Flujo completo (v4)</h2>
+
+<div class="diagram">
+<pre class="mermaid">
+sequenceDiagram
+  participant J as Jugador
+  participant GT as GestureTracker
+  participant GP as GesturePower
+  participant GD as GestureDirection
+  participant GS as GestureSpin
+  participant TA as ThrowAim
+  participant TH as ThrowHandler
+  participant TS as ThrowSpin
+  participant B as BocceBall
+
+  Note over TH: _ready: aplica config a componentes
+
+  J->>GT: click (presiona)
+  GT->>GP: gesture_started → bar = 0
+
+  loop Cada frame del drag
+    J->>GT: arrastra mouse
+    GT->>GP: gesture_dragging → bar sube (peak)
+    GT->>GD: gesture_dragging → preview del aim
+  end
+
+  Note over J: Suelta (o max_draw_points)
+  GT->>GD: gesture_ended → aim final
+  GD->>TA: aim_calculated(aim_x)
+  TA-->>TA: dir = Vec3(cos(3°), sin(3°), aim_x*tan(3°))
+
+  GT->>GS: gesture_ended → curvatura
+  GS->>TS: spin_calculated(curve)
+
+  GT->>TH: gesture_ended
+  TH->>TH: _get_throw_type()
+  TH->>TH: print tipo + stats
+  TH->>B: apply_central_impulse(dir * power * max_force)
+
+  alt knuckleball
+    loop Cada physics frame
+      TS->>B: sin(t*wobble_speed+phase) * wobble_force * delta
+    end
+  else spin controlado
+    loop Cada physics frame
+      TS->>B: -curve * steer_force * delta
+    end
+  end
+</pre>
+</div>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Pendiente</h2>
+
+<div class="grid2">
+<div class="throw-card">
+<h4>Tiro con retroceso</h4>
+<p>La bola frena o retrocede al final del trayecto. Requiere lógica de física adicional. No implementado.</p>
+</div>
+<div class="throw-card">
+<h4>Tiros C y S suavizados</h4>
+<p>Permitir que la forma del gesto (C o S) se traduzca en curvas progresivas. Actualmente solo se usa el promedio de curvatura.</p>
+</div>
+<div class="throw-card">
+<h4>Perfiles de personajes</h4>
+<p>Crear diferentes <code>ThrowConfig.tres</code> para distintos personajes (fuerza, curva, precisión).</p>
+</div>
+<div class="throw-card">
+<h4>Anticipación visual</h4>
+<p>Mostrar trayectoria predicha antes de soltar. Requiere simular la física o aproximarla.</p>
+</div>
+</div>
+
+</div>
+
+<script>mermaid.initialize({startOnLoad:true, theme:'dark', themeVariables:{primaryColor:'#7c3aed',primaryTextColor:'#e5e7eb',primaryBorderColor:'#7c3aed',lineColor:'#a78bfa',secondaryColor:'#181b24',tertiaryColor:'#181b24'}});</script>
+</body>
+</html>

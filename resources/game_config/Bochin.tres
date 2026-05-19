@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PhysicsConfig" format=3 uid="uid://c5jqwdd7turwu"]
+
+[ext_resource type="Script" uid="uid://brw7ud0cmgli0" path="res://resources/game_config/physics_config.gd" id="1_l163c"]
+
+[resource]
+script = ExtResource("1_l163c")
+ball_mass = 0.4
+linear_damping = 0.2
+angular_damping = 0.3
+metadata/_custom_type_script = "uid://brw7ud0cmgli0"

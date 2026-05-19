@@ -17,6 +17,6 @@ func _reset(_s):
 	peak_value = 0.0
 
 func _update(cur, start):
-	var current = clamp((cur.y - start.y) / max_drag_px, 0.0, 1.0) * 100.0
-	peak_value = max(peak_value, current) # 🔒 Congela el máximo alcanzado
+	var current = clampf((cur.y - start.y) / max_drag_px, 0.0, 1.0) * 100.0
+	peak_value = maxf(peak_value, current)
 	bar.value = peak_value

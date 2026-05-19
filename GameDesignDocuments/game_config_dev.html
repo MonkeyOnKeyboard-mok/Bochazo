@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Config — Throw · Court · Bocce · Bochin</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  :root { --bg:#0f1117; --card:#181b24; --border:#2a2d3a; --text:#d4d4d8; --accent:#7c3aed; --accent2:#a78bfa; --dim:#6b7280; --green:#34d399; --red:#f87171; --amber:#fbbf24; --cyan:#22d3ee; --orange:#fb923c; --pink:#f472b6; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.65; }
+  .wrap { max-width:1020px; margin:0 auto; padding:2rem 1.5rem; }
+  h1 { font-size:2rem; color:#fff; margin-bottom:0.25rem; }
+  h2 { font-size:1.4rem; color:var(--accent2); margin:2rem 0 0.5rem; border-bottom:1px solid var(--border); padding-bottom:0.3rem; }
+  h3 { font-size:1.1rem; color:#fff; margin:1.2rem 0 0.4rem; }
+  h4 { font-size:0.95rem; color:var(--accent2); margin:1rem 0 0.3rem; }
+  p { margin-bottom:0.6rem; }
+  ul { padding-left:1.2rem; margin-bottom:0.6rem; }
+  li { margin-bottom:0.25rem; }
+  code { background:var(--border); padding:0.1rem 0.35rem; border-radius:4px; font-size:0.9em; color:#e5e7eb; }
+  .diagram { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1rem; margin:1rem 0; overflow-x:auto; }
+  .diagram pre { margin:0; }
+  .note { background:rgba(124,58,237,0.1); border-left:3px solid var(--accent); padding:0.6rem 1rem; border-radius:0 8px 8px 0; margin:0.8rem 0; font-size:0.92rem; }
+  .note strong { color:var(--accent2); }
+  .tag { display:inline-block; padding:0.1rem 0.5rem; border-radius:12px; font-size:0.75rem; margin:0.1rem 0.15rem; font-weight:600; }
+  .tag-new { background:var(--green); color:#0f1117; }
+  .tag-cfg { background:var(--cyan); color:#0f1117; }
+  .tag-phys { background:var(--orange); color:#0f1117; }
+  details { background:var(--card); border:1px solid var(--border); border-radius:10px; margin:0.75rem 0; }
+  details summary { padding:0.8rem 1.1rem; cursor:pointer; font-weight:600; color:#fff; list-style:none; display:flex; align-items:center; gap:0.5rem; }
+  details summary::before { content:'▸'; transition:transform 0.2s; display:inline-block; }
+  details[open] summary::before { transform:rotate(90deg); }
+  details summary:hover { color:var(--accent2); }
+  details > .body { padding:0 1.1rem 1rem; }
+  pre.code { background:#111320; border:1px solid var(--border); border-radius:8px; padding:1rem; overflow-x:auto; font-family:'Cascadia Code','Fira Code',monospace; font-size:0.82rem; line-height:1.6; color:#c9d1d9; margin:0.75rem 0; white-space:pre; }
+  pre.code .exp { color:#fbbf24; }
+  table { width:100%; border-collapse:collapse; margin:0.6rem 0; }
+  th,td { text-align:left; padding:0.35rem 0.6rem; border-bottom:1px solid var(--border); }
+  th { color:var(--accent2); font-size:0.82rem; text-transform:uppercase; letter-spacing:0.04em; }
+  td { font-size:0.88rem; }
+  .sep { border:0; border-top:1px solid var(--border); margin:2rem 0; }
+  .entity { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem; margin:1rem 0; }
+  .entity h3 { margin:0 0 0.5rem; }
+  .entity .color { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:6px; vertical-align:middle; }
+  .cfg-group { background:rgba(34,211,238,0.05); border:1px solid rgba(34,211,238,0.2); border-radius:8px; padding:0.75rem 1rem; margin:0.5rem 0; }
+  .cfg-group h4 { margin:0 0 0.3rem; color:var(--cyan); font-size:0.9rem; }
+  .cfg-row { display:flex; justify-content:space-between; padding:0.15rem 0; font-size:0.85rem; }
+  .cfg-row .type { color:var(--dim); font-size:0.8rem; margin-left:0.3rem; }
+  .cfg-row .val { color:var(--green); font-family:monospace; }
+  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; }
+  @media(max-width:768px){ .grid3{grid-template-columns:1fr;} }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+  @media(max-width:640px){ .grid2{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Game Config <span style="font-size:1rem;color:var(--dim);font-weight:400;">Throw · Court · Bocce · Bochin</span></h1>
+
+<!-- ============================================================ -->
+<h2>Visión General</h2>
+
+<p>Cada entidad del juego (Throw, Court, Bocce, Bochin) tiene su propia configuración via <code>Resource</code>. Esto permite:</p>
+<ul>
+  <li>Crear <strong>diferentes personajes</strong> con distinta fuerza, curva y precisión</li>
+  <li>Crear <strong>diferentes canchas</strong> con distinta fricción, tamaño y obstáculos</li>
+  <li>Crear <strong>diferentes tipos de bola</strong> con distinta masa y rebote</li>
+  <li>Ajustar todo desde el inspector sin tocar código</li>
+</ul>
+
+<div class="diagram">
+<pre class="mermaid">
+graph TD
+  GC["GameConfig<br>(scene root)"] --> TC["ThrowConfig"]
+  GC --> PC["PhysicsConfig"]
+  GC --> CC["CourtConfig"]
+
+  TC --> TH["ThrowHandler"]
+  TC --> TA["ThrowAim"]
+  TC --> TS["ThrowSpin"]
+  TC --> GP["GesturePower"]
+  TC --> GD["GestureDirection"]
+  TC --> GS["GestureSpin"]
+  TC --> GT["GestureTracker"]
+
+  PC --> BB["BocceBall"]
+  PC --> BN["Bochin"]
+
+  CC --> COURT["Court"]
+
+  style TC fill:#7c3aed,stroke:#a78bfa,color:#fff
+  style PC fill:#fb923c,stroke:#f97316,color:#fff
+  style CC fill:#34d399,stroke:#10b981,color:#fff
+</pre>
+</div>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Atributos por Entidad</h2>
+
+<div class="diagram">
+<pre class="mermaid">
+classDiagram
+  class ThrowConfig {
+    +max_force: float = 35.0
+    +min_power: float = 0.05
+    +max_drag_px: float = 300.0
+    +max_draw_points: int = 60
+    +max_spread_deg: float = 3.0
+    +aim_sensitivity: float = 300.0
+    +steer_force: float = 0.3
+    +min_curve_threshold: float = 0.2
+    +spin_sensitivity: float = 100.0
+    +wobble_speed: float = 8.0
+    +wobble_force: float = 0.12
+    +launch_angle_deg: float = 3.0
+  }
+
+  class PhysicsConfig {
+    +ball_mass: float = 1.0
+    +ball_friction: float = 0.5
+    +ball_bounce: float = 0.3
+    +linear_damping: float = 0.8
+    +angular_damping: float = 0.9
+    +stop_velocity_threshold: float = 0.1
+  }
+
+  class CourtConfig {
+    +court_friction: float = 0.7
+    +court_bounce: float = 0.2
+    +court_length: float = 30.0
+    +court_width: float = 4.0
+    +wall_bounce: float = 0.5
+  }
+
+  class BocceBall {
+    +physics_config: PhysicsConfig
+    +stop_velocity_threshold: float
+    +debug_verbose: bool
+  }
+
+  class Bochin {
+    +mass_override: float = 0.4
+    +radius_override: float = 0.2
+  }
+</pre>
+</div>
+
+<!-- ============================================================ -->
+<h2>ThrowConfig <span class="tag tag-cfg">RESOURCE</span></h2>
+
+<p>Parámetros del lanzamiento. Se asigna a <code>ThrowHandler.config</code> y se distribuye a los componentes.</p>
+
+<div class="cfg-group">
+<h4>Power — Potencia</h4>
+<div class="cfg-row"><code>max_force</code> <span class="type">float</span> <span class="val">35.0</span></div>
+<div class="cfg-row"><code>max_drag_px</code> <span class="type">float</span> <span class="val">300.0</span></div>
+<div class="cfg-row"><code>min_power</code> <span class="type">float</span> <span class="val">0.05</span></div>
+</div>
+
+<div class="cfg-group">
+<h4>Aim — Dirección</h4>
+<div class="cfg-row"><code>max_spread_deg</code> <span class="type">float</span> <span class="val">3.0</span></div>
+<div class="cfg-row"><code>aim_sensitivity</code> <span class="type">float</span> <span class="val">300.0</span></div>
+<div class="cfg-row"><code>launch_angle_deg</code> <span class="type">float</span> <span class="val">3.0</span></div>
+</div>
+
+<div class="cfg-group">
+<h4>Spin — Efecto</h4>
+<div class="cfg-row"><code>steer_force</code> <span class="type">float</span> <span class="val">0.3</span></div>
+<div class="cfg-row"><code>min_curve_threshold</code> <span class="type">float</span> <span class="val">0.2</span></div>
+<div class="cfg-row"><code>spin_sensitivity</code> <span class="type">float</span> <span class="val">100.0</span></div>
+</div>
+
+<div class="cfg-group">
+<h4>Wobble — Knuckleball</h4>
+<div class="cfg-row"><code>wobble_speed</code> <span class="type">float</span> <span class="val">8.0</span></div>
+<div class="cfg-row"><code>wobble_force</code> <span class="type">float</span> <span class="val">0.12</span></div>
+</div>
+
+<div class="cfg-group">
+<h4>Drawing — Dibujo</h4>
+<div class="cfg-row"><code>max_draw_points</code> <span class="type">int</span> <span class="val">60</span></div>
+</div>
+
+<details>
+<summary>Código — ThrowConfig</summary>
+<div class="body">
+<pre class="code">class_name ThrowConfig
+extends Resource
+
+@export_group("Power")
+@export var max_force: float = 35.0
+@export var max_drag_px: float = 300.0
+@export var min_power: float = 0.05
+
+@export_group("Aim")
+@export var max_spread_deg: float = 3.0
+@export var aim_sensitivity: float = 300.0
+@export var launch_angle_deg: float = 3.0
+
+@export_group("Spin")
+@export var steer_force: float = 0.3
+@export var min_curve_threshold: float = 0.2
+@export var spin_sensitivity: float = 100.0
+
+@export_group("Wobble")
+@export var wobble_speed: float = 8.0
+@export var wobble_force: float = 0.12
+
+@export_group("Drawing")
+@export var max_draw_points: int = 60</pre>
+</div>
+</details>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>PhysicsConfig <span class="tag tag-phys">RESOURCE</span></h2>
+
+<p>Física de las bolas. Actualmente compartido entre BocceBall y Bochin, pero <strong>deberían tener configuraciones separadas</strong> porque el Bochin es más pequeño y liviano.</p>
+
+<div class="note"><strong>Problema actual:</strong> <code>bocce_ball.tres</code> tiene <code>linear_damping = 0.1</code> pero <code>physics_config.gd</code> define <code>linear_damping = 0.8</code>. El <code>.tres</code> no tiene <code>ball_mass</code>, <code>ball_friction</code>, ni <code>ball_bounce</code> definidos (usa los defaults del script). Además, el Bochin usa el mismo <code>.tres</code> que la BocceBall.</div>
+
+<div class="grid3">
+<div class="cfg-group">
+<h4>BocceBall (default)</h4>
+<div class="cfg-row"><code>ball_mass</code> <span class="val">1.0</span></div>
+<div class="cfg-row"><code>ball_friction</code> <span class="val">0.5</span></div>
+<div class="cfg-row"><code>ball_bounce</code> <span class="val">0.3</span></div>
+<div class="cfg-row"><code>linear_damping</code> <span class="val">0.8</span></div>
+<div class="cfg-row"><code>angular_damping</code> <span class="val">0.9</span></div>
+<div class="cfg-row"><code>stop_velocity</code> <span class="val">0.1</span></div>
+</div>
+<div class="cfg-group">
+<h4>Bochin (propuesto)</h4>
+<div class="cfg-row"><code>ball_mass</code> <span class="val">0.4</span></div>
+<div class="cfg-row"><code>ball_friction</code> <span class="val">0.4</span></div>
+<div class="cfg-row"><code>ball_bounce</code> <span class="val">0.5</span></div>
+<div class="cfg-row"><code>linear_damping</code> <span class="val">0.6</span></div>
+<div class="cfg-row"><code>angular_damping</code> <span class="val">0.7</span></div>
+<div class="cfg-row"><code>stop_velocity</code> <span class="val">0.08</span></div>
+</div>
+<div class="cfg-group">
+<h4>Diferencia clave</h4>
+<p style="font-size:0.85rem;color:var(--dim);">
+  El Bochin es <strong>más liviano</strong> (0.4 vs 1.0), <strong>más bouncy</strong> (0.5 vs 0.3) y se <strong>frena más rápido</strong> (damping 0.6 vs 0.8). Esto lo hace más sensible a los impactos pero más fácil de desplazar.
+</p>
+</div>
+</div>
+
+<details>
+<summary>Código — PhysicsConfig (actual)</summary>
+<div class="body">
+<pre class="code">extends Resource
+class_name PhysicsConfig
+
+@export_group("Ball Physics")
+@export var ball_mass: float = 1.0
+@export var ball_friction: float = 0.5
+@export var ball_bounce: float = 0.3
+@export var linear_damping: float = 0.8
+@export var angular_damping: float = 0.9
+
+@export_group("Throw Mechanics")
+@export var min_throw_power: float = 5.0
+@export var max_throw_power: float = 25.0
+@export var power_multiplier: float = 1.5
+@export var spin_multiplier: float = 2.0
+@export var curve_sensitivity: float = 1.2</pre>
+<div class="note" style="background:rgba(248,113,113,0.1);border-left-color:var(--red);">
+  <strong style="color:var(--red);">Problema:</strong> Los campos "Throw Mechanics" duplican parámetros que ya están en <code>ThrowConfig</code>. Deberían eliminarse de <code>PhysicsConfig</code> y centralizarse en <code>ThrowConfig</code>.
+</div>
+</div>
+</details>
+
+<details>
+<summary>Código — PhysicsConfig (propuesto, limpio)</summary>
+<div class="body">
+<pre class="code">class_name PhysicsConfig
+extends Resource
+
+@export_group("Ball Physics")
+@export var ball_mass: float = 1.0
+@export var ball_friction: float = 0.5
+@export var ball_bounce: float = 0.3
+@export var linear_damping: float = 0.8
+@export var angular_damping: float = 0.9
+@export var stop_velocity_threshold: float = 0.1</pre>
+<div class="note">Se elimina "Throw Mechanics" — esos parámetros ya están en <code>ThrowConfig</code>. Se agrega <code>stop_velocity_threshold</code> que antes estaba hardcodeado en <code>BocceBall</code>.</div>
+</div>
+</details>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>CourtConfig <span class="tag tag-new">NUEVO</span> <span class="tag tag-cfg">RESOURCE</span></h2>
+
+<p>Actualmente la cancha es un <code>StaticBody3D</code> sin física configurable — usa los defaults de Godot. Se propone agregar <code>CourtConfig</code> para permitir diferentes canchas con distintas propiedades.</p>
+
+<div class="cfg-group">
+<h4>Court Physics</h4>
+<div class="cfg-row"><code>court_friction</code> <span class="type">float</span> <span class="val">0.7</span></div>
+<div class="cfg-row"><code>court_bounce</code> <span class="type">float</span> <span class="val">0.2</span></div>
+<div class="cfg-row"><code>court_length</code> <span class="type">float</span> <span class="val">30.0</span></div>
+<div class="cfg-row"><code>court_width</code> <span class="type">float</span> <span class="val">4.0</span></div>
+<div class="cfg-row"><code>wall_bounce</code> <span class="type">float</span> <span class="val">0.5</span></div>
+</div>
+
+<div class="cfg-group">
+<h4>Ejemplos de canchas</h4>
+<div class="cfg-row"><code>court_dirt.tres</code> <span style="color:#d4a052;">friction 0.9 · bounce 0.1 · slower</span></div>
+<div class="cfg-row"><code>court_grass.tres</code> <span style="color:#4ade80;">friction 0.7 · bounce 0.2 · standard</span></div>
+<div class="cfg-row"><code>court_synthetic.tres</code> <span style="color:#60a5fa;">friction 0.4 · bounce 0.4 · faster</span></div>
+<div class="cfg-row"><code>court_ice.tres</code> <span style="color:#93c5fd;">friction 0.1 · bounce 0.1 · very fast</span></div>
+</div>
+
+<details>
+<summary>Código — CourtConfig (propuesto)</summary>
+<div class="body">
+<pre class="code">class_name CourtConfig
+extends Resource
+
+@export_group("Surface")
+@export var court_friction: float = 0.7
+@export var court_bounce: float = 0.2
+
+@export_group("Dimensions")
+@export var court_length: float = 30.0
+@export var court_width: float = 4.0
+
+@export_group("Walls")
+@export var wall_bounce: float = 0.5</pre>
+</div>
+</details>
+
+<details>
+<summary>Código — Court (propuesto, agregando CourtConfig)</summary>
+<div class="body">
+<pre class="code">extends StaticBody3D
+class_name Court
+
+@export var court_config: CourtConfig
+
+func _ready():
+    _apply_config()
+
+func _apply_config():
+    if not court_config: return
+    var mat = PhysicsMaterial.new()
+    mat.friction = court_config.court_friction
+    mat.bounce = court_config.court_bounce
+    
+    # Aplicar a todas las CollisionShape3D hijas
+    for child in get_children():
+        if child is CollisionShape3D:
+            # El shape hereda el material del StaticBody
+            pass
+    
+    physics_material_override = mat</pre>
+<p>La cancha aplica <code>PhysicsMaterial</code> (friction + bounce) como override del <code>StaticBody3D</code>. Las bolas interactúan con esta superficie a través de la física de Godot.</p>
+</div>
+</details>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Entidades — Diagrama de Atributos</h2>
+
+<div class="grid3">
+
+<div class="entity">
+<h3><span class="color" style="background:#7c3aed;"></span>ThrowConfig</h3>
+<p style="color:var(--dim);font-size:0.85rem;">Lanzamiento</p>
+<table>
+  <tr><td><code>max_force</code></td><td>35.0</td></tr>
+  <tr><td><code>min_power</code></td><td>0.05</td></tr>
+  <tr><td><code>max_drag_px</code></td><td>300</td></tr>
+  <tr><td><code>max_draw_points</code></td><td>60</td></tr>
+  <tr><td><code>max_spread_deg</code></td><td>3.0</td></tr>
+  <tr><td><code>aim_sensitivity</code></td><td>300</td></tr>
+  <tr><td><code>launch_angle_deg</code></td><td>3.0</td></tr>
+  <tr><td><code>steer_force</code></td><td>0.3</td></tr>
+  <tr><td><code>min_curve_threshold</code></td><td>0.2</td></tr>
+  <tr><td><code>spin_sensitivity</code></td><td>100</td></tr>
+  <tr><td><code>wobble_speed</code></td><td>8.0</td></tr>
+  <tr><td><code>wobble_force</code></td><td>0.12</td></tr>
+</table>
+</div>
+
+<div class="entity">
+<h3><span class="color" style="background:#fb923c;"></span>PhysicsConfig</h3>
+<p style="color:var(--dim);font-size:0.85rem;">Física de bola</p>
+<table>
+  <tr><th>Atributo</th><th>BocceBall</th><th>Bochin</th></tr>
+  <tr><td><code>ball_mass</code></td><td>1.0</td><td>0.4</td></tr>
+  <tr><td><code>ball_friction</code></td><td>0.5</td><td>0.4</td></tr>
+  <tr><td><code>ball_bounce</code></td><td>0.3</td><td>0.5</td></tr>
+  <tr><td><code>linear_damping</code></td><td>0.8</td><td>0.6</td></tr>
+  <tr><td><code>angular_damping</code></td><td>0.9</td><td>0.7</td></tr>
+  <tr><td><code>stop_velocity</code></td><td>0.1</td><td>0.08</td></tr>
+  <tr><td><code>radius</code></td><td>~1.0</td><td>0.2</td></tr>
+</table>
+</div>
+
+<div class="entity">
+<h3><span class="color" style="background:#34d399;"></span>CourtConfig</h3>
+<p style="color:var(--dim);font-size:0.85rem;">Cancha</p>
+<table>
+  <tr><td><code>court_friction</code></td><td>0.7</td></tr>
+  <tr><td><code>court_bounce</code></td><td>0.2</td></tr>
+  <tr><td><code>court_length</code></td><td>30.0</td></tr>
+  <tr><td><code>court_width</code></td><td>4.0</td></tr>
+  <tr><td><code>wall_bounce</code></td><td>0.5</td></tr>
+</table>
+</div>
+
+</div>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Interacción entre entidades</h2>
+
+<div class="diagram">
+<pre class="mermaid">
+graph TD
+  subgraph "Lanzamiento"
+    TC["ThrowConfig"] --> TH["ThrowHandler"]
+    TH -->|impulso| BB["BocceBall"]
+    TH -->|impulso| BN["Bochin"]
+  end
+
+  subgraph "Física de bola"
+    PC_BB["PhysicsConfig<br>(bocce_ball.tres)"] --> BB
+    PC_BN["PhysicsConfig<br>(bochin.tres)"] --> BN
+  end
+
+  subgraph "Física de cancha"
+    CC["CourtConfig"] --> COURT["Court"]
+    COURT -->|friction + bounce| BB
+    COURT -->|friction + bounce| BN
+  end
+
+  BB -->|colisión con| BN
+  BN -->|colisión con| BB
+  BB -->|colisión con| BB2["otras BocceBall"]
+  BB -->|rebote en pared| COURT
+  BN -->|rebote en pared| COURT
+</pre>
+</div>
+
+<h3>Cómo interactúan las físicas</h3>
+
+<p>Cada bola tiene su propio <code>PhysicsMaterial</code> (friction + bounce). La cancha también tiene su <code>PhysicsMaterial</code>. Cuando una bola toca la cancha, Godot calcula la fricción y el rebote combinando ambos materiales.</p>
+
+<p><strong>Friction =media armónica</strong> de los dos materiales. <strong>Bounce = multiplicación</strong>. Así que:</p>
+
+<table>
+  <tr><th>Superficie</th><th>Court Friction</th><th>Court Bounce</th><th>BocceBall se frena en...</th><th>BocceBall rebota en...</th></tr>
+  <tr><td>Tierra</td><td>0.9</td><td>0.1</td><td>Muy rápido</td><td>Casi nada</td></tr>
+  <tr><td>Césped</td><td>0.7</td><td>0.2</td><td>Normal</td><td>Poco</td></tr>
+  <tr><td>Sintético</td><td>0.4</td><td>0.4</td><td>Lento</td><td>Algo</td></tr>
+  <tr><td>Hielo</td><td>0.1</td><td>0.1</td><td>Muy lento</td><td>Casi nada</td></tr>
+</table>
+
+<div class="note"><strong>Para que la bola llegue al fondo:</strong> El <code>launch_angle_deg</code> (3°) le da un pequeño salto inicial. Pero la <strong>fricción de la cancha</strong> determina cuánto se frena. Si la cancha tiene poca fricción (sintético, hielo), la bola llega más lejos. Si tiene mucha (tierra), hay que usar más fuerza.</div>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>BocceBall y Bochin — Código actual</h2>
+
+<details>
+<summary>BocceBall — Escena + Script</summary>
+<div class="body">
+
+<h4>bocce_ball.gd</h4>
+<pre class="code">extends RigidBody3D
+class_name BocceBall
+
+signal stopped_moving(ball_ref: BocceBall)
+signal collision_occurred(impulse: Vector3)
+
+@export_group("Configuración")
+@export var physics_config: PhysicsConfig
+@export var stop_velocity_threshold: float = 0.1
+@export var debug_verbose: bool = false
+
+@onready var ball_mesh: MeshInstance3D = $BallMesh
+@onready var ball_collision: CollisionShape3D = $BallCollision
+
+var _is_stopped: bool = false
+
+func _ready():
+    _apply_physics()
+    body_entered.connect(_on_body_entered)
+
+func _physics_process(_delta):
+    if _is_stopped: return
+    if linear_velocity.length() &lt; stop_velocity_threshold:
+        _is_stopped = true
+        freeze = true
+        stopped_moving.emit(self)
+        if debug_verbose: print("[BocceBall] Se detuvo")
+        freeze = false
+
+func _apply_physics():
+    if physics_config:
+        mass = physics_config.ball_mass
+        linear_damp = physics_config.linear_damping
+        angular_damp = physics_config.angular_damping
+        var phys_mat = PhysicsMaterial.new()
+        phys_mat.friction = physics_config.ball_friction
+        phys_mat.bounce = physics_config.ball_bounce
+        physics_material_override = phys_mat
+    else:
+        push_warning("[BocceBall] physics_config no asignado.")
+
+func _on_body_entered(body: Node):
+    collision_occurred.emit(linear_velocity)
+    if debug_verbose and linear_velocity.length() &gt; 0.5:
+        print("[BocceBall] Colisión con %s" % body.name)</pre>
+
+<h4>bocce_ball.tscn (estructura)</h4>
+<div style="background:#111320;border:1px solid var(--border);border-radius:8px;padding:1rem;font-family:monospace;font-size:0.85rem;line-height:1.8;">
+<span style="color:#34d399;">BocceBall</span> <span style="color:#e5e7eb;">(RigidBody3D)</span>
+  ├── <span style="color:#e5e7eb;">BallMesh</span> <span style="color:#a78bfa;">(MeshInstance3D, visible=false)</span>
+  ├── <span style="color:#e5e7eb;">BallCollision</span> <span style="color:#a78bfa;">(CollisionShape3D, SphereShape3D)</span>
+  └── <span style="color:#e5e7eb;">BochaAzul</span> <span style="color:#a78bfa;">(MeshInstance3D, modelo importado)</span>
+</div>
+<p><strong>Nota:</strong> Tiene un SphereMesh oculto + el modelo importado (BochaAzul) visible. El <code>SphereShape3D</code> no tiene radio definido en el .tscn — usa el default (1.0).</p>
+</div>
+</details>
+
+<details>
+<summary>Bochin — Escena + Script</summary>
+<div class="body">
+
+<h4>bochin.gd</h4>
+<pre class="code">extends BocceBall
+class_name Bochin</pre>
+<p>Herencia directa de <code>BocceBall</code>. Solo hereda comportamiento, no tiene overrides propios.</p>
+
+<h4>bochin.tscn (estructura)</h4>
+<div style="background:#111320;border:1px solid var(--border);border-radius:8px;padding:1rem;font-family:monospace;font-size:0.85rem;line-height:1.8;">
+<span style="color:#34d399;">Bochin</span> <span style="color:#e5e7eb;">(RigidBody3D, mass=0.4)</span>
+  ├── <span style="color:#e5e7eb;">BallMesh</span> <span style="color:#a78bfa;">(MeshInstance3D, SphereMesh r=0.2)</span>
+  └── <span style="color:#e5e7eb;">BallCollision</span> <span style="color:#a78bfa;">(CollisionShape3D, SphereShape3D r=0.2)</span>
+</div>
+
+<div class="note"><strong>Problema:</strong> El Bochin usa el mismo <code>bocce_ball.tres</code> que la BocceBall. Hereda los mismos valores de masa, fricción y rebote, pero los sobrescribe parcialmente en la escena (<code>mass = 0.4</code>, radio más chico). Debería tener su propio <code>.tres</code> con valores diferenciados.</div>
+</div>
+</details>
+
+<details>
+<summary>Court — Escena</summary>
+<div class="body">
+<div style="background:#111320;border:1px solid var(--border);border-radius:8px;padding:1rem;font-family:monospace;font-size:0.85rem;line-height:1.8;">
+<span style="color:#34d399;">Court</span> <span style="color:#e5e7eb;">(StaticBody3D)</span>
+  ├── <span style="color:#e5e7eb;">CanchaBochas</span> <span style="color:#a78bfa;">(MeshInstance3D, visible=false)</span>
+  ├── <span style="color:#e5e7eb;">CollisionShape3D</span> <span style="color:#a78bfa;">(ConcavePolygonShape3D)</span>
+  └── <span style="color:#e5e7eb;">CanchaBochas2</span> <span style="color:#a78bfa;">(instancia GLB, visible)</span>
+</div>
+<p>La cancha es un <code>StaticBody3D</code> con forma cóncava. No tiene <code>PhysicsMaterial</code> configurado — usa los defaults de Godot (friction 1.0, bounce 0.0). <strong>Necesita un <code>CourtConfig</code> resource.</strong></p>
+</div>
+</details>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Código Actual vs Propuesto</h2>
+
+<h3>Problemas actuales</h3>
+
+<div class="grid2">
+<div class="cfg-group">
+<h4>PhysicsConfig duplica ThrowConfig</h4>
+<p style="font-size:0.85rem;">Los campos <code>min_throw_power</code>, <code>max_throw_power</code>, <code>power_multiplier</code>, <code>spin_multiplier</code>, <code>curve_sensitivity</code> se superponen con <code>ThrowConfig</code>. Deben eliminarse.</p>
+</div>
+<div class="cfg-group">
+<h4>Bochin usa config de BocceBall</h4>
+<p style="font-size:0.85rem;">El Bochin referencia <code>bocce_ball.tres</code> pero tiene masa y radio distintos. Necesita su propio <code>bochin.tres</code>.</p>
+</div>
+<div class="cfg-group">
+<h4>Court sin PhysicsMaterial</h4>
+<p style="font-size:0.85rem;">El <code>StaticBody3D</code> de la cancha no tiene <code>PhysicsMaterial</code>. La fricción depende de los defaults de Godot. Necesita <code>CourtConfig</code>.</p>
+</div>
+<div class="cfg-group">
+<h4>BocceBall stop_velocity_threshold hardcoded</h4>
+<p style="font-size:0.85rem;">El umbral de detención (<code>0.1</code>) está como <code>@export</code> en <code>BocceBall</code>. Debería estar en <code>PhysicsConfig</code>.</p>
+</div>
+</div>
+
+<h3>Recursos propuestos</h3>
+
+<table>
+  <tr><th>Archivo</th><th>Tipo</th><th>Asignado a</th><th>Contiene</th></tr>
+  <tr><td><code>throw_config_default.tres</code></td><td>ThrowConfig</td><td>ThrowHandler.config</td><td>Todos los parámetros de lanzamiento</td></tr>
+  <tr><td><code>bocce_ball.tres</code></td><td>PhysicsConfig</td><td>BocceBall.physics_config</td><td>Masa, fricción, rebote, damping (bola grande)</td></tr>
+  <tr><td><code>bochin.tres</code></td><td>PhysicsConfig</td><td>Bochin.physics_config</td><td>Masa, fricción, rebote, damping (bola chica)</td></tr>
+  <tr><td><code>court_grass.tres</code></td><td>CourtConfig</td><td>Court.court_config</td><td>Fricción, rebote, dimensiones (césped)</td></tr>
+  <tr><td><code>court_dirt.tres</code></td><td>CourtConfig</td><td>Court.court_config</td><td>Fricción, rebote, dimensiones (tierra)</td></tr>
+  <tr><td><code>court_synthetic.tres</code></td><td>CourtConfig</td><td>Court.court_config</td><td>Fricción, rebote, dimensiones (sintético)</td></tr>
+</table>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Distribución de config</h2>
+
+<div class="diagram">
+<pre class="mermaid">
+graph TD
+  subgraph "Resources (.tres)"
+    TC["throw_config_default.tres<br>ThrowConfig"]
+    PC_BB["bocce_ball.tres<br>PhysicsConfig"]
+    PC_BN["bochin.tres<br>PhysicsConfig"]
+    CC_G["court_grass.tres<br>CourtConfig"]
+    CC_D["court_dirt.tres<br>CourtConfig"]
+  end
+
+  subgraph "Scene Nodes"
+    TH["ThrowHandler"]
+    GP["GesturePower"]
+    GD["GestureDirection"]
+    GS["GestureSpin"]
+    GT["GestureTracker"]
+    TA["ThrowAim"]
+    TS["ThrowSpin"]
+    BB["BocceBall"]
+    BN["Bochin"]
+    COURT["Court"]
+  end
+
+  TC --> TH
+  TH -->|max_drag_px| GP
+  TH -->|aim_sensitivity| GD
+  TH -->|max_draw_points| GT
+  TH -->|max_spread_deg<br>launch_angle_deg| TA
+  TH -->|steer_force<br>min_curve_threshold<br>wobble_speed<br>wobble_force| TS
+  TH -->|spin_sensitivity| GS
+  TH -->|max_force<br>min_power| TH
+
+  PC_BB --> BB
+  PC_BN --> BN
+  CC_G --> COURT
+
+  style TC fill:#7c3aed,stroke:#a78bfa,color:#fff
+  style PC_BB fill:#fb923c,stroke:#f97316,color:#fff
+  style PC_BN fill:#fb923c,stroke:#f97316,color:#fff
+  style CC_G fill:#34d399,stroke:#10b981,color:#fff
+  style CC_D fill:#34d399,stroke:#10b981,color:#fff
+</pre>
+</div>
+
+<div class="note"><strong>Flujo:</strong> Cada <code>.tres</code> se assigna en el editor. <code>ThrowHandler</code> distribuye los valores a los componentes en <code>_ready()</code>. <code>ThrowHandler</code> no necesita conocer los detalles de PhysicsConfig o CourtConfig — esas se asignan directamente a las bolas y la cancha.</div>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Ejemplos de Perfiles de Personaje</h2>
+
+<p>Con <code>ThrowConfig</code> como resource, se pueden crear diferentes perfiles:</p>
+
+<div class="grid3">
+<div class="cfg-group">
+<h4>Fuerte (max_force elevado)</h4>
+<div class="cfg-row"><code>max_force</code> <span class="val">45.0</span></div>
+<div class="cfg-row"><code>steer_force</code> <span class="val">0.2</span></div>
+<div class="cfg-row"><code>wobble_force</code> <span class="val">0.18</span></div>
+<div class="cfg-row"><code>launch_angle_deg</code> <span class="val">5.0</span></div>
+<p style="font-size:0.8rem;color:var(--dim);">Tira fuerte pero le cuesta la curva. Knuckleball más errático.</p>
+</div>
+<div class="cfg-group">
+<h4>Técnico (curvas precisas)</h4>
+<div class="cfg-row"><code>max_force</code> <span class="val">28.0</span></div>
+<div class="cfg-row"><code>steer_force</code> <span class="val">0.5</span></div>
+<div class="cfg-row"><code>wobble_force</code> <span class="val">0.08</span></div>
+<div class="cfg-row"><code>min_curve_threshold</code> <span class="val">0.15</span></div>
+<p style="font-size:0.8rem;color:var(--dim);">Menos fuerza pero mejor control de curvas. Knuckleball más preciso.</p>
+</div>
+<div class="cfg-group">
+<h4>Equilibrado (default)</h4>
+<div class="cfg-row"><code>max_force</code> <span class="val">35.0</span></div>
+<div class="cfg-row"><code>steer_force</code> <span class="val">0.3</span></div>
+<div class="cfg-row"><code>wobble_force</code> <span class="val">0.12</span></div>
+<div class="cfg-row"><code>launch_angle_deg</code> <span class="val">3.0</span></div>
+<p style="font-size:0.8rem;color:var(--dim);">Balance entre fuerza y curva. Los valores actuales.</p>
+</div>
+</div>
+
+<hr class="sep">
+
+<!-- ============================================================ -->
+<h2>Resumen de cambios necesarios</h2>
+
+<table>
+  <tr><th>Qué</th><th>Estado</th><th>Acción</th></tr>
+  <tr><td><code>ThrowConfig</code></td><td>Propuesto en v4</td><td>Crear <code>throw_config.gd</code> y <code>throw_config_default.tres</code></td></tr>
+  <tr><td><code>PhysicsConfig</code></td><td>Existe</td><td>Eliminar grupo "Throw Mechanics", agregar <code>stop_velocity_threshold</code></td></tr>
+  <tr><td><code>bocce_ball.tres</code></td><td>Existe</td><td>Actualizar con todos los campos de PhysicsConfig</td></tr>
+  <tr><td><code>bochin.tres</code></td><td>No existe</td><td>Crear con valores diferenciados (mass=0.4, bounce=0.5, etc.)</td></tr>
+  <tr><td><code>CourtConfig</code></td><td>No existe</td><td>Crear <code>court_config.gd</code> y <code>court_grass.tres</code></td></tr>
+  <tr><td><code>Court</code> script</td><td>No existe</td><td>Crear script que aplique <code>CourtConfig</code> al <code>StaticBody3D</code></td></tr>
+  <tr><td><code>BocceBall.stop_velocity_threshold</code></td><td>Export en script</td><td>Mover a <code>PhysicsConfig</code>, servir desde ahí</td></tr>
+  <tr><td><code>Bochin</code></td><td>Hereda sin overrides de physics</td><td>Asignar su propio <code>bochin.tres</code></td></tr>
+  <tr><td><code>ThrowHandler._ready()</code></td><td>Existe</td><td>Agregar distribución de ThrowConfig a componentes</td></tr>
+</table>
+
+</div>
+
+<script>mermaid.initialize({startOnLoad:true, theme:'dark', themeVariables:{primaryColor:'#7c3aed',primaryTextColor:'#e5e7eb',primaryBorderColor:'#7c3aed',lineColor:'#a78bfa',secondaryColor:'#181b24',tertiaryColor:'#181b24'}});</script>
+</body>
+</html>

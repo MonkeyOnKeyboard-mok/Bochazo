@@ -6,7 +6,10 @@
 [ext_resource type="PackedScene" uid="uid://dkyifd84b2ot3" path="res://scenes/04_game/components/throw_system/gesture_power.tscn" id="4_kybjp"]
 [ext_resource type="PackedScene" uid="uid://bm7yb3ywo436" path="res://scenes/04_game/components/throw_system/gesture_spin.tscn" id="5_qoxh3"]
 [ext_resource type="PackedScene" uid="uid://dqf2tj02ghfra" path="res://scenes/04_game/components/throw_system/throw_handler.tscn" id="6_6ad6u"]
+[ext_resource type="Resource" uid="uid://odcp508bx42u" path="res://resources/game_config/BaseThrow.tres" id="7_6ad6u"]
 [ext_resource type="PackedScene" uid="uid://khh2to667k2u" path="res://scenes/04_game/components/balls/bocce_ball.tscn" id="7_mb33v"]
+[ext_resource type="PackedScene" uid="uid://0fpoxpjhoq0h" path="res://scenes/04_game/components/throw_system/throw_aim.tscn" id="7_qoxh3"]
+[ext_resource type="PackedScene" uid="uid://d4mm2xvb0hd61" path="res://scenes/04_game/components/throw_system/throw_spin.tscn" id="8_6ad6u"]
 [ext_resource type="PackedScene" uid="uid://4qe83ntmmj7w" path="res://scenes/04_game/components/balls/bochin.tscn" id="8_b6v23"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b6v23"]
@@ -43,6 +46,7 @@ offset_left = 63.0
 offset_top = 56.0
 offset_right = 67.0
 offset_bottom = 83.0
+rounded = true
 
 [node name="GestureTracker" parent="CanvasLayer" unique_id=638050222 instance=ExtResource("2_pay8p")]
 
@@ -56,15 +60,24 @@ bar = NodePath("../CanvasLayer/PowerBar")
 [node name="GestureSpin" parent="." unique_id=604236741 node_paths=PackedStringArray("tracker") instance=ExtResource("5_qoxh3")]
 tracker = NodePath("../CanvasLayer/GestureTracker")
 
-[node name="ThrowHandler" parent="." unique_id=114444530 node_paths=PackedStringArray("tracker", "power_bar", "dir_module", "spin_module", "ball") instance=ExtResource("6_6ad6u")]
+[node name="ThrowHandler" parent="." unique_id=114444530 node_paths=PackedStringArray("tracker", "power_bar", "aim", "spin", "ball", "power", "direction", "spin_module_ref") instance=ExtResource("6_6ad6u")]
 tracker = NodePath("../CanvasLayer/GestureTracker")
 power_bar = NodePath("../CanvasLayer/PowerBar")
-dir_module = NodePath("../CanvasLayer/GestureDirection")
-spin_module = NodePath("../GestureSpin")
+aim = NodePath("ThrowAim2")
+spin = NodePath("ThrowSpin2")
 ball = NodePath("../BocceBall")
-steer_strength = 0.5
-spin_hz = 1000.0
-min_curve_threshold = 0.5
+power = NodePath("../GesturePower")
+direction = NodePath("../CanvasLayer/GestureDirection")
+spin_module_ref = NodePath("../GestureSpin")
+config = ExtResource("7_6ad6u")
+max_force = 50.0
+
+[node name="ThrowAim2" parent="ThrowHandler" unique_id=1759945484 node_paths=PackedStringArray("dir_module") instance=ExtResource("7_qoxh3")]
+dir_module = NodePath("../../CanvasLayer/GestureDirection")
+
+[node name="ThrowSpin2" parent="ThrowHandler" unique_id=1261984182 node_paths=PackedStringArray("ball", "spin_module") instance=ExtResource("8_6ad6u")]
+ball = NodePath("../../BocceBall")
+spin_module = NodePath("../../GestureSpin")
 
 [node name="BocceBall" parent="." unique_id=357459484 instance=ExtResource("7_mb33v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.015383, 1.0616543, 0.074545436)

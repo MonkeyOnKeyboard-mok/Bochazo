@@ -1,6 +1,12 @@
 [gd_scene format=3 uid="uid://dqf2tj02ghfra"]
 
 [ext_resource type="Script" uid="uid://oi4520bobv4i" path="res://scenes/04_game/components/throw_system/throw_handler.gd" id="1_bmhle"]
+[ext_resource type="PackedScene" uid="uid://d4mm2xvb0hd61" path="res://scenes/04_game/components/throw_system/throw_spin.tscn" id="2_b77xr"]
+[ext_resource type="PackedScene" uid="uid://0fpoxpjhoq0h" path="res://scenes/04_game/components/throw_system/throw_aim.tscn" id="3_k00ru"]
 
 [node name="ThrowHandler" type="Node" unique_id=114444530]
 script = ExtResource("1_bmhle")
+
+[node name="ThrowSpin" parent="." unique_id=1261984182 instance=ExtResource("2_b77xr")]
+
+[node name="ThrowAim" parent="." unique_id=1759945484 instance=ExtResource("3_k00ru")]
