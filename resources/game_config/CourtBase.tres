@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="CourtConfig" format=3 uid="uid://c4g1qkioghtss"]
+
+[ext_resource type="Script" uid="uid://cbth3l1fmdu1h" path="res://resources/game_config/court_config.gd" id="1_wrij5"]
+
+[resource]
+script = ExtResource("1_wrij5")
+metadata/_custom_type_script = "uid://cbth3l1fmdu1h"

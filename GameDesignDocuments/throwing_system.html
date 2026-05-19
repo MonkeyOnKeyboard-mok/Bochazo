@@ -525,24 +525,191 @@ graph TD
 </ul>
 
 <!-- ============================================================ -->
-<h2>Posibles Mejoras</h2>
+<h2>Cambios Propuestos</h2>
+
+<p>Mejoras basadas en el gameplay: más control del jugador, menos resultados impredecibles, menor complejidad.</p>
+
+<!-- ────────────────────────────────────────────────────────────── -->
+<h3>Cambio 1: Límite de dibujo — GestureTracker</h3>
+
+<div class="card">
+  <p>Archivo: <code>gesture_tracker.gd</code></p>
+</div>
+
+<p><strong>Problema:</strong> No hay límite en el largo del dibujo. El jugador puede dibujar indefinidamente, generando perfiles de spin largos e impredecibles.</p>
+
+<p><strong>Solución:</strong> Agregar <code>max_draw_points</code>. Cuando se alcanza el límite, el gesto se completa automáticamente (se emite <code>gesture_ended</code>). Esto también limita naturalmente el tamaño del perfil de spin.</p>
+
+<h4>Nuevo @export</h4>
+<table>
+  <tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr>
+  <tr><td><code>max_draw_points</code></td><td>60</td><td>Cantidad máxima de puntos del dibujo. Al alcanzarse, el lanzamiento se ejecuta automáticamente. 0 = sin límite.</td></tr>
+</table>
+
+<h4>Lógica</h4>
+<div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TD
+  A[mouse motion: nuevo punto] --> B{max_draw_points &gt; 0?}
+  B -->|No| C[agregar punto normalmente]
+  B -->|Sí| D{points.size &gt;= max_draw_points?}
+  D -->|No| C
+  D -->|Sí| E["is_tracking = false\ngesture_ended.emit(points)"]
+</pre>
+</div>
+
+<p>En <code>_input</code>, al agregar un punto por <code>InputEventMouseMotion</code>, verificar si se alcanzó el límite. Si sí, forzar el fin del gesto automáticamente — como si el jugador hubiera soltado el botón.</p>
+
+<!-- ────────────────────────────────────────────────────────────── -->
+<h3>Cambio 2: Potencia bidireccional — GesturePower</h3>
+
+<div class="card">
+  <p>Archivo: <code>gesture_power.gd</code></p>
+</div>
+
+<p><strong>Problema:</strong> <code>peak_value</code> solo sube. Si el jugador arrastra demasiado, no puede reducir la potencia. Se siente sin control.</p>
+
+<p><strong>Solución:</strong> Eliminar <code>peak_value</code>. Usar la distancia actual del drag directamente. La potencia sube al arrastrar hacia abajo y <strong>baja al arrastrar hacia arriba</strong>.</p>
+
+<h4>Variables eliminadas</h4>
+<p><del>peak_value: float = 0.0</del></p>
+
+<h4>Nueva lógica</h4>
+<div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TD
+  A[gesture_started] --> B["bar.value = 0"]
+  C[gesture_dragging] --> D["current = clamp(cur.y - start.y / max_drag_px, 0, 1) * 100"]
+  D --> E["bar.value = current"]
+</pre>
+</div>
+
+<p class="note"><strong>Antes:</strong> <code>bar.value = max(peak_value, current)</code> — la barra solo subía, nunca bajaba.<br>
+<strong>Ahora:</strong> <code>bar.value = current</code> — la barra sigue el drag actual. Sube y baja libremente.</p>
+
+<p><strong>Gameplay:</strong> El jugador tiene control total de la potencia. Arrastra hacia abajo para cargar, suelta hacia arriba para reducir. Soltar en el momento justo es parte del skill.</p>
+
+<!-- ────────────────────────────────────────────────────────────── -->
+<h3>Cambio 3: Spin simplificado — GestureSpin + ThrowHandler</h3>
+
+<div class="card">
+  <p>Archivos: <code>gesture_spin.gd</code>, <code>throw_handler.gd</code></p>
+</div>
+
+<p><strong>Problema:</strong> El perfil de spin (array de valores) produce curvas impredecibles. La dirección y el efecto se mezclan de forma confusa. El sistema es complejo sin beneficio de gameplay.</p>
+
+<p><strong>Solución:</strong> Reemplazar el perfil completo por un <strong>único valor float</strong>. El spin se aplica como una rotación constante por frame, sin perfiles ni índices.</p>
+
+<h4>Gesto → Spin: GestureSpin simplificado</h4>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TD
+  A[gesture_ended: points] --> B{points.size &lt; 3?}
+  B -->|Sí| C["emit spin_calculated(0.0)"]
+  B -->|No| D["dir = (end - start).normalized()"]
+  D --> E["perp = Vector2(-dir.y, dir.x)"]
+  E --> F["Para cada punto: lateral = (p - start) · perp / sensitivity"]
+  F --> G["curve = promedio(laterals)"]
+  G --> H["curve = clamp(curve, -1.0, 1.0)"]
+  H --> I["emit spin_calculated(curve)"]
+</pre>
+</div>
+
+<p>En vez de emitir <code>PackedFloat32Array</code>, se emite <code>float</code> — un solo número que representa la curvatura promedio del gesto.</p>
+
+<table>
+  <tr><th>Antes</th><th>Después</th></tr>
+  <tr><td><code>spin_profile_calculated(values: PackedFloat32Array)</code></td><td><code>spin_calculated(curve: float)</code></td></tr>
+  <tr><td>Array completo de desviaciones</td><td>Promedio de desviaciones (-1 a 1)</td></tr>
+  <tr><td>Se消费e valor por valor a frecuencia spin_hz</td><td>Valor constante aplicado cada frame</td></tr>
+</table>
+
+<h4>Aplicación del spin: ThrowHandler simplificado</h4>
+
+<p><strong>Variables eliminadas:</strong></p>
+<ul>
+  <li><del>spin_profile: PackedFloat32Array</del></li>
+  <li><del>spin_idx: int</del></li>
+  <li><del>spin_timer: float</del></li>
+</ul>
+
+<p><strong>Variables nuevas:</strong></p>
+<ul>
+  <li><code>spin_curve: float = 0.0</code> — valor de curvatura actual (-1 a 1)</li>
+</ul>
+
+<h4>Nuevos @export</h4>
+<table>
+  <tr><th>Parámetro</th><th>Default</th><th>Descripción</th></tr>
+  <tr><td><code>steer_force</code></td><td>1.5</td><td>Fuerza de curvatura por frame. Controla cuánto efecto tiene la bocha. Reemplaza <code>steer_strength</code>.</td></tr>
+</table>
+
+<h4>@export eliminados</h4>
+<table>
+  <tr><th>Parámetro eliminado</th><th>Razón</th></tr>
+  <tr><td><del>spin_hz</del></td><td>No se necesita frecuencia con un valor constante</td></tr>
+</table>
+
+<h4>Nueva lógica _on_spin</h4>
+<div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TD
+  A[spin_calculated: curve] --> B{abs(curve) &gt; min_curve_threshold?}
+  B -->|No| C["spin_curve = 0.0\nis_applying_spin = false"]
+  B -->|Sí| D["spin_curve = curve\nis_applying_spin = true"]
+</pre>
+</div>
+
+<h4>Nueva lógica _physics_process</h4>
+<div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TD
+  A[_physics_process] --> B{is_applying_spin?}
+  B -->|No| Z[return]
+  B -->|Sí| C{vel.length &gt; 0.1?}
+  C -->|No| Z
+  C -->|Sí| D["ball.linear_velocity =\n  vel.rotated(Vector3.UP, spin_curve * steer_force * delta)"]
+</pre>
+</div>
+
+<p class="note"><strong>Antes:</strong> Un perfil de N valores se consumía a frecuencia <code>spin_hz</code>, cada uno con su propia curvatura. Resultado impredecible.<br>
+<strong>Ahora:</strong> Un valor constante rota la velocidad suavemente cada frame. La curva es predecible: siempre la misma intensidad, siempre en la misma dirección. Lo que dibujaste es lo que obtenés.</p>
+
+<!-- ────────────────────────────────────────────────────────────── -->
+<h3>Resumen de cambios</h3>
+
+<div class="diagram-wrap">
+<pre class="mermaid">
+graph LR
+  subgraph "Antes"
+    GT1["GestureTracker"] -->|"gesture_dragging"| GP1["GesturePower\n(peak, solo sube)"]
+    GT1 -->|"gesture_ended"| GS1["GestureSpin\n(perfil PackedFloat32Array)"]
+    GP1 -->|"bar.value"| TH1["ThrowHandler\n(perfil + idx + timer + hz)"]
+    GS1 -->|"spin_profile_calculated"| TH1
+  end
+
+  subgraph "Después"
+    GT2["GestureTracker\n(+ max_draw_points)"] -->|"gesture_dragging"| GP2["GesturePower\n(current, sube y baja)"]
+    GT2 -->|"gesture_ended"| GS2["GestureSpin\n(float: curve)"]
+    GP2 -->|"bar.value"| TH2["ThrowHandler\n(curve, sin perfil)"]
+    GS2 -->|"spin_calculated"| TH2
+  end
+</pre>
+</div>
+
+<table>
+  <tr><th>Archivo</th><th>Cambio</th><th>Complejidad</th></tr>
+  <tr><td><code>gesture_tracker.gd</code></td><td>+1 @export (max_draw_points), +3 líneas de lógica</td><td>Mínima</td></tr>
+  <tr><td><code>gesture_power.gd</code></td><td>-1 variable (peak_value), simplificar _update</td><td>Mínima</td></tr>
+  <tr><td><code>gesture_spin.gd</code></td><td>Señal cambia de array a float, calcular promedio</td><td>Pequeña</td></tr>
+  <tr><td><code>throw_handler.gd</code></td><td>-3 variables, -1 @export, +1 @export (steer_force), simplificar _physics_process</td><td>Media</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>Ideas Futuras</h2>
 
 <div class="grid">
-<div class="card">
-<h3>Potencia degradada</h3>
-<p>Actualmente <code>peak_value</code> solo sube. Se podría agregar un decaimiento temporal para que si el jugador hace pausa antes de soltar, la potencia baje ligeramente — modelando fatiga o indecisión.</p>
-</div>
-
-<div class="card">
-<h3>Dirección desde el trazo completo</h3>
-<p>La dirección se calcula solo del flick (último segmento). Podría ser mejor usar un promedio ponderado de los últimos N puntos del gesto, suavizando el resultado y reduciendo ruido.</p>
-</div>
-
-<div class="card">
-<h3>Spin con aceleración angular</h3>
-<p>El spin actual rota la velocidad uniformemente. Se podría agregar una curva de decaimiento para que el efecto se atenúe con la distancia — las bochas reales pierden efecto con el roce.</p>
-</div>
-
 <div class="card">
 <h3>Anticipación visual</h3>
 <p>Mostrar la trayectoria predicha (parábola + curva) antes de soltar, actualizada en tiempo real durante el drag. Esto le daría al jugador feedback continuo.</p>
