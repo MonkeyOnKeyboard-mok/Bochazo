@@ -32,13 +32,13 @@ func _process(_delta: float) -> void:
 	nombre.text = current_character.data.name
 
 func move_left() -> void:
-	if Input.is_action_just_pressed("move_left"):
+	if Input.is_action_just_pressed("move_right"):
 		if index+1 >= player_list.size(): return
 		if moving == true: return
 		_handle_movement(Vector3(-2,0,0),Vector3(0, deg_to_rad(90), 0),"left")
 
 func move_right() -> void:
-	if Input.is_action_just_pressed("move_right"):
+	if Input.is_action_just_pressed("move_left"):
 		if index-1 <= -1: return
 		if moving == true: return
 		_handle_movement(Vector3(2,0,0),Vector3(0, deg_to_rad(-90), 0),"right")
