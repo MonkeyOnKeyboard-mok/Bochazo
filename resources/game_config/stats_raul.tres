@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PlayerThrowStats" format=3 uid="uid://24rsp1vhri2o"]
+
+[ext_resource type="Script" uid="uid://cb3alnt10noh2" path="res://resources/game_config/player_throw_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+player_name = "Raul"
+max_force = 30.0
+curve_strength = 0.3
+wobble_speed = 6.0
+wobble_force = 0.1

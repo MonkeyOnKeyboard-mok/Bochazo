@@ -1,105 +1,85 @@
 [gd_scene format=3 uid="uid://cp0yr0lyaga0i"]
 
-[ext_resource type="PackedScene" uid="uid://b4bqnwgulw6e6" path="res://scenes/04_game/components/court/court.tscn" id="1_ijwa6"]
-[ext_resource type="PackedScene" uid="uid://d1yqc4qlsi0kg" path="res://scenes/04_game/components/throw_system/gesture_tracker.tscn" id="2_pay8p"]
-[ext_resource type="PackedScene" uid="uid://cs64uyt8f6gbp" path="res://scenes/04_game/components/throw_system/gesture_direction.tscn" id="3_b6v23"]
-[ext_resource type="PackedScene" uid="uid://dkyifd84b2ot3" path="res://scenes/04_game/components/throw_system/gesture_power.tscn" id="4_kybjp"]
-[ext_resource type="PackedScene" uid="uid://bm7yb3ywo436" path="res://scenes/04_game/components/throw_system/gesture_spin.tscn" id="5_qoxh3"]
-[ext_resource type="PackedScene" uid="uid://dqf2tj02ghfra" path="res://scenes/04_game/components/throw_system/throw_handler.tscn" id="6_6ad6u"]
-[ext_resource type="Resource" uid="uid://odcp508bx42u" path="res://resources/game_config/BaseThrow.tres" id="7_6ad6u"]
-[ext_resource type="PackedScene" uid="uid://khh2to667k2u" path="res://scenes/04_game/components/balls/bocce_ball.tscn" id="7_mb33v"]
-[ext_resource type="PackedScene" uid="uid://0fpoxpjhoq0h" path="res://scenes/04_game/components/throw_system/throw_aim.tscn" id="7_qoxh3"]
-[ext_resource type="PackedScene" uid="uid://d4mm2xvb0hd61" path="res://scenes/04_game/components/throw_system/throw_spin.tscn" id="8_6ad6u"]
-[ext_resource type="PackedScene" uid="uid://4qe83ntmmj7w" path="res://scenes/04_game/components/balls/bochin.tscn" id="8_b6v23"]
+[ext_resource type="PackedScene" uid="uid://b4bqnwgulw6e6" path="res://scenes/04_game/components/court/court.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://khh2to667k2u" path="res://scenes/04_game/components/balls/bocce_ball.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://4qe83ntmmj7w" path="res://scenes/04_game/components/balls/bochin.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://h7l4bjedpvxx" path="res://scenes/04_game/components/throw_system/throw_system.tscn" id="4"]
+[ext_resource type="Resource" uid="uid://24rsp1vhri2o" path="res://resources/game_config/stats_raul.tres" id="5"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b6v23"]
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 
-[sub_resource type="Sky" id="Sky_kybjp"]
-sky_material = SubResource("ProceduralSkyMaterial_b6v23")
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
 
-[sub_resource type="Environment" id="Environment_oyrge"]
+[sub_resource type="Environment" id="Env"]
 background_mode = 2
-sky = SubResource("Sky_kybjp")
+sky = SubResource("Sky")
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_b6v23"]
+[sub_resource type="ViewportTexture" id="ViewportTex"]
 viewport_path = NodePath("SubViewport")
 
-[node name="TestThrowingBall" type="Node3D" unique_id=1398608785]
+[sub_resource type="GDScript" id="ResetScript"]
+script/source = "extends Node
 
-[node name="Court" parent="." unique_id=1767025561 instance=ExtResource("1_ijwa6")]
+func _on_reset_button_pressed() -> void:
+	get_tree().reload_current_scene()
+"
+
+[node name="TestThrowingBall" type="Node3D" unique_id=1306207877]
+
+[node name="Court" parent="." unique_id=150222716 instance=ExtResource("1")]
 transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0, 0)
 
-[node name="TestCamera" type="Camera3D" parent="." unique_id=870966074]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -38.70582, 3.1043491, 0)
+[node name="TestCamera" type="Camera3D" parent="." unique_id=362319183]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -40.222416, 4.0504556, 0)
+fov = 50.0
 near = 2.0
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=317846015]
-environment = SubResource("Environment_oyrge")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=218657089]
+environment = SubResource("Env")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=774647621]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1531567219]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 11.402227, 0)
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1517742117]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=608851310]
 
-[node name="PowerBar" type="ProgressBar" parent="CanvasLayer" unique_id=1750334608]
-offset_left = 63.0
-offset_top = 56.0
-offset_right = 67.0
-offset_bottom = 83.0
-rounded = true
+[node name="ResetButton" type="Button" parent="CanvasLayer" unique_id=1297170426]
+offset_left = 1677.0
+offset_top = 300.0
+offset_right = 1731.0
+offset_bottom = 340.0
+text = "RESET"
 
-[node name="GestureTracker" parent="CanvasLayer" unique_id=638050222 instance=ExtResource("2_pay8p")]
-
-[node name="GestureDirection" parent="CanvasLayer" unique_id=1350806008 node_paths=PackedStringArray("tracker") instance=ExtResource("3_b6v23")]
-tracker = NodePath("../GestureTracker")
-
-[node name="GesturePower" parent="." unique_id=1819727909 node_paths=PackedStringArray("tracker", "bar") instance=ExtResource("4_kybjp")]
-tracker = NodePath("../CanvasLayer/GestureTracker")
-bar = NodePath("../CanvasLayer/PowerBar")
-
-[node name="GestureSpin" parent="." unique_id=604236741 node_paths=PackedStringArray("tracker") instance=ExtResource("5_qoxh3")]
-tracker = NodePath("../CanvasLayer/GestureTracker")
-
-[node name="ThrowHandler" parent="." unique_id=114444530 node_paths=PackedStringArray("tracker", "power_bar", "aim", "spin", "ball", "power", "direction", "spin_module_ref") instance=ExtResource("6_6ad6u")]
-tracker = NodePath("../CanvasLayer/GestureTracker")
-power_bar = NodePath("../CanvasLayer/PowerBar")
-aim = NodePath("ThrowAim2")
-spin = NodePath("ThrowSpin2")
-ball = NodePath("../BocceBall")
-power = NodePath("../GesturePower")
-direction = NodePath("../CanvasLayer/GestureDirection")
-spin_module_ref = NodePath("../GestureSpin")
-config = ExtResource("7_6ad6u")
-max_force = 50.0
-
-[node name="ThrowAim2" parent="ThrowHandler" unique_id=1759945484 node_paths=PackedStringArray("dir_module") instance=ExtResource("7_qoxh3")]
-dir_module = NodePath("../../CanvasLayer/GestureDirection")
-
-[node name="ThrowSpin2" parent="ThrowHandler" unique_id=1261984182 node_paths=PackedStringArray("ball", "spin_module") instance=ExtResource("8_6ad6u")]
-ball = NodePath("../../BocceBall")
-spin_module = NodePath("../../GestureSpin")
-
-[node name="BocceBall" parent="." unique_id=357459484 instance=ExtResource("7_mb33v")]
+[node name="BocceBall" parent="." unique_id=63890350 instance=ExtResource("2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.015383, 1.0616543, 0.074545436)
 
-[node name="SubViewport" type="SubViewport" parent="." unique_id=2044791916]
+[node name="SubViewport" type="SubViewport" parent="." unique_id=731301028]
 transparent_bg = true
 size = Vector2i(256, 256)
 render_target_update_mode = 3
 
-[node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=845160978]
+[node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=689176119]
 transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, 26.705826, 12.090761, 0)
 current = true
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=1639613537]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1251439467]
 offset_left = 1511.0
 offset_top = 18.0
 offset_right = 1852.0
 offset_bottom = 233.0
-texture = SubResource("ViewportTexture_b6v23")
+texture = SubResource("ViewportTex")
 
-[node name="BocceBall2" parent="." unique_id=854889355 instance=ExtResource("7_mb33v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.79998, 0.6806338, 0.066963926)
+[node name="BocceBall2" parent="." unique_id=426834441 instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.79998, 0.6806338, 2.753825)
 
-[node name="Bochin" parent="." unique_id=1841816552 instance=ExtResource("8_b6v23")]
+[node name="Bochin" parent="." unique_id=1312063183 instance=ExtResource("3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.240103, 0.36360884, -1.6789726)
+
+[node name="Reset" type="Node" parent="." unique_id=428890241]
+script = SubResource("ResetScript")
+
+[node name="ThrowSystem" parent="." unique_id=1442565698 node_paths=PackedStringArray("ball") instance=ExtResource("4")]
+ball = NodePath("../BocceBall")
+stats = ExtResource("5")
+
+[connection signal="pressed" from="CanvasLayer/ResetButton" to="Reset" method="_on_reset_button_pressed"]

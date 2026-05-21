@@ -4,6 +4,4 @@
 
 [resource]
 script = ExtResource("1_4d65w")
-linear_damping = 0.2
-angular_damping = 0.3
 metadata/_custom_type_script = "uid://brw7ud0cmgli0"

@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Throw System — Checklist</title>
+<style>
+  :root { --bg:#0f1117; --card:#181b24; --border:#2a2d3a; --text:#d4d4d8; --accent:#7c3aed; --accent2:#a78bfa; --dim:#6b7280; --green:#34d399; --red:#f87171; --amber:#fbbf24; --cyan:#22d3ee; --orange:#fb923c; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.65; }
+  .wrap { max-width:860px; margin:0 auto; padding:2rem 1.5rem; }
+  h1 { font-size:1.8rem; color:#fff; margin-bottom:0.25rem; }
+  h2 { font-size:1.2rem; color:var(--accent2); margin:1.8rem 0 0.5rem; border-bottom:1px solid var(--border); padding-bottom:0.3rem; }
+  .progress-bar { background:var(--border); border-radius:8px; height:8px; margin:1rem 0; overflow:hidden; }
+  .progress-fill { height:100%; background:var(--green); transition:width 0.3s; border-radius:8px; }
+  .progress-text { color:var(--dim); font-size:0.85rem; margin-bottom:1.5rem; }
+  .group { background:var(--card); border:1px solid var(--border); border-radius:10px; margin:0.75rem 0; overflow:hidden; }
+  .item { display:flex; align-items:center; padding:0.7rem 1rem; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s; }
+  .item:last-child { border-bottom:none; }
+  .item:hover { background:rgba(124,58,237,0.08); }
+  .item input[type=checkbox] { width:20px; height:20px; accent-color:var(--green); cursor:pointer; flex-shrink:0; }
+  .item-info { flex:1; margin-left:0.75rem; }
+  .item-title { font-weight:600; color:#fff; font-size:0.95rem; }
+  .item-desc { color:var(--dim); font-size:0.82rem; margin-top:0.15rem; }
+  .item-status { font-size:0.75rem; font-weight:600; padding:0.15rem 0.5rem; border-radius:10px; margin-left:0.5rem; flex-shrink:0; }
+  .status-pending { background:rgba(107,114,128,0.2); color:var(--dim); }
+  .status-done { background:rgba(52,211,153,0.15); color:var(--green); }
+  .status-fail { background:rgba(248,113,113,0.15); color:var(--red); }
+  .tag { display:inline-block; padding:0.05rem 0.4rem; border-radius:10px; font-size:0.7rem; font-weight:600; margin-right:0.3rem; }
+  .tag-script { background:var(--accent2); color:#0f1117; }
+  .tag-visual { background:var(--cyan); color:#0f1117; }
+  .tag-physics { background:var(--orange); color:#0f1117; }
+  .tag-config { background:var(--green); color:#0f1117; }
+  .tag-test { background:var(--amber); color:#0f1117; }
+  .actions { display:flex; gap:0.5rem; margin-top:1.5rem; }
+  .btn { background:var(--border); color:var(--text); border:none; padding:0.5rem 1rem; border-radius:6px; cursor:pointer; font-size:0.85rem; }
+  .btn:hover { background:var(--accent2); color:#0f1117; }
+  .note { background:rgba(124,58,237,0.1); border-left:3px solid var(--accent); padding:0.6rem 1rem; border-radius:0 8px 8px 0; margin:0.8rem 0; font-size:0.9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Throw System — Checklist</h1>
+<p style="color:var(--dim);font-size:0.9rem;">Marcá cada ítem cuando lo pruebes. Se guarda automáticamente en el navegador.</p>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+<div class="progress-text" id="progressText">0 / 0 completados</div>
+
+<!-- ============================================================ -->
+<h2>Fases del Gesto</h2>
+<div class="group">
+
+<div class="item" data-id="phase_charge">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Fase CHARGE funciona</div>
+    <div class="item-desc">Al arrastrar hacia abajo, la potencia sube (peak). La línea es vertical naranja. Se acumula charge_distance.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="phase_charge_vertical">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Línea CHARGE es vertical fija</div>
+    <div class="item-desc">Durante CHARGE, la línea se dibuja en X = start.x fijo. Solo se mueve en Y. No sigue al cursor horizontalmente.</div>
+    <span class="tag tag-visual">visual</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="phase_charge_color">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Línea CHARGE es naranja</div>
+    <div class="item-desc">ChargeLine se dibuja en color naranja (1, 0.6, 0).</div>
+    <span class="tag tag-visual">visual</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="phase_aim_transition">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Transición CHARGE → AIM</div>
+    <div class="item-desc">Cuando se deja de bajar (dy ≤ 0) y se cargó al menos 50px, O cuando se llega al tope de carga (300px). La línea cambia a cyan.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="phase_aim_color">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Línea AIM es cyan</div>
+    <div class="item-desc">AimLine se dibuja en color cyan (0, 0.9, 1).</div>
+    <span class="tag tag-visual">visual</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="phase_no_aim_straight">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Soltar sin AIM = tiro recto</div>
+    <div class="item-desc">Si se suelta sin pasar a AIM (solo cargó), gesture_ended envía was_straight=true. ThrowHandler fuerza knuckleball.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="phase_max_aim">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">max_aim_points solo cuenta en AIM</div>
+    <div class="item-desc">El límite de puntos solo se aplica durante la fase AIM, no durante CHARGE. Mover despacio en CHARGE no agota los puntos.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="phase_charge_cap">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">CHARGE se corta al 100% de potencia</div>
+    <div class="item-desc">Cuando charge_distance llega a max_charge_distance (300px), se pasa a AIM automáticamente. La potencia no puede superar 100%.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+</div>
+
+<!-- ============================================================ -->
+<h2>Tipos de Tiro</h2>
+<div class="group">
+
+<div class="item" data-id="throw_1_knuckleball">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">1. Knuckleball (sin AIM)</div>
+    <div class="item-desc">Solo cargar y soltar. Wobble sutil aleatorio, bola va recta.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="throw_2_straight">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">2. Straight (AIM hacia arriba)</div>
+    <div class="item-desc">Cargar + mover recto hacia arriba. Sin efecto, bola recta pura.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="throw_3_diagonal_right">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">3. Diagonal derecha (y = x)</div>
+    <div class="item-desc">Cargar + diagonal recta arriba-derecha. Bola va en diagonal a la derecha.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="throw_4_diagonal_left">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">4. Diagonal izquierda (y = -x)</div>
+    <div class="item-desc">Cargar + diagonal recta arriba-izquierda. Simétrico al anterior.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="throw_5_horizontal_knuckleball">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">5. Knuckleball horizontal</div>
+    <div class="item-desc">Cargar + mover horizontal (→ o ←). Wobble con dirección hacia donde se movió.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="throw_6_parabola">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">6. Parábola (y = x²)</div>
+    <div class="item-desc">Cargar + media parábola. La bola se mueve levemente hacia un lado y luego va recta.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="throw_7_logarithmic">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">7. Logaritmo</div>
+    <div class="item-desc">Cargar + curva tipo log(x). Primero recto, luego se curva hacia el lado marcado.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="throw_8_c_shape">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">8. Semicírculo (C)</div>
+    <div class="item-desc">Cargar + forma de C. Curva hacia un lado y después hacia el contrario.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="throw_not_too_strong">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Curvas no son excesivamente fuertes</div>
+    <div class="item-desc">steer_force = 0.3. Las curvas deben ser suaves y controlables.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="throw_correct_direction">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Simetría: derecha = derecha, izquierda = izquierda</div>
+    <div class="item-desc">Todos los tiros simétricos deben funcionar igual en ambas direcciones.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+</div>
+
+<!-- ============================================================ -->
+<h2>Potencia y Velocidad</h2>
+<div class="group">
+
+<div class="item" data-id="power_peak">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Potencia usa peak_value</div>
+    <div class="item-desc">La barra sube al arrastrar hacia abajo y se mantiene en el máximo. No baja al mover hacia arriba.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="power_no_throw_low">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">No se lanza con potencia &lt; 5%</div>
+    <div class="item-desc">Si la potencia del peak es menor a min_power (0.05), no se ejecuta el lanzamiento.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="power_ball_reaches_end">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">A potencia máxima, la bola llega al fondo</div>
+    <div class="item-desc">Con launch_angle_deg=3° y max_force=35, la bola debería llegar hasta la pared del fondo y rebotar significativamente.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="power_not_too_fast">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">La bola no sale volando demasiado rápido</div>
+    <div class="item-desc">max_force=35 (o el valor del config). La velocidad debe sentir controlable, no un cañonazo.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+</div>
+
+<!-- ============================================================ -->
+<h2>Dirección</h2>
+<div class="group">
+
+<div class="item" data-id="aim_spread_subtle">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Diagonales son sutiles (no violentas)</div>
+    <div class="item-desc">max_spread_deg=3°. La dirección lateral es apenas perceptible. El movimiento lateral real viene del spin, no del aim.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="aim_preview">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">PreviewLine muestra dirección durante drag</div>
+    <div class="item-desc">La línea verde muestra la dirección del aim en tiempo real durante el drag.</div>
+    <span class="tag tag-visual">visual</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+</div>
+
+<!-- ============================================================ -->
+<h2>Scripts y Componentes</h2>
+<div class="group">
+
+<div class="item" data-id="script_gesture_tracker">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">GestureTracker</div>
+    <div class="item-desc">Fases CHARGE/AIM, dos líneas, gestiona puntos correctamente.</div>
+    <span class="tag tag-script">script</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="script_gesture_power">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">GesturePower</div>
+    <div class="item-desc">Peak_value, barra progresa al arrastrar hacia abajo, no baja.</div>
+    <span class="tag tag-script">script</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="script_gesture_direction">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">GestureDirection</div>
+    <div class="item-desc">Aim lateral desde endpoint. Preview durante drag. aim_x entre -1 y 1.</div>
+    <span class="tag tag-script">script</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="script_gesture_spin">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">GestureSpin</div>
+    <div class="item-desc">Calcula curvatura promedio de aim_points. Emite float. Usa was_straight para emitir 0.</div>
+    <span class="tag tag-script">script</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="script_throw_aim">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">ThrowAim</div>
+    <div class="item-desc">Convierte aim_x a Vector3 con cono de 3° y launch_angle de 3°.</div>
+    <span class="tag tag-script">script</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="script_throw_spin">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">ThrowSpin</div>
+    <div class="item-desc">3 modos: STRAIGHT, WOBBLE, CURVE. set_knuckleball() para when was_straight. Fase aleatoria en wobble.</div>
+    <span class="tag tag-script">script</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="script_throw_handler">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">ThrowHandler</div>
+    <div class="item-desc">Orquestador. Aplica config, imprime tipo de tiro, fuerza knuckleball en was_straight.</div>
+    <span class="tag tag-script">script</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="script_throw_config">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">ThrowConfig</div>
+    <div class="item-desc">Resource con todos los parámetros. Se distribuye a los componentes en _ready().</div>
+    <span class="tag tag-config">config</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+</div>
+
+<!-- ============================================================ -->
+<h2>Debug y Test</h2>
+<div class="group">
+
+<div class="item" data-id="debug_throw_type">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Console print con tipo de tiro</div>
+    <div class="item-desc">Al lanzar, imprime: "[ThrowHandler] straight | power: 85% | aim: 0.012 | curve: 0.000"</div>
+    <span class="tag tag-test">test</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="debug_reset_button">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Botón RESET funciona</div>
+    <div class="item-desc">Al presionar RESET, la escena se recarga y la bola vuelve a su posición inicial.</div>
+    <span class="tag tag-test">test</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+</div>
+
+<!-- ============================================================ -->
+<h2>Escenas .tscn</h2>
+<div class="group">
+
+<div class="item" data-id="tscn_gesture_tracker">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">gesture_tracker.tscn</div>
+    <div class="item-desc">ChargeLine (naranja, 3px) + AimLine (cyan, 3px). Sin DebugLine viejo.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="tscn_gesture_direction">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">gesture_direction.tscn</div>
+    <div class="item-desc">PreviewLine (verde, 3px).</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="tscn_test_scene">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">test_throwing_ball.tscn</div>
+    <div class="item-desc">ResetButton, Reset node con reload_current_scene, BallStart eliminado.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="tscn_connections">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Todas las conexiones @export están correctas</div>
+    <div class="item-desc">ThrowHandler.config → ThrowConfig, ThrowHandler.spin → ThrowSpin, etc.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+</div>
+
+<!-- ============================================================ -->
+<h2>Pendiente / Futuro</h2>
+<div class="group">
+
+<div class="item" data-id="pending_retroceso">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Tiro con retroceso</div>
+    <div class="item-desc">La bola frena o retrocede al final del trayecto. No implementado actualmente.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="pending_perfiles">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Perfiles de personaje (ThrowConfig)</div>
+    <div class="item-desc">Crear diferentes .tres para distintos personajes (fuerte, técnico, etc.).</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="pending_court_config">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">CourtConfig para diferentes canchas</div>
+    <div class="item-desc">Fricción, rebote y dimensiones por cancha. No implementado.</div>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+</div>
+
+<!-- ============================================================ -->
+<h2>v6 — Nuevos componentes y tipos de tiro</h2>
+<div class="group">
+
+<div class="item" data-id="v6_steering_lookat">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">ThrowSteering con look_at()</div>
+    <div class="item-desc">La bocha usa look_at() hacia su velocity + steering progresivo. Reemplaza ThrowSpin.</div>
+    <span class="tag tag-script">script</span>
+    <span class="tag tag-physics">physics</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="v6_shape_analyzer">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">GestureShapeAnalyzer por segmentos</div>
+    <div class="item-desc">Divide aim_points en 3 segmentos y clasifica: parábola, logaritmo, C, free throw.</div>
+    <span class="tag tag-script">script</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="v6_diagonal_narrow">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">max_spread_deg = 1.5° (diagonal angosta)</div>
+    <div class="item-desc">Reducido de 3° a 1.5°. La cancha es más larga que ancha, diagonales deben ser sutiles.</div>
+    <span class="tag tag-config">config</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="v6_parabola_steering">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Parábola: steering decreciente</div>
+    <div class="item-desc">Curva fuerte al inicio del trayecto, se endereza progresivamente. Factor = (1 - progress).</div>
+    <span class="tag tag-physics">physics</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="v6_logarithm_steering">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Logaritmo: steering creciente</div>
+    <div class="item-desc">Recto al inicio, curva fuerte al final. Factor = progress.</div>
+    <span class="tag tag-physics">physics</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="v6_c_curve_steering">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">C (semicírculo): cambio de signo</div>
+    <div class="item-desc">Curva hacia un lado y luego hacia el otro. Steering cambia de signo a mitad del trayecto.</div>
+    <span class="tag tag-physics">physics</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="v6_free_throw">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Tiro libre (Free Throw)</div>
+    <div class="item-desc">aim_points se convierten en waypoints 3D. La bocha sigue los waypoints con look_at + steering.</div>
+    <span class="tag tag-script">script</span>
+    <span class="tag tag-physics">physics</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="v6_knuckleball_horizontal">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">Knuckleball horizontal con dirección</div>
+    <div class="item-desc">AIM horizontal genera wobble + impulso con componente Z lateral.</div>
+    <span class="tag tag-physics">physics</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="v6_handler_integration">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">ThrowHandler integrado con shape_analyzer</div>
+    <div class="item-desc">Recibe shape_analyzed, aplica impulso + inicia steering. Reemplaza lógica de spin.</div>
+    <span class="tag tag-script">script</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+<div class="item" data-id="v6_config_updated">
+  <input type="checkbox">
+  <div class="item-info">
+    <div class="item-title">ThrowConfig v6 actualizado</div>
+    <div class="item-desc">max_spread_deg=1.5, eliminados thresholds viejos, nuevos params steering.</div>
+    <span class="tag tag-config">config</span>
+  </div>
+  <span class="item-status status-pending">pendiente</span>
+</div>
+
+</div>
+
+<div class="actions">
+  <button class="btn" onclick="resetAll()">Reiniciar todo</button>
+  <button class="btn" onclick="exportStatus()">Copiar estado</button>
+</div>
+
+</div>
+
+<script>
+const ITEMS = document.querySelectorAll('.item');
+const STORAGE_KEY = 'throw_checklist_v6';
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    ITEMS.forEach(item => {
+      const id = item.dataset.id;
+      const cb = item.querySelector('input[type=checkbox]');
+      const status = item.querySelector('.item-status');
+      if (saved[id] === true) {
+        cb.checked = true;
+        status.textContent = '✓ ok';
+        status.className = 'item-status status-done';
+      } else if (saved[id] === false) {
+        cb.checked = false;
+        status.textContent = '✗ falla';
+        status.className = 'item-status status-fail';
+      } else {
+        cb.checked = false;
+        status.textContent = 'pendiente';
+        status.className = 'item-status status-pending';
+      }
+    });
+  } catch(e) { console.error(e); }
+  updateProgress();
+}
+
+function saveState() {
+  const state = {};
+  ITEMS.forEach(item => {
+    const id = item.dataset.id;
+    const cb = item.querySelector('input[type=checkbox]');
+    const status = item.querySelector('.item-status');
+    if (cb.checked && status.classList.contains('status-done')) {
+      state[id] = true;
+    } else if (!cb.checked && status.classList.contains('status-fail')) {
+      state[id] = false;
+    }
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function updateProgress() {
+  const total = ITEMS.length;
+  let done = 0;
+  ITEMS.forEach(item => {
+    const status = item.querySelector('.item-status');
+    if (status.classList.contains('status-done')) done++;
+  });
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = done + ' / ' + total + ' completados (' + pct + '%)';
+}
+
+ITEMS.forEach(item => {
+  const cb = item.querySelector('input[type=checkbox]');
+  cb.addEventListener('change', () => {
+    const status = item.querySelector('.item-status');
+    if (cb.checked) {
+      status.textContent = '✓ ok';
+      status.className = 'item-status status-done';
+    } else {
+      status.textContent = 'pendiente';
+      status.className = 'item-status status-pending';
+    }
+    saveState();
+    updateProgress();
+  });
+
+  item.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    const status = item.querySelector('.item-status');
+    if (status.classList.contains('status-fail')) {
+      cb.checked = false;
+      status.textContent = 'pendiente';
+      status.className = 'item-status status-pending';
+    } else {
+      cb.checked = false;
+      status.textContent = '✗ falla';
+      status.className = 'item-status status-fail';
+    }
+    saveState();
+    updateProgress();
+  });
+
+  item.addEventListener('dblclick', () => {
+    const cb2 = item.querySelector('input[type=checkbox]');
+    const status = item.querySelector('.item-status');
+    if (status.classList.contains('status-fail')) {
+      cb2.checked = false;
+      status.textContent = 'pendiente';
+      status.className = 'item-status status-pending';
+    } else {
+      cb2.checked = false;
+      status.textContent = '✗ falla';
+      status.className = 'item-status status-fail';
+    }
+    saveState();
+    updateProgress();
+  });
+});
+
+function resetAll() {
+  if (!confirm('Reiniciar todos los estados?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  loadState();
+}
+
+function exportStatus() {
+  let text = 'Throw System Checklist\n====================\n\n';
+  const groups = document.querySelectorAll('h2');
+  let currentGroup = '';
+  ITEMS.forEach(item => {
+    const h2 = item.closest('.group')?.previousElementSibling;
+    const group = h2 ? h2.textContent : '';
+    if (group !== currentGroup) {
+      currentGroup = group;
+      text += '\n' + currentGroup + '\n' + '-'.repeat(currentGroup.length) + '\n';
+    }
+    const title = item.querySelector('.item-title').textContent;
+    const status = item.querySelector('.item-status');
+    const s = status.classList.contains('status-done') ? '✓' : status.classList.contains('status-fail') ? '✗' : '○';
+    text += s + ' ' + title + '\n';
+  });
+  navigator.clipboard.writeText(text).then(() => alert('Copiado al portapapeles'));
+}
+
+loadState();
+</script>
+</body>
+</html>
