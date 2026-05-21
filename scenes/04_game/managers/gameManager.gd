@@ -14,6 +14,9 @@ var p1_turns : int = 6
 var p2_turns : int = 6
 
 ## Bochas Variables
+var bochin : Node3D = null
+var bochin_pos : Vector3 = Vector3.ZERO
+
 var bochin_thrown : bool = false
 var bochas_thrown : Array = []
 var bochas_distance : Array = []
@@ -27,6 +30,7 @@ func deduct_turn(player: String) -> void:
 
 func who_is_closer() -> void:
 	if bochas_distance[0].size() == 0 : return
+	bochin_pos = bochin.position
 	for bocha in bochas_thrown:
 		if bocha.distance_to_bochin < bochas_distance[0]:
 			bochas_distance.push_front(bocha.distance_to_bochin)
@@ -41,6 +45,8 @@ func reset_all() -> void:
 	p1_turn = true  
 	p1_turns = 6
 	p2_turns = 6
+	bochin = null
+	bochin.pos = Vector3.ZERO
 	bochin_thrown = false
 	bochas_thrown  = []
 	bochas_distance  = []

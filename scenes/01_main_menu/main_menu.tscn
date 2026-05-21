@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://bucrqu41l6xo2" path="res://TestSceneSanti/placeholders/salir.png" id="4_rqlqo"]
 [ext_resource type="Texture2D" uid="uid://1hhmdqw864mi" path="res://TestSceneSanti/placeholders/salir_select.png" id="5_6e25n"]
 [ext_resource type="Texture2D" uid="uid://noea0g8kj5tj" path="res://TestSceneSanti/placeholders/creditos_select.png" id="5_xomuy"]
+[ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="8_6prxp"]
 
 [sub_resource type="GDScript" id="GDScript_11rdk"]
 resource_name = "PlayButton"
@@ -148,9 +149,14 @@ offset_bottom = 59.39984
 scale = Vector2(0.13928252, 0.10826816)
 text = "Volver"
 
+[node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("8_6prxp")]
+
+[node name="Timer" type="Timer" parent="FadeTransition" unique_id=32502218]
+
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Creditos" to="." method="_on_creditos_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="ChooseOpp/VsPlayer" to="." method="_on_vs_player_pressed"]
 [connection signal="pressed" from="ChooseOpp/VsCPU" to="." method="_on_vs_cpu_pressed"]
 [connection signal="pressed" from="ChooseOpp/Back" to="." method="_on_back_pressed"]
+[connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]

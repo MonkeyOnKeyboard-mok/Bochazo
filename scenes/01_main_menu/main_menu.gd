@@ -17,7 +17,7 @@ func _ready() -> void:
 	choose_opp.hide()
 	#creditos_png.hide()
 	#Audio.menu.play()
-	#$fade_transition/AnimationPlayer.play("fade_out")
+	$FadeTransition/ColorRect/FadeRect.play("fade_out")
 	pass
 	
 func _process(_delta: float) -> void:
@@ -31,12 +31,6 @@ func _on_creditos_pressed() -> void:
 	#Audio.click()
 	button_type = "credits"
 	creditos()
-
-func _on_fade_timer_timeout() -> void:
-	match button_type:
-		"start": 
-			#get_tree().change_scene_to_file("res://Main/main.tscn")
-			print("Cargando escena principal")
 
 func _on_exit_pressed() -> void:
 	get_tree().quit()
@@ -72,3 +66,9 @@ func _on_vs_cpu_pressed() -> void:
 
 func _on_back_pressed() -> void:
 	choose_opp.hide()
+
+func _on_timer_timeout() -> void:
+	match button_type:
+		"start": 
+			#get_tree().change_scene_to_file("res://Main/main.tscn")
+			print("Cargando escena principal")

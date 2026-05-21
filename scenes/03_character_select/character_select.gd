@@ -20,6 +20,7 @@ func _ready() -> void:
 	print(player_list)
 	current_character = player_list [index]
 	label_player.text = "Player 1"
+	$FadeTransition/ColorRect/FadeRect.play("fade_out")
 	#player_list[0].play("idle") // Jugador 1 hace su animación idle
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -16,3 +16,7 @@ position = Vector2(960, 540)
 texture = ExtResource("2_s7wnd")
 
 [node name="FadeTransition" parent="." unique_id=188914972 instance=ExtResource("3_s7wnd")]
+
+[node name="Timer" type="Timer" parent="FadeTransition" unique_id=404336234]
+
+[connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]
