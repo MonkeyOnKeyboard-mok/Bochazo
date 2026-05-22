@@ -5,7 +5,3 @@
 [resource]
 script = ExtResource("1")
 player_name = "Raul"
-max_force = 30.0
-curve_strength = 0.3
-wobble_speed = 6.0
-wobble_force = 0.1

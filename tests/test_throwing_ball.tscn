@@ -1,10 +1,14 @@
 [gd_scene format=3 uid="uid://cp0yr0lyaga0i"]
 
-[ext_resource type="PackedScene" uid="uid://b4bqnwgulw6e6" path="res://scenes/04_game/components/court/court.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://b4bqnwgulw6e6" path="res://scenes/04_game/components/court/grass_court.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://khh2to667k2u" path="res://scenes/04_game/components/balls/bocce_ball.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://4qe83ntmmj7w" path="res://scenes/04_game/components/balls/bochin.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://h7l4bjedpvxx" path="res://scenes/04_game/components/throw_system/throw_system.tscn" id="4"]
 [ext_resource type="Resource" uid="uid://24rsp1vhri2o" path="res://resources/game_config/stats_raul.tres" id="5"]
+[ext_resource type="PackedScene" uid="uid://btroi2t6atcbl" path="res://scenes/04_game/components/court/dirty_court.tscn" id="6_8fyj8"]
+[ext_resource type="PackedScene" uid="uid://b4jiwlexyi4s2" path="res://scenes/04_game/components/court/pro_court.tscn" id="7_kybjp"]
+[ext_resource type="PackedScene" uid="uid://ch5lpe2hjqysw" path="res://scenes/04_game/components/court/sand_court.tscn" id="8_qoxh3"]
+[ext_resource type="PackedScene" uid="uid://b6kn74l0pgn83" path="res://scenes/04_game/components/court/flat_court.tscn" id="9_6ad6u"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 
@@ -27,8 +31,9 @@ func _on_reset_button_pressed() -> void:
 
 [node name="TestThrowingBall" type="Node3D" unique_id=1306207877]
 
-[node name="Court" parent="." unique_id=150222716 instance=ExtResource("1")]
+[node name="GrassCourt" parent="." unique_id=150222716 instance=ExtResource("1")]
 transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0, 0)
+visible = false
 
 [node name="TestCamera" type="Camera3D" parent="." unique_id=362319183]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -40.222416, 4.0504556, 0)
@@ -73,7 +78,7 @@ texture = SubResource("ViewportTex")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.79998, 0.6806338, 2.753825)
 
 [node name="Bochin" parent="." unique_id=1312063183 instance=ExtResource("3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.240103, 0.36360884, -1.6789726)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.240103, 0.7596563, -1.6789726)
 
 [node name="Reset" type="Node" parent="." unique_id=428890241]
 script = SubResource("ResetScript")
@@ -81,5 +86,16 @@ script = SubResource("ResetScript")
 [node name="ThrowSystem" parent="." unique_id=1442565698 node_paths=PackedStringArray("ball") instance=ExtResource("4")]
 ball = NodePath("../BocceBall")
 stats = ExtResource("5")
+
+[node name="DirtyCourt" parent="." unique_id=1767025561 instance=ExtResource("6_8fyj8")]
+visible = false
+
+[node name="ProCourt" parent="." unique_id=1382323979 instance=ExtResource("7_kybjp")]
+visible = false
+
+[node name="SandCourt" parent="." unique_id=415370930 instance=ExtResource("8_qoxh3")]
+visible = false
+
+[node name="FlatCourt" parent="." unique_id=1351929218 instance=ExtResource("9_6ad6u")]
 
 [connection signal="pressed" from="CanvasLayer/ResetButton" to="Reset" method="_on_reset_button_pressed"]

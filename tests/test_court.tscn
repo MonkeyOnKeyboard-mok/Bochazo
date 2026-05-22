@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b1u7ph1hhqb66"]
 
-[ext_resource type="PackedScene" uid="uid://b4bqnwgulw6e6" path="res://scenes/04_game/components/court/court.tscn" id="1_ksdrd"]
+[ext_resource type="PackedScene" uid="uid://b4bqnwgulw6e6" path="res://scenes/04_game/components/court/grass_court.tscn" id="1_ksdrd"]
 
 [sub_resource type="GDScript" id="GDScript_ksdrd"]
 resource_name = "test_court"
