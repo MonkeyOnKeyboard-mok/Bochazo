@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://d4mm2xvb0hd61"]
-
-[ext_resource type="Script" uid="uid://pwjyq32ykm63" path="res://scenes/04_game/components/throw_system/throw_spin.gd" id="1_aq4rx"]
-
-[node name="ThrowSpin" type="Node" unique_id=1261984182]
-script = ExtResource("1_aq4rx")

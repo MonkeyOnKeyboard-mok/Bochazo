@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="PlayerThrowStats" format=3 uid="uid://dp45rrxqkfvxh"]
+
+[ext_resource type="Script" uid="uid://cb3alnt10noh2" path="res://resources/game_config/player_throw_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+player_name = "Miguel"

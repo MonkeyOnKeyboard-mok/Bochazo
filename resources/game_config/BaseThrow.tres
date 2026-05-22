@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="ThrowConfig" format=3 uid="uid://odcp508bx42u"]
-
-[ext_resource type="Script" uid="uid://c7exa62rc3bqx" path="res://resources/game_config/throw_config.gd" id="1_w5hak"]
-
-[resource]
-script = ExtResource("1_w5hak")
-metadata/_custom_type_script = "uid://c7exa62rc3bqx"

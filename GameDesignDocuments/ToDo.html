@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Throw System v7 — ToDo</title>
+<style>
+  :root { --bg:#0f1117; --card:#181b24; --border:#2a2d3a; --text:#d4d4d8; --accent:#7c3aed; --green:#34d399; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+  .wrap { max-width:600px; margin:0 auto; padding:2rem 1.5rem; }
+  h1 { font-size:1.4rem; color:#fff; margin-bottom:0.3rem; }
+  h2 { font-size:1rem; color:var(--accent); margin:1rem 0 0.3rem; border-bottom:1px solid var(--border); padding-bottom:0.2rem; }
+  .step { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:0.6rem 0.8rem; margin:0.3rem 0; }
+  .step p { font-size:0.82rem; }
+  .step code { background:var(--border); padding:0.1rem 0.3rem; border-radius:3px; font-size:0.8rem; color:#e5e7eb; }
+  .new { background:rgba(52,211,153,0.1); border-left:3px solid var(--green); padding:0.4rem 0.7rem; border-radius:0 6px 6px 0; margin:0.4rem 0; font-size:0.82rem; }
+  pre { background:var(--border); padding:0.5rem; border-radius:6px; font-size:0.78rem; margin:0.3rem 0; overflow-x:auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Throw System v7 — ToDo</h1>
+<p style="font-size:0.8rem;color:#6b7280;">Decime "listo" cuando termines.</p>
+
+<div class="new">
+  <strong>Plug & Play:</strong> Instanciar <code>throw_system.tscn</code> → conectar solo <code>ball</code> y <code>stats</code>. Listo.
+</div>
+
+<h2>1. Abrir test_throwing_ball.tscn y probar</h2>
+
+<div class="step">
+  <p>Ya tiene <code>ThrowSystem</code> instanciado con <code>ball</code> y <code>stats_raul.tres</code> conectados. Corré y probá.</p>
+</div>
+
+<h2>2. Cambiar personaje</h2>
+
+<div class="step">
+  <p>En el inspector del nodo <code>ThrowSystem</code>, cambiá <code>stats</code>:</p>
+  <p><code>stats_raul.tres</code> — Fuerte, curva suave, wobble leve</p>
+  <p><code>stats_jorge.tres</code> — Técnico, mucha curva, wobble fuerte</p>
+  <p><code>stats_miguel.tres</code> — Balanceado</p>
+</div>
+
+<h2>3. Crear nuevo personaje</h2>
+
+<div class="step">
+  <p>Click derecho en el filesystem → New Resource → <code>PlayerThrowStats</code>. Ajustá valores y asignalo al <code>stats</code> del ThrowSystem.</p>
+  <pre>player_name: "TuPersonaje"
+max_force: 35.0          # Fuerza del tiro
+curve_strength: 0.5      # Cuánto curva
+curve_duration: 3.0      # Duración del efecto
+wobble_speed: 8.0        # Velocidad del knuckleball
+wobble_force: 0.15       # Amplitud del knuckleball
+max_spread_deg: 1.5      # Ángulo máximo diagonal
+aim_sensitivity: 300.0   # Sensibilidad del aim</pre>
+</div>
+
+</div>
+</body>
+</html>

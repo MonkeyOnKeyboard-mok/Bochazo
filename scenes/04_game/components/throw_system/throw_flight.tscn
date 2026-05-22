@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://c8k2m4n6p8qr"]
+
+[ext_resource type="Script" path="res://scenes/04_game/components/throw_system/throw_flight.gd" id="1"]
+
+[node name="ThrowFlight" type="Node"]
+script = ExtResource("1")
