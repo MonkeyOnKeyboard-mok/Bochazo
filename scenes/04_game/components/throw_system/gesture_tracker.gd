@@ -1,85 +1,88 @@
 extends Node
 class_name GestureTracker
 
-enum Phase { CHARGE, AIM }
+enum Phase { IDLE, CHARGE, WAITING, AIM }
+
+signal charge_started(pos: Vector2)
+signal charge_dragging(current: Vector2, start: Vector2)
+signal charge_ended(power_frac: float, lateral: float)
+signal aim_started(pos: Vector2)
+signal aim_drawing(points: PackedVector2Array)
+signal aim_ended(points: PackedVector2Array)
 
 @export var debug_enabled: bool = true
 @export var max_aim_points: int = 60
 @export var min_charge_distance: float = 50.0
 @export var max_charge_distance: float = 300.0
-@export var min_aim_movement: float = 15.0
+
+var phase: Phase = Phase.IDLE
+var charge_start: Vector2 = Vector2.ZERO
+var aim_points: PackedVector2Array = []
+var aim_start_y: float = 0.0
 
 @onready var charge_line: Line2D = $ChargeLine
 @onready var aim_line: Line2D = $AimLine
 
-var start_pos: Vector2
-var aim_points: PackedVector2Array = []
-var is_tracking: bool = false
-var phase: Phase = Phase.CHARGE
-var charge_distance: float = 0.0
-var prev_pos: Vector2 = Vector2.ZERO
-var aim_start_pos: Vector2 = Vector2.ZERO
-var aim_movement_total: float = 0.0
-
-signal gesture_started(start_pos: Vector2)
-signal gesture_dragging(current: Vector2, start: Vector2)
-signal gesture_phase_changed(phase: int)
-signal gesture_ended(aim_points: PackedVector2Array, was_straight: bool)
-
-func _input(event):
+func _input(event: InputEvent):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		is_tracking = event.pressed
-		if is_tracking:
-			start_pos = event.position
-			aim_points.clear()
-			charge_distance = 0.0
-			phase = Phase.CHARGE
-			prev_pos = start_pos
-			aim_movement_total = 0.0
-			if charge_line: charge_line.clear_points()
-			if aim_line: aim_line.clear_points()
-			_add_charge_point(start_pos)
-			gesture_started.emit(start_pos)
-		else:
-			var was_straight = (phase == Phase.CHARGE) or (aim_movement_total < min_aim_movement)
-			gesture_ended.emit(aim_points, was_straight)
+		_on_click(event)
+	elif event is InputEventMouseMotion and phase in [Phase.CHARGE, Phase.AIM]:
+		_on_motion(event)
 
-	elif is_tracking and event is InputEventMouseMotion:
-		var pos = event.position
-		var dy = pos.y - prev_pos.y
+func _on_click(event: InputEventMouseButton):
+	if event.pressed:
+		match phase:
+			Phase.IDLE: _start_charge(event.position)
+			Phase.WAITING: _start_aim(event.position)
+	else:
+		match phase:
+			Phase.CHARGE: _end_charge(event.position)
+			Phase.AIM: _end_aim()
 
-		if phase == Phase.CHARGE:
-			_add_charge_point(pos)
-			charge_distance += maxf(dy, 0.0)
+func _start_charge(pos: Vector2):
+	phase = Phase.CHARGE
+	charge_start = pos
+	aim_points.clear()
+	if charge_line: charge_line.clear_points(); charge_line.add_point(pos)
+	if aim_line: aim_line.clear_points()
+	charge_started.emit(pos)
 
-			if (dy <= 0.0 and charge_distance >= min_charge_distance) or charge_distance >= max_charge_distance:
-				phase = Phase.AIM
-				aim_start_pos = pos
-				if aim_line: aim_line.clear_points()
-				aim_points.clear()
-				aim_points.append(pos)
-				if aim_line: aim_line.add_point(pos)
-				gesture_phase_changed.emit(Phase.AIM)
+func _end_charge(pos: Vector2):
+	var dist = absf(pos.y - charge_start.y)
+	if dist < min_charge_distance:
+		phase = Phase.IDLE
+		charge_ended.emit(0.0, 0.0)
+		return
+	var frac = clampf(dist / max_charge_distance, 0.0, 1.0)
+	var lateral = (pos.x - charge_start.x) / max_charge_distance
+	phase = Phase.WAITING
+	charge_ended.emit(frac, lateral)
 
-		elif phase == Phase.AIM:
-			var dx = pos.x - prev_pos.x
-			var moved_enough = absf(dx) > 1.0 or dy < -1.0
+func _start_aim(pos: Vector2):
+	phase = Phase.AIM
+	aim_start_y = pos.y
+	aim_points = [pos]
+	if aim_line: aim_line.clear_points(); aim_line.add_point(pos)
+	aim_started.emit(pos)
 
-			if moved_enough:
-				aim_movement_total += Vector2(dx, dy).length()
+func _on_motion(event: InputEventMouseMotion):
+	var pos = event.position
+	if phase == Phase.CHARGE:
+		if charge_line: charge_line.add_point(Vector2(charge_start.x, pos.y))
+		charge_dragging.emit(pos, charge_start)
+	elif phase == Phase.AIM:
+		var clamped = Vector2(pos.x, minf(pos.y, aim_start_y))
+		if aim_points.size() < max_aim_points:
+			aim_points.append(clamped)
+			if debug_enabled and aim_line: aim_line.add_point(clamped)
+			aim_drawing.emit(aim_points)
 
-				if max_aim_points > 0 and aim_points.size() >= max_aim_points:
-					is_tracking = false
-					gesture_ended.emit(aim_points, false)
-				else:
-					aim_points.append(pos)
-					if debug_enabled and aim_line:
-						aim_line.add_point(pos)
+func _end_aim():
+	phase = Phase.IDLE
+	aim_ended.emit(aim_points)
 
-		gesture_dragging.emit(pos, start_pos)
-		prev_pos = pos
-
-func _add_charge_point(pos: Vector2):
-	var vertical_pos = Vector2(start_pos.x, pos.y)
-	if debug_enabled and charge_line:
-		charge_line.add_point(vertical_pos)
+func reset():
+	phase = Phase.IDLE
+	aim_points.clear()
+	if charge_line: charge_line.clear_points()
+	if aim_line: aim_line.clear_points()

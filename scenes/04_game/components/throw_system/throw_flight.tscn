@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" path="res://scenes/04_game/components/throw_system/throw_flight.gd" id="1"]
 
-[node name="ThrowFlight" type="Node"]
+[node name="ThrowFlight" type="Node" unique_name_in_owner=true]
 script = ExtResource("1")

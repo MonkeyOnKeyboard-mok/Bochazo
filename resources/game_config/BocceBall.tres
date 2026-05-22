@@ -4,4 +4,5 @@
 
 [resource]
 script = ExtResource("1_4d65w")
+ball_friction = 1.0
 metadata/_custom_type_script = "uid://brw7ud0cmgli0"

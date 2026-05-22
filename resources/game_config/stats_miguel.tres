@@ -5,3 +5,7 @@
 [resource]
 script = ExtResource("1")
 player_name = "Miguel"
+potencia = 35.0
+efecto = 0.55
+precision = 0.9
+control = 0.85

@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" uid="uid://c78wu1i7rne7c" path="res://scenes/04_game/components/throw_system/throw_aim.gd" id="1_5fj73"]
 
-[node name="ThrowAim" type="Node" unique_id=1759945484]
+[node name="ThrowAim" type="Node" unique_name_in_owner=true]
 script = ExtResource("1_5fj73")

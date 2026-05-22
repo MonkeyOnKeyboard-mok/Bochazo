@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" uid="uid://8lew35oniajs" path="res://scenes/04_game/components/throw_system/gesture_power.gd" id="1_jl66n"]
 
-[node name="GesturePower" type="Node" unique_id=1819727909]
+[node name="GesturePower" type="Node" unique_name_in_owner=true]
 script = ExtResource("1_jl66n")
