@@ -3,139 +3,63 @@ class_name ThrowFlight
 
 var ball: RigidBody3D
 
-var curve_strength: float = 0.5
-var curve_duration: float = 3.0
-var wobble_speed: float = 8.0
-var wobble_force: float = 0.15
+var efecto: float = 0.5
+var precision: float = 0.95
+var control: float = 0.85
+var max_force: float = 35.0
+var min_power: float = 0.05
 
 var _active: bool = false
-var _mode: int = 0
-var _time: float = 0.0
-var _wobble_phase: float = 0.0
-var _curve_profile: PackedFloat64Array = []
-var _start_pos: Vector3 = Vector3.ZERO
-var _total_dist: float = 0.0
+var _waypoints: PackedVector3Array = []
+var _current_wp: int = 0
+var _waypoint_reach: float = 1.5
+var _steer_factor: float = 8.0
 
-enum Mode { STRAIGHT, KNUCKLEBALL, CURVE }
+func launch(power: float, direction: Vector3, waypoints: PackedVector3Array):
+	if not ball: return
+	_waypoints = waypoints
+	_current_wp = 1 if waypoints.size() > 1 else 0
+	_active = true
+	var spread = (1.0 - precision) * 0.08
+	var dir = direction.rotated(Vector3.UP, randf_range(-spread, spread))
+	ball.apply_central_impulse(dir * power * max_force)
+	if control < 1.0:
+		var wobble = (1.0 - control) * 0.15
+		ball.apply_central_impulse(Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)).normalized() * wobble)
 
-func start_straight():
+func launch_straight(power: float, direction: Vector3):
+	if not ball: return
+	_waypoints.clear()
 	_active = false
-	_mode = Mode.STRAIGHT
+	var spread = (1.0 - precision) * 0.05
+	var dir = direction.rotated(Vector3.UP, randf_range(-spread, spread))
+	ball.apply_central_impulse(dir * power * max_force)
 
-func start_knuckleball():
-	_mode = Mode.KNUCKLEBALL
-	_active = true
-	_time = 0.0
-	_wobble_phase = randf_range(0.0, TAU)
-	_curve_profile.clear()
-	_start_pos = ball.global_position
-	var vel = ball.linear_velocity
-	_total_dist = vel.length() * curve_duration if vel.length() > 0.1 else 0.0
-
-func start_curve(aim_points: PackedVector2Array):
-	if aim_points.size() < 3:
-		start_straight()
+func _physics_process(_delta):
+	if not _active or not ball: return
+	if ball.linear_velocity.length() < 0.5:
+		_active = false
 		return
-
-	_mode = Mode.CURVE
-	_active = true
-	_time = 0.0
-	_curve_profile = _build_profile(aim_points)
-	_start_pos = ball.global_position
-	var vel = ball.linear_velocity
-	_total_dist = vel.length() * curve_duration if vel.length() > 0.1 else 0.0
-
-func _build_profile(points: PackedVector2Array) -> PackedFloat64Array:
-	var smoothed = _smooth(points, 2)
-	var start = smoothed[0]
-	var end = smoothed[smoothed.size() - 1]
-	var dir = (end - start).normalized()
-	if dir.length() < 0.1:
-		return PackedFloat64Array()
-
-	var perp = Vector2(-dir.y, dir.x)
-	var length = (end - start).length()
-	if length < 10.0:
-		return PackedFloat64Array()
-
-	var profile = PackedFloat64Array()
-	var samples = 30
-
-	for i in range(samples):
-		var t = float(i) / float(samples - 1)
-		var line_point = start + dir * length * t
-
-		var closest = _closest(smoothed, line_point)
-		var lateral = (closest - line_point).dot(perp)
-
-		profile.append(lateral / length)
-
-	var max_val = 0.0
-	for v in profile:
-		if absf(v) > max_val:
-			max_val = absf(v)
-
-	if max_val > 0.001:
-		for i in range(profile.size()):
-			profile[i] = profile[i] / max_val
-
-	return profile
-
-func _smooth(points: PackedVector2Array, passes: int) -> PackedVector2Array:
-	var result = points.duplicate()
-	for _p in passes:
-		if result.size() < 3:
-			break
-		var next = PackedVector2Array()
-		next.append(result[0])
-		for i in range(1, result.size() - 1):
-			next.append(result[i - 1] * 0.25 + result[i] * 0.5 + result[i + 1] * 0.25)
-		next.append(result[result.size() - 1])
-		result = next
-	return result
-
-func _closest(points: PackedVector2Array, target: Vector2) -> Vector2:
-	var best = points[0]
-	var best_d = 1e18
-	for p in points:
-		var d = (p - target).length_squared()
-		if d < best_d:
-			best_d = d
-			best = p
-	return best
-
-func _physics_process(delta):
-	if not _active:
-		return
-
-	var vel = ball.linear_velocity
-	if vel.length() < 0.1:
+	if _current_wp >= _waypoints.size():
 		_active = false
 		return
 
-	var traveled = (ball.global_position - _start_pos).length()
-	var progress = 1.0
-	if _total_dist > 0:
-		progress = clampf(traveled / _total_dist, 0.0, 1.0)
+	var target = _waypoints[_current_wp]
+	var to_target = Vector3(target.x - ball.global_position.x, 0, target.z - ball.global_position.z)
+	var dist = to_target.length()
 
-	var lateral_force: float = 0.0
+	if dist < _waypoint_reach:
+		_current_wp += 1
+		if _current_wp >= _waypoints.size():
+			_active = false
+		return
 
-	match _mode:
-		Mode.KNUCKLEBALL:
-			_time += delta
-			lateral_force = sin(_time * wobble_speed + _wobble_phase) * wobble_force
+	var vel = ball.linear_velocity
+	var vel_horiz = Vector3(vel.x, 0, vel.z)
+	if vel_horiz.length() < 0.3: return
 
-		Mode.CURVE:
-			if _curve_profile.size() > 0:
-				var idx = progress * float(_curve_profile.size() - 1)
-				var i0 = int(floor(idx))
-				var i1 = min(i0 + 1, _curve_profile.size() - 1)
-				var t = idx - floor(idx)
-				lateral_force = lerp(_curve_profile[i0], _curve_profile[i1], t) * curve_strength
-
-	if absf(lateral_force) > 0.001:
-		var right = ball.global_transform.basis.x
-		ball.apply_central_force(right * lateral_force)
-
-	if progress >= 1.0:
-		_active = false
+	var forward = vel_horiz.normalized()
+	var right = forward.cross(Vector3.UP).normalized()
+	var desired = to_target.normalized()
+	var lateral = desired.dot(right)
+	ball.apply_central_force(right * lateral * efecto * _steer_factor)
