@@ -1,7 +1,9 @@
 extends Node
 
 ## Global Event Signals
+@warning_ignore("unused_signal")
 signal spawn_bocha()
+@warning_ignore("unused_signal")
 signal bocha_spawned(bocha : RigidBody3D)
 ## Vs AI flag
 var vsAI : bool = false
@@ -43,6 +45,7 @@ func who_is_closer() -> void:
 	if bochas_thrown[0].player == "player1":
 		p1_turn = true
 	else: p1_turn = false
+	print("Bochas en la cancha : " ,bochas_thrown)
 
 func first_bocha(distance: float) -> void:
 	bochas_distance.append(distance)

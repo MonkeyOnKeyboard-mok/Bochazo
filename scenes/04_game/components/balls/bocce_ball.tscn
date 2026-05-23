@@ -43,6 +43,8 @@ shadow_mesh = SubResource("ArrayMesh_5ys2v")
 freeze_mode = 1
 script = ExtResource("1_qnnu0")
 physics_config = ExtResource("2_wm8ks")
+stop_velocity_threshold = null
+debug_verbose = null
 
 [node name="BallCollision" type="CollisionShape3D" parent="." unique_id=2072604333]
 shape = SubResource("SphereShape3D_67rmk")

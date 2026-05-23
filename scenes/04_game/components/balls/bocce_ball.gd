@@ -67,10 +67,13 @@ func _define_settings() -> void:
 	if settings_set : return
 	var mat = $BochaMesh.material_override as StandardMaterial3D
 	if mat:
+		mat = mat.duplicate()  # <-- creates a unique instance for this ball
+		$BochaMesh.material_override = mat
+
 		if GameManager.p1_turn:
 			mat.albedo_texture = rojo
 			player = "player1"
-		else: 
+		else:
 			mat.albedo_texture = azul
 			player = "player2"
 	settings_set = true
