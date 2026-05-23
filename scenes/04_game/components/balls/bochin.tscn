@@ -15,7 +15,7 @@ mass = 0.4
 script = ExtResource("1_fw4uf")
 physics_config = ExtResource("2_fw4uf")
 
-[node name="BallMesh" type="MeshInstance3D" parent="." unique_id=123046408]
+[node name="BochaMesh" type="MeshInstance3D" parent="." unique_id=123046408]
 mesh = SubResource("SphereMesh_5ugk0")
 
 [node name="BallCollision" type="CollisionShape3D" parent="." unique_id=169731938]

@@ -4,7 +4,4 @@
 
 [resource]
 script = ExtResource("1_l163c")
-ball_mass = 0.4
-linear_damping = 0.2
-angular_damping = 0.3
 metadata/_custom_type_script = "uid://brw7ud0cmgli0"

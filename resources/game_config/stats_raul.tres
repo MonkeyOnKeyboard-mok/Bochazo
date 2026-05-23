@@ -6,4 +6,3 @@
 script = ExtResource("1")
 player_name = "Raul"
 potencia = 40.0
-control = 1000.0

@@ -1,10 +1,9 @@
 [gd_scene format=3 uid="uid://cp0yr0lyaga0i"]
 
-[ext_resource type="PackedScene" uid="uid://khh2to667k2u" path="res://scenes/04_game/components/balls/bocce_ball.tscn" id="2"]
-[ext_resource type="PackedScene" uid="uid://4qe83ntmmj7w" path="res://scenes/04_game/components/balls/bochin.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://h7l4bjedpvxx" path="res://scenes/04_game/components/throw_system/throw_system.tscn" id="4"]
+[ext_resource type="Script" uid="uid://clwp0gamlbqfs" path="res://scenes/04_game/components/bocha_spawner/bocha_spawner.gd" id="4_0u7gl"]
 [ext_resource type="Resource" uid="uid://24rsp1vhri2o" path="res://resources/game_config/stats_raul.tres" id="5"]
-[ext_resource type="PackedScene" uid="uid://btroi2t6atcbl" path="res://scenes/04_game/components/court/dirty_court.tscn" id="6_8fyj8"]
+[ext_resource type="PackedScene" uid="uid://b6kn74l0pgn83" path="res://scenes/04_game/components/court/flat_court.tscn" id="5_r5rj8"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 
@@ -15,6 +14,21 @@ sky_material = SubResource("SkyMat")
 background_mode = 2
 sky = SubResource("Sky")
 
+[sub_resource type="GDScript" id="GDScript_0u7gl"]
+script/source = "extends Label
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta: float) -> void:
+	text = str(\"Juega el jugador 1? \", GameManager.p1_turn  , 
+	\"Turnos de jugador 1: \", GameManager.p1_turns, \"Turnos de jugador 2 :\", GameManager.p2_turns)
+"
+
 [sub_resource type="ViewportTexture" id="ViewportTex"]
 viewport_path = NodePath("SubViewport")
 
@@ -22,7 +36,8 @@ viewport_path = NodePath("SubViewport")
 script/source = "extends Node
 
 func _on_reset_button_pressed() -> void:
-	get_tree().reload_current_scene()
+	#get_tree().reload_current_scene()
+	GameManager.spawn_bocha.emit()
 "
 
 [node name="TestThrowingBall" type="Node3D" unique_id=1306207877]
@@ -47,8 +62,12 @@ offset_right = 1731.0
 offset_bottom = 340.0
 text = "RESET"
 
-[node name="BocceBall" parent="." unique_id=63890350 instance=ExtResource("2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.015383, 1.0616543, 0.074545436)
+[node name="Test_Turns" type="Label" parent="CanvasLayer" unique_id=841508906]
+offset_left = 104.0
+offset_top = 54.0
+offset_right = 144.0
+offset_bottom = 77.0
+script = SubResource("GDScript_0u7gl")
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=731301028]
 transparent_bg = true
@@ -66,19 +85,18 @@ offset_right = 1852.0
 offset_bottom = 233.0
 texture = SubResource("ViewportTex")
 
-[node name="BocceBall2" parent="." unique_id=426834441 instance=ExtResource("2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.79998, 0.6806338, 2.753825)
-
-[node name="Bochin" parent="." unique_id=1312063183 instance=ExtResource("3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.240103, 1.9485402, -1.6789726)
-
 [node name="Reset" type="Node" parent="." unique_id=428890241]
 script = SubResource("ResetScript")
 
-[node name="ThrowSystem" parent="." unique_id=864086691 node_paths=PackedStringArray("ball") instance=ExtResource("4")]
-ball = NodePath("../BocceBall")
+[node name="ThrowSystem" parent="." unique_id=864086691 instance=ExtResource("4")]
 stats = ExtResource("5")
 
-[node name="Court" parent="." unique_id=1767025561 instance=ExtResource("6_8fyj8")]
+[node name="Court" parent="." unique_id=1767025561 instance=ExtResource("5_r5rj8")]
+
+[node name="BochaSpawner" type="Node3D" parent="." unique_id=1619815305]
+script = ExtResource("4_0u7gl")
+
+[node name="BochaPos" type="Marker3D" parent="BochaSpawner" unique_id=456937765]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.539896, 1.1839142, 0)
 
 [connection signal="pressed" from="CanvasLayer/ResetButton" to="Reset" method="_on_reset_button_pressed"]

@@ -1,7 +1,9 @@
 extends Node3D
 class_name ThrowSystem
 
-@export var ball: RigidBody3D
+
+const BOCHIN = preload("uid://4qe83ntmmj7w")
+
 @export var stats: PlayerThrowStats
 
 @onready var tracker: GestureTracker = %GestureTracker
@@ -10,12 +12,15 @@ class_name ThrowSystem
 @onready var aim: ThrowAim = %ThrowAim
 @onready var flight: ThrowFlight = %ThrowFlight
 
+var start_pos : Vector3 = Vector3(-27.54,1.184,0)
 var _stored_power: float = 0.0
 var _stored_lateral: float = 0.0
+var ball : RigidBody3D = null
 
 func _ready():
+	GameManager.connect("bocha_spawned", update_bocha)
 	_wire()
-	if stats: _apply_stats()
+	if stats: _apply_stats() 
 
 func _wire():
 	power.tracker = tracker
@@ -72,3 +77,8 @@ func _get_forward(camera: Camera3D) -> Vector3:
 		fwd.y = 0
 		return fwd.normalized()
 	return Vector3.FORWARD
+
+func update_bocha(bocha : RigidBody3D) -> void:
+	ball = bocha
+	flight.ball = ball
+	if stats: _apply_stats()
