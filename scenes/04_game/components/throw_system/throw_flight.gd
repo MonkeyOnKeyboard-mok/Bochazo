@@ -22,7 +22,14 @@ func launch(power: float, direction: Vector3, waypoints: PackedVector3Array):
 	_active = true
 	var spread = (1.0 - precision) * 0.08
 	var dir = direction.rotated(Vector3.UP, randf_range(-spread, spread))
+	GameManager.emit_signal("throw")
+	while !GameManager.throw_for_real:
+		print("XD222")
+		await get_tree().create_timer(0.1).timeout
+	ball.global_position = Vector3(-27.54,0.3,0.0)
 	ball.apply_central_impulse(dir * power * max_force)
+	ball.is_thrown = true ## Agregado Santi
+	GameManager.throw_for_real = false
 	if control < 1.0:
 		var wobble = (1.0 - control) * 0.15
 		ball.apply_central_impulse(Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)).normalized() * wobble)
@@ -33,7 +40,14 @@ func launch_straight(power: float, direction: Vector3):
 	_active = false
 	var spread = (1.0 - precision) * 0.05
 	var dir = direction.rotated(Vector3.UP, randf_range(-spread, spread))
+	GameManager.emit_signal("throw")
+	while !GameManager.throw_for_real:
+		print("XD333")
+		await get_tree().create_timer(0.1).timeout
+	ball.global_position = Vector3(-27.54,0.3,0.0)
 	ball.apply_central_impulse(dir * power * max_force)
+	ball.is_thrown = true ## Agregado Santi
+	GameManager.throw_for_real = false
 
 func _physics_process(_delta):
 	if not _active or not ball: return

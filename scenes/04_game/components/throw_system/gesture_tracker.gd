@@ -40,6 +40,7 @@ func _on_click(event: InputEventMouseButton):
 			Phase.AIM: _end_aim()
 
 func _start_charge(pos: Vector2):
+	GameManager.emit_signal("charge_throw")
 	phase = Phase.CHARGE
 	charge_start = pos
 	aim_points.clear()

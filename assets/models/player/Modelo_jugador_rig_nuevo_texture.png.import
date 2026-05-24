@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://coy0gskhric15"
-path.s3tc="res://.godot/imported/Modelo_jugador_rig_nuevo_texture.png-370bc746f073e550e438c018a86f7e28.s3tc.ctex"
+path.s3tc="res://.godot/imported/Modelo_jugador_rig_nuevo_texture.png-64047378c4f9bf9f0bf34f5d799b1e99.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -14,8 +14,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://assets/models/raul/Modelo_jugador_rig_nuevo_texture.png"
-dest_files=["res://.godot/imported/Modelo_jugador_rig_nuevo_texture.png-370bc746f073e550e438c018a86f7e28.s3tc.ctex"]
+source_file="res://assets/models/player/Modelo_jugador_rig_nuevo_texture.png"
+dest_files=["res://.godot/imported/Modelo_jugador_rig_nuevo_texture.png-64047378c4f9bf9f0bf34f5d799b1e99.s3tc.ctex"]
 
 [params]
 
