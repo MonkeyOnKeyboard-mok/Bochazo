@@ -70,6 +70,9 @@ func _on_reset_button_pressed() -> void:
 		GameManager.spawn_bocha.emit()
 "
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_r5rj8"]
+viewport_path = NodePath("SubViewport2")
+
 [node name="TestThrowingBall" type="Node3D" unique_id=1306207877]
 
 [node name="TestCamera" type="Camera3D" parent="." unique_id=362319183]
@@ -134,10 +137,42 @@ stats = ExtResource("5")
 script = ExtResource("4_0u7gl")
 
 [node name="BochaPos" type="Marker3D" parent="BochaSpawner" unique_id=456937765]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.54, 0.5452657, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.225138, 0.43813962, -0.063742846)
 
 [node name="raul2" parent="." unique_id=1037237290 instance=ExtResource("5_8fyj8")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -29.149254, 0, -0.9683605)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -29.149254, 0.4202634, -0.9683605)
+
+[node name="Skeleton3D" parent="raul2/Armature_001" parent_id_path=PackedInt32Array(1037237290, 1651209447) index="0" unique_id=271522685]
+bones/0/position = Vector3(0.30094972, 2.4435666, 0.1972579)
+bones/0/rotation = Quaternion(0.6081469, 0.39044768, 0.24895765, -0.6447698)
+bones/0/scale = Vector3(0.9978718, 0.99866205, 0.95070016)
+bones/2/rotation = Quaternion(0.02628295, 0.32585332, 0.05530122, 0.9434356)
+bones/3/rotation = Quaternion(0.015200371, 0.014169954, 0.08852984, 0.9958568)
+bones/4/rotation = Quaternion(0.09656134, 0.7046515, 0.09496509, 0.69650835)
+bones/5/position = Vector3(0.098914206, 0.88015676, 0.07041482)
+bones/5/rotation = Quaternion(0.039152652, 0.03118385, 0.9983187, -0.0292323)
+bones/6/position = Vector3(-0.7053874, 2.2278285, 0.22392389)
+bones/6/rotation = Quaternion(0.5164489, -0.4106758, -0.7255068, 0.19561675)
+bones/6/scale = Vector3(0.9727784, 0.9937379, 0.98137224)
+bones/8/position = Vector3(-0.13359256, 0.91605085, 0.06595397)
+bones/8/rotation = Quaternion(0.054407798, -0.45059025, 0.8604714, -0.23151043)
+
+[node name="BoneAttachment3D" parent="raul2/Armature_001/Skeleton3D" index="5" unique_id=1641692452]
+transform = Transform3D(-0.38112748, -0.12307677, -0.894769, -0.71231353, -0.5559847, 0.38282454, -0.54195136, 0.8143624, 0.1261942, -0.79174006, 1.8671683, 0.7148963)
+
+[node name="SubViewport2" type="SubViewport" parent="." unique_id=1015136399]
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport2" unique_id=1670840217]
+transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, -29.302715, 1.5956507, 3.0734487)
+
+[node name="SubViewport2TR" type="TextureRect" parent="." unique_id=1093010804]
+offset_left = 1372.0
+offset_top = 498.0
+offset_right = 1884.0
+offset_bottom = 1010.0
+texture = SubResource("ViewportTexture_r5rj8")
 
 [connection signal="pressed" from="CanvasLayer/ResetButton" to="Reset" method="_on_reset_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Test_Who_Won" to="CanvasLayer/Test_Who_Won" method="_on_pressed"]
+
+[editable path="raul2"]

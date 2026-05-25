@@ -6,6 +6,8 @@ var current_player : bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	make_model_transparent(self, 0.2)
+	enable_shadows(self) ### Not working
 	GameManager.connect("idle", play_idle_anim)
 	GameManager.connect("charge_throw", play_charge_throw_anim)
 	GameManager.connect("throw", play_throw_anim)
@@ -30,3 +32,26 @@ func play_lose_anim() -> void:
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "throw_2":
 		GameManager.throw_for_real = true
+
+
+func make_model_transparent(node: Node, alpha: float):
+	if node is MeshInstance3D:
+		for i in node.mesh.get_surface_count():
+			var mat = node.get_active_material(i)
+
+			if mat:
+				mat = mat.duplicate()
+				mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+				mat.albedo_color.a = alpha
+
+				node.set_surface_override_material(i, mat)
+
+	for child in node.get_children():
+		make_model_transparent(child, alpha)
+
+func enable_shadows(node: Node):
+	if node is MeshInstance3D:
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+
+	for child in node.get_children():
+		enable_shadows(child)
