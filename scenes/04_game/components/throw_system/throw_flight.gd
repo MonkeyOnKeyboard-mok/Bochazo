@@ -12,32 +12,32 @@ var min_power: float = 0.05
 var _active: bool = false
 var _waypoints: PackedVector3Array = []
 var _current_wp: int = 0
-var _waypoint_reach: float = 1.5
-var _steer_factor: float = 8.0
+var _waypoint_reach: float = 1.2
+var _steer_factor: float = 20.0
 
 func launch(power: float, direction: Vector3, waypoints: PackedVector3Array):
 	if not ball: return
 	_waypoints = waypoints
 	_current_wp = 1 if waypoints.size() > 1 else 0
 	_active = true
-	var spread = (1.0 - precision) * 0.08
+	var spread = (1.0 - precision) * 0.06
 	var dir = direction.rotated(Vector3.UP, randf_range(-spread, spread))
 	ball.apply_central_impulse(dir * power * max_force)
 	if control < 1.0:
-		var wobble = (1.0 - control) * 0.15
+		var wobble = (1.0 - control) * 0.1
 		ball.apply_central_impulse(Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)).normalized() * wobble)
 
 func launch_straight(power: float, direction: Vector3):
 	if not ball: return
 	_waypoints.clear()
 	_active = false
-	var spread = (1.0 - precision) * 0.05
+	var spread = (1.0 - precision) * 0.04
 	var dir = direction.rotated(Vector3.UP, randf_range(-spread, spread))
 	ball.apply_central_impulse(dir * power * max_force)
 
 func _physics_process(_delta):
 	if not _active or not ball: return
-	if ball.linear_velocity.length() < 0.5:
+	if ball.linear_velocity.length() < 0.3:
 		_active = false
 		return
 	if _current_wp >= _waypoints.size():
@@ -56,7 +56,7 @@ func _physics_process(_delta):
 
 	var vel = ball.linear_velocity
 	var vel_horiz = Vector3(vel.x, 0, vel.z)
-	if vel_horiz.length() < 0.3: return
+	if vel_horiz.length() < 0.2: return
 
 	var forward = vel_horiz.normalized()
 	var right = forward.cross(Vector3.UP).normalized()

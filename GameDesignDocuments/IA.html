@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>IA de Tiro - Diseño</title>
+<style>
+  body { font-family: 'Segoe UI', sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; background: #1e1e2e; color: #cdd6f4; }
+  h1 { color: #f38ba8; border-bottom: 2px solid #f38ba8; padding-bottom: .5rem; }
+  h2 { color: #89b4fa; margin-top: 2rem; }
+  h3 { color: #a6e3a1; }
+  code { background: #313244; padding: .15rem .4rem; border-radius: 4px; font-size: .9em; }
+  pre { background: #313244; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { border: 1px solid #45475a; padding: .5rem .8rem; text-align: left; }
+  th { background: #313244; color: #89b4fa; }
+  .tag { display: inline-block; background: #45475a; padding: .1rem .5rem; border-radius: 4px; font-size: .8em; margin: .2rem; }
+  .tag.green { background: #1e4a2e; color: #a6e3a1; }
+  .tag.red { background: #4a1e2e; color: #f38ba8; }
+  .tag.blue { background: #1e2e4a; color: #89b4fa; }
+  .tag.yellow { background: #4a4a1e; color: #f9e2af; }
+  .phase { background: #313244; border-left: 4px solid #89b4fa; padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+  .warn { background: #4a1e2e; border-left: 4px solid #f38ba8; padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+  .ok { background: #1e4a2e; border-left: 4px solid #a6e3a1; padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+  .checklist li { margin: .3rem 0; }
+  .checklist li::before { content: "☐ "; color: #f9e2af; }
+</style>
+</head>
+<body>
+
+<h1>🎯 IA de Tiro - Arbol de Decisiones</h1>
+
+<h2>Resumen</h2>
+<p>La IA saltea todo el sistema de gestos del jugador y directamente genera los parametros que <code>ThrowFlight</code> necesita para lanzar la bocha. Se entrena un <strong>Arbol de Decisiones</strong> simulando tiros al azar y evaluando si el resultado final esta mas cerca del bochin que las bochas existentes.</p>
+
+<div class="ok">
+<strong>Principio clave:</strong> La IA NO dibuja. La IA NO usa GestureTracker/GesturePower/ThrowAim. La IA genera directamente los parametros de <code>ThrowFlight.launch()</code> y <code>ThrowFlight.launch_straight()</code>.
+</div>
+
+<h2>1. Arquitectura</h2>
+
+<h3>1.1 Componentes</h3>
+<table>
+<tr><th>Archivo</th><th>Rol</th><th>Descripcion</th></tr>
+<tr><td><code>ai_throw_brain.gd</code></td><td>Brain</td><td>Arbol de decisiones entrenado. Recibe el contexto del juego y devuelve parametros de lanzamiento.</td></tr>
+<tr><td><code>ai_throw_simulator.gd</code></td><td>Simulador</td><td>Ejecuta simulaciones de tiros en batch para entrenar el arbol.</td></tr>
+<tr><td><code>ai_context.gd</code></td><td>Contexto</td><td>Recolecta datos del juego: posicion del bochin, cancha, bochas cercanas, stats del personaje.</td></tr>
+<tr><td><code>ai_throw_params.gd</code></td><td>Parametros</td><td>Resource: estructura de datos que la IA produce como resultado.</td></tr>
+<tr><td><code>ai_tree_node.gd</code></td><td>Nodo Arbol</td><td>Nodo individual del arbol de decisiones (pregunta → rama izq/der → hoja resultado).</td></tr>
+<tr><td><code>ai_trainer.gd</code></td><td>Entrenador</td><td>Genera datos de entrenamiento y construye el arbol.</td></tr>
+</table>
+
+<h3>1.2 Flujo de la IA</h3>
+<div class="phase">
+<pre>
+┌─────────────┐     ┌──────────────┐     ┌────────────────┐
+│ AIContext    │────→│ AIThrowBrain  │────→│ ThrowFlight    │
+│ (lee juego) │     │ (arbol dec.)  │     │ (ejecuta tiro) │
+└─────────────┘     └──────────────┘     └────────────────┘
+     │                    │
+     │  tipo_cancha       │  AIThrowParams:
+     │  bochin_pos        │    power: float
+     │  bochas_cercanas   │    direction: Vector3
+     │  stats_personaje   │    waypoints: PackedVector3Array
+     │  distancia_bochin  │    (o null → straight)
+     └────────────────────┘
+</pre>
+</div>
+
+<h2>2. Parametros que ThrowFlight Necesita</h2>
+
+<h3>2.1 launch() - Tiro con curva</h3>
+<pre>
+ThrowFlight.launch(power: float, direction: Vector3, waypoints: PackedVector3Array)
+</pre>
+<table>
+<tr><th>Parametro</th><th>Tipo</th><th>Rango</th><th>Descripcion</th></tr>
+<tr><td><code>power</code></td><td>float</td><td>0.0 - 1.0</td><td>Fuerza del impulso (fraccion de max_force)</td></tr>
+<tr><td><code>direction</code></td><td>Vector3</td><td>normalized, Y=0</td><td>Direccion del lanzamiento en el plano XZ</td></tr>
+<tr><td><code>waypoints</code></td><td>PackedVector3Array</td><td>min 2 puntos</td><td>Puntos 3D que la bola sigue con steering</td></tr>
+</table>
+
+<h3>2.2 launch_straight() - Tiro recto</h3>
+<pre>
+ThrowFlight.launch_straight(power: float, direction: Vector3)
+</pre>
+<table>
+<tr><th>Parametro</th><td>Tipo</td><th>Rango</th><th>Descripcion</th></tr>
+<tr><td><code>power</code></td><td>float</td><td>0.0 - 1.0</td><td>Fuerza del impulso</td></tr>
+<tr><td><code>direction</code></td><td>Vector3</td><td>normalized, Y=0</td><td>Direccion del lanzamiento</td></tr>
+</table>
+
+<h3>2.3 Stats que afectan el resultado</h3>
+<table>
+<tr><th>Stat</th><th>Efecto en ThrowFlight</th></tr>
+<tr><td><code>potencia</code></td><td>max_force del impulso</td></tr>
+<tr><td><code>efecto</code></td><td>Fuerza lateral de steering hacia waypoints</td></tr>
+<tr><td><code>precision</code></td><td>Desviacion aleatoria al lanzar (menor precision = mas spread)</td></tr>
+<tr><td><code>control</code></td><td>Wobble aleatorio inicial (menor control = mas wobble)</td></tr>
+</table>
+
+<h2>3. AIThrowParams - Resultado de la IA</h2>
+<div class="phase">
+<pre>
+class_name AIThrowParams
+extends Resource
+
+var power: float = 0.5          # 0.0 - 1.0
+var direction: Vector3 = Vector3.FORWARD  # normalized, Y=0
+var waypoints: PackedVector3Array = []  # vacio = tiro recto
+var is_straight: bool = false   # true = launch_straight
+</pre>
+</div>
+
+<h2>4. AIContext - Entrada del Arbol</h2>
+
+<h3>4.1 Datos de entrada</h3>
+<table>
+<tr><th>Dato</th><th>Tipo</th><th>Descripcion</th><th>Discretizacion</th></tr>
+<tr><td><code>court_type</code></td><td>int</td><td>Tipo de cancha (arena, pasto, cemento, etc)</td><td>Enum directo</td></tr>
+<tr><td><code>bochin_pos</code></td><td>Vector3</td><td>Posicion del bochin</td><td>Distancia normalizada al lanzador (0-1)</td></tr>
+<tr><td><code>bochin_angle</code></td><td>float</td><td>Angulo del bochin relativo al forward</td><td>5 rangos: centro, izq-centro, izq, der-centro, der</td></tr>
+<tr><td><code>nearest_ally_dist</code></td><td>float</td><td>Distancia de la bocha aliada mas cercana al bochin</td><td>3 rangos: cerca (&lt;2m), medio (2-5m), lejos (&gt;5m)</td></tr>
+<tr><td><code>nearest_enemy_dist</code></td><td>float</td><td>Distancia de la bocha enemiga mas cercana al bochin</td><td>3 rangos: cerca, medio, lejos</td></tr>
+<tr><td><code>offense_need</code></td><td>int</td><td>Necesidad ofensiva: 0=ya ganando, 1=empate, 2=perdiendo</td><td>Enum directo</td></tr>
+<tr><td><code>stats.potencia</code></td><td>float</td><td>Stat del personaje</td><td>Continuo</td></tr>
+<tr><td><code>stats.efecto</code></td><td>float</td><td>Stat del personaje</td><td>Continuo</td></tr>
+<tr><td><code>stats.precision</code></td><td>float</td><td>Stat del personaje</td><td>Continuo</td></tr>
+<tr><td><code>stats.control</code></td><td>float</td><td>Stat del personaje</td><td>Continuo</td></tr>
+</table>
+
+<h3>4.2 Simplificacion: Las 2 bochas mas cercanas</h3>
+<p>Para limitar la complejidad del arbol, solo consideramos las 2 bochas mas cercanas al bochin:</p>
+<ul>
+<li><code>nearest_ally_1</code>: bocha aliada mas cercana al bochin</li>
+<li><code>nearest_ally_2</code>: segunda bocha aliada mas cercana (o null)</li>
+<li><code>nearest_enemy_1</code>: bocha enemiga mas cercana al bochin</li>
+<li><code>nearest_enemy_2</code>: segunda bocha enemiga mas cercana (o null)</li>
+</ul>
+<p>De cada una solo guardamos <code>dist_to_bochin</code> y <code>angle_relative</code>.</p>
+
+<h2>5. Arbol de Decisiones</h2>
+
+<h3>5.1 Estructura del nodo</h3>
+<pre>
+class_name AITreeNode
+extends Resource
+
+# Nodo de pregunta (split)
+var feature: String = ""        # ej: "bochin_dist", "nearest_enemy_dist"
+var threshold: float = 0.0     # valor de corte
+var left: AITreeNode = null     # feature &lt; threshold
+var right: AITreeNode = null    # feature &gt;= threshold
+
+# Nodo hoja (decision)
+var params: AIThrowParams = null  # si es hoja, tiene los parametros
+var is_leaf: bool = false
+</pre>
+
+<h3>5.2 Features del arbol</h3>
+<p>El arbol hace preguntas sobre el contexto. Cada nodo interno pregunta:</p>
+<pre>
+if context[feature] &lt; threshold:
+    go left
+else:
+    go right
+</pre>
+
+<p>Features posibles con sus discretizaciones:</p>
+<table>
+<tr><th>Feature</th><th>Valores</th><th>Ejemplo pregunta</th></tr>
+<tr><td><code>bochin_dist_norm</code></td><td>0.0 - 1.0</td><td>"¿El bochin esta cerca?" → threshold 0.5</td></tr>
+<tr><td><code>bochin_angle</code></td><td>-1.0 - 1.0</td><td>"¿El bochin esta a la izquierda?"</td></tr>
+<tr><td><code>nearest_enemy_dist</code></td><td>0.0 - 1.0</td><td>"¿Hay un enemigo cerca del bochin?"</td></tr>
+<tr><td><code>offense_need</code></td><td>0, 1, 2</td><td>"¿Estamos perdiendo?"</td></tr>
+<tr><td><code>court_type</code></td><td>0 - 4</td><td>"¿Es cancha de arena?"</td></tr>
+</table>
+
+<h3>5.3 Hojas del arbol = AIThrowParams</h3>
+<p>Cada hoja contiene:</p>
+<ul>
+<li><code>power</code>: fuerza del lanzamiento (0-1)</li>
+<li><code>angle_offset</code>: angulo de desviacion respecto al bochin (radianes)</li>
+<li><code>curve_intensity</code>: 0 = recto, >0 = curva con waypoints laterales</li>
+<li><code>curve_side</code>: -1 izquierda, +1 derecha, 0 recto</li>
+</ul>
+<p>A partir de estos valores, <code>AIThrowBrain</code> calcula los <code>waypoints</code> 3D y el <code>direction</code> final.</p>
+
+<h2>6. Entrenamiento</h2>
+
+<h3>6.1 Algoritmo</h3>
+<div class="phase">
+<ol>
+<li><strong>Generar contexto aleatorio:</strong> posicion del bochin, cancha, bochas existentes, stats del personaje</li>
+<li><strong>Generar parametros aleatorios:</strong> power, angle_offset, curve_intensity, curve_side</li>
+<li><strong>Simular el tiro:</strong> lanzar la bola con estos parametros en la fisica de Godot</li>
+<li><strong>Esperar a que se detenga:</strong> medir distancia final al bochin</li>
+<li><strong>Calcular reward:</strong>
+    <ul>
+    <li><em>Excelente:</em> Distancia &lt; bocha aliada mas cercana → reward alto</li>
+    <li><em>Bueno:</em> Distancia &lt; bocha enemiga mas cercana → reward medio</li>
+    <li><em>Malo:</em> Distancia &gt; bocha enemiga mas cercana → reward bajo</li>
+    </ul>
+</li>
+<li><strong>Construir arbol:</strong> Dividir los datos usando el feature y threshold que mejor separa los buenos resultados de los malos (CART algorithm)</li>
+<li><strong>Podar:</strong> Limitar profundidad maxima (5-7 niveles)</li>
+<li><strong>Guardar:</strong> Serializar el arbol como .tres resource</li>
+</ol>
+</div>
+
+<h3>6.2 Funcion de Reward</h3>
+<pre>
+func calculate_reward(final_pos, bochin_pos, ally_dists, enemy_dists) -&gt; float:
+    var dist_to_bochin = final_pos.distance_to(bochin_pos)
+    var best_ally = ally_dists.min() if ally_dists.size() &gt; 0 else INF
+    var best_enemy = enemy_dists.min() if enemy_dists.size() &gt; 0 else INF
+    
+    var score = 0.0
+    
+    # Bonus por estar cerca del bochin
+    score += clampf(1.0 - dist_to_bochin / 30.0, 0.0, 1.0)
+    
+    # Bonus por superar a la mejor bocha aliada
+    if dist_to_bochin &lt; best_ally:
+        score += 0.5
+    
+    # Bonus por superar a la mejor bocha enemiga
+    if dist_to_bochin &lt; best_enemy:
+        score += 0.3
+    
+    # Penalty por quedar muy lejos
+    if dist_to_bochin &gt; 10.0:
+        score -= 0.3
+    
+    return score
+</pre>
+
+<h3>6.3 Generacion de Waypoints para Simulacion</h3>
+<p>Dado un <code>angle_offset</code> y <code>curve_intensity</code>, la IA genera los waypoints 3D:</p>
+<pre>
+func generate_waypoints(ball_pos, bochin_pos, angle_offset, curve_intensity, curve_side):
+    var direction = (bochin_pos - ball_pos).normalized()
+    direction = direction.rotated(Vector3.UP, angle_offset)
+    
+    if curve_intensity &lt; 0.05:
+        return []  # tiro recto
+    
+    var dist = ball_pos.distance_to(bochin_pos)
+    var wp_count = int(3 + curve_intensity * 5)
+    var waypoints = PackedVector3Array()
+    var right = direction.cross(Vector3.UP).normalized()
+    
+    for i in range(wp_count):
+        var t = float(i) / float(wp_count - 1)
+        var pos = ball_pos + direction * dist * t
+        # Curva senoidal: pico en el medio
+        var lateral = sin(t * PI) * curve_intensity * curve_side * dist * 0.15
+        pos += right * lateral
+        pos.y = ball_pos.y
+        waypoints.append(pos)
+    
+    return waypoints
+</pre>
+
+<h2>7. Tipos de Cancha</h2>
+<table>
+<tr><th>Enum</th><th>Nombre</th><th>Friction</th><th>Bounce</th><th>Efecto en IA</th></tr>
+<tr><td>0</td><td>SAND</td><td>0.8</td><td>0.1</td><td>La bola frena rapido → mas potencia, curvas mas cerradas</td></tr>
+<tr><td>1</td><td>GRASS</td><td>0.6</td><td>0.15</td><td>Equilibrado</td></tr>
+<tr><td>2</td><td>DIRT</td><td>0.5</td><td>0.2</td><td>Rodado largo → menos potencia, mas control</td></tr>
+<tr><td>3</td><td>FLAT/CEMENT</td><td>0.3</td><td>0.3</td><td>Muy rapido → se exageran las curvas</td></tr>
+<tr><td>4</td><td>PRO</td><td>0.4</td><td>0.25</td><td>Rapido pero predecible</td></tr>
+</table>
+
+<h2>8. Estrategias Segun Contexto</h2>
+<table>
+<tr><th>Situacion</th><th>Estrategia</th><th>power</th><th>curve</th><th>angle_offset</th></tr>
+<tr><td>Bochin cerca, sin enemigos</td><td>Tiro directo preciso</td><td>0.4-0.6</td><td>0</td><td>~0</td></tr>
+<tr><td>Bochin lejos</td><td>Tiro con mas potencia</td><td>0.7-1.0</td><td>baja</td><td>~0</td></tr>
+<tr><td>Enemigo muy cerca del bochin</td><td>Tiro con curva para desplazar</td><td>0.6-0.8</td><td>alta</td><td>angulo abierto</td></tr>
+<tr><td>Aliado ya cerca del bochin</td><td>Tiro corto de aseguracion</td><td>0.3-0.5</td><td>0</td><td>~0</td></tr>
+<tr><td>Cancha de arena</td><td>Mas potencia por friccion</td><td>+0.1</td><td>reducida</td><td>—</td></tr>
+<tr><td>Cancha de cemento</td><td>Menos potencia, mas_precision</td><td>-0.1</td><td>reducida</td><td>—</td></tr>
+</table>
+
+<h2>9. Integracion con ThrowSystem Existente</h2>
+
+<h3>9.1 AIPlayer - Componente nuevo</h3>
+<pre>
+class_name AIPlayer
+extends Node
+
+@export var stats: PlayerThrowStats
+@export var ball: BocceBall
+
+var brain: AIThrowBrain
+var flight: ThrowFlight
+
+func take_turn(bochin_pos: Vector3, court_type: int, bochas: Array):
+    var context = AIContext.gather(bochin_pos, court_type, bochas, stats, ball.global_position)
+    var params = brain.decide(context)
+    
+    # Aplicar stats del personaje
+    flight.efecto = stats.efecto
+    flight.precision = stats.precision
+    flight.control = stats.control
+    flight.max_force = stats.potencia
+    flight.ball = ball
+    
+    if params.is_straight or params.waypoints.size() &lt; 2:
+        flight.launch_straight(params.power, params.direction)
+    else:
+        flight.launch(params.power, params.direction, params.waypoints)
+</pre>
+
+<h3>9.2 El flujo completo en juego</h3>
+<pre>
+Turno IA:
+  1. AIContext.gather() → recolecta datos del juego
+  2. AIThrowBrain.decide(context) → devuelve AIThrowParams
+  3. AIThrowParams → ThrowFlight.launch() → bola vuela
+  4. Esperar a que la bola se detenga (señal stopped_moving)
+  5. Evaluar resultado (para entrenamiento futuro)
+</pre>
+
+<h2>10. Plan de Implementacion</h2>
+
+<ul class="checklist">
+<li>☑ <strong>Paso 1:</strong> Crear <code>ai_throw_params.gd</code> - Resource con los parametros de lanzamiento</li>
+<li>☑ <strong>Paso 2:</strong> Crear <code>ai_context.gd</code> - Recolector de contexto del juego</li>
+<li>☑ <strong>Paso 3:</strong> Crear <code>ai_tree_node.gd</code> - Nodo del arbol de decisiones</li>
+<li>☑ <strong>Paso 4:</strong> Crear <code>ai_throw_brain.gd</code> - Evaluador del arbol con noise por dificultad</li>
+<li>☑ <strong>Paso 5:</strong> Crear <code>ai_throw_simulator.gd</code> - Simulador de tiros (legacy)</li>
+<li>☑ <strong>Paso 6:</strong> Crear <code>ai_trainer.gd</code> - Algoritmo CART para construir el arbol</li>
+<li>☑ <strong>Paso 7:</strong> Crear <code>ai_training_runner.gd</code> - Runner de simulaciones async</li>
+<li>☑ <strong>Paso 8:</strong> Crear <code>ai_training_ball.gd/.tscn</code> - Bola de entrenamiento</li>
+<li>☑ <strong>Paso 9:</strong> Crear <code>ai_training_controller.gd</code> - UI del training_AI.tscn</li>
+<li>☑ <strong>Paso 10:</strong> Crear <code>ai_test_controller.gd</code> - UI del test_AI.tscn</li>
+<li>☑ <strong>Paso 11:</strong> Crear <code>ai_difficulty_config.gd</code> - Resource de niveles de dificultad</li>
+<li>☑ <strong>Paso 12:</strong> Crear <code>ai_training_result.gd</code> - Resource para guardar arbol entrenado</li>
+<li>☑ <strong>Paso 13:</strong> Crear 5 configs de dificultad (.tres)</li>
+<li>☑ <strong>Paso 14:</strong> Crear <code>training_AI.tscn</code> - Escena de entrenamiento</li>
+<li>☑ <strong>Paso 15:</strong> Crear <code>test_AI.tscn</code> - Escena de test</li>
+<li>☐ <strong>Paso 16:</strong> Entrenar el arbol en el editor con training_AI.tscn</li>
+<li>☐ <strong>Paso 17:</strong> Probar la IA en test_AI.tscn</li>
+<li>☐ <strong>Paso 18:</strong> Integrar AIPlayer en la escena de juego real</li>
+</ul>
+
+<h2>11. Archivos Implementados</h2>
+<pre>
+scenes/04_game/ai/
+├── ai_throw_params.gd       # Resource: parametros de lanzamiento (power, angle, curve)
+├── ai_context.gd            # Recoleccion de datos del juego
+├── ai_tree_node.gd          # Nodo del arbol de decisiones (feature/threshold/leaf)
+├── ai_throw_brain.gd         # Evaluador del arbol + noise por dificultad
+├── ai_throw_simulator.gd    # Simulador de tiros (legacy, usa runner ahora)
+├── ai_trainer.gd            # Construye arbol con algoritmo CART
+├── ai_training_runner.gd    # Corre simulaciones async con TrainingBall
+├── ai_training_controller.gd # UI del training_AI.tscn
+├── ai_training_ball.gd       # Bola simple para simulaciones (se para sola)
+├── ai_training_ball.tscn     # Escena de la bola de training
+├── ai_training_result.gd     # Resource para guardar arbol entrenado
+├── ai_difficulty_config.gd   # Resource: config de dificultad (epochs, noise)
+├── ai_default_tree.gd        # Arbol hardcodeado como fallback
+├── ai_test_controller.gd    # UI del test_AI.tscn
+└── ai_player.gd             # Integracion IA → ThrowFlight (para juego real)
+
+resources/ai_config/
+├── difficulty_0_easy.tres        # Easy: 20 epochs, depth 3, noise ±30%
+├── difficulty_1_medium_easy.tres # Medium-Easy: 50 epochs, depth 4
+├── difficulty_2_medium.tres      # Medium: 100 epochs, depth 5
+├── difficulty_3_medium_hard.tres # Medium-Hard: 200 epochs, depth 6
+└── difficulty_4_hard.tres         # Hard: 400 epochs, depth 7, noise ±2%
+
+tests/
+├── training_AI.tscn          # Escena de entrenamiento (corre simulaciones)
+└── test_AI.tscn             # Escena de test (ver la IA lanzando)
+</pre>
+
+<h2>12. Detalle de Archivo: ai_throw_params.gd</h2>
+<pre>
+class_name AIThrowParams
+extends Resource
+
+@export var power: float = 0.5
+@export var angle_offset: float = 0.0     # radianes, desviacion del bochin
+@export var curve_intensity: float = 0.0   # 0 = recto, &gt;0 = curva
+@export var curve_side: float = 1.0        # -1 izq, +1 der
+@export var is_straight: bool = false
+
+# Calculados a partir de lo anterior:
+var direction: Vector3 = Vector3.FORWARD
+var waypoints: PackedVector3Array = []
+</pre>
+
+<h2>13. Detalle de Archivo: ai_context.gd</h2>
+<pre>
+class_name AIContext
+extends RefCounted
+
+var court_type: int = 0
+var bochin_dist_norm: float = 0.5
+var bochin_angle: float = 0.0
+var nearest_ally_dist: float = 5.0
+var nearest_enemy_dist: float = 5.0
+var offense_need: int = 0
+var stats_potencia: float = 35.0
+var stats_efecto: float = 0.5
+var stats_precision: float = 0.95
+var stats_control: float = 0.85
+
+static func gather(bochin_pos, court_type, bochas, stats, ball_pos) -&gt; AIContext:
+    # ... calcula distancias, angulos, necesidad ofensiva
+</pre>
+
+<h2>14. Detalle de Archivo: ai_tree_node.gd</h2>
+<pre>
+class_name AITreeNode
+extends Resource
+
+@export var feature: String = ""
+@export var threshold: float = 0.0
+@export var is_leaf: bool = false
+@export var params: AIThrowParams
+@export var left: AITreeNode
+@export var right: AITreeNode
+
+func decide(context: AIContext) -&gt; AIThrowParams:
+    if is_leaf:
+        return params
+    var value = context.get(feature)
+    if value &lt; threshold:
+        return left.decide(context) if left else params
+    else:
+        return right.decide(context) if right else params
+</pre>
+
+<h2>15. Consideraciones Importantes</h2>
+
+<h3>15.1 Sistema de 5 Dificultades</h3>
+<table>
+<tr><th>Nivel</th><th>Nombre</th><th>Epochs</th><th>Profundidad Arbol</th><th>Noise Power</th><th>Noise Angle</th><th>Noise Curve</th></tr>
+<tr><td>0</td><td>Easy</td><td>20</td><td>3</td><td>±0.15</td><td>±0.20</td><td>±0.30</td></tr>
+<tr><td>1</td><td>Medium-Easy</td><td>50</td><td>4</td><td>±0.10</td><td>±0.15</td><td>±0.20</td></tr>
+<tr><td>2</td><td>Medium</td><td>100</td><td>5</td><td>±0.07</td><td>±0.10</td><td>±0.12</td></tr>
+<tr><td>3</td><td>Medium-Hard</td><td>200</td><td>6</td><td>±0.04</td><td>±0.05</td><td>±0.06</td></tr>
+<tr><td>4</td><td>Hard</td><td>400</td><td>7</td><td>±0.02</td><td>±0.02</td><td>±0.03</td></tr>
+</table>
+
+<p>El noise se aplica en <code>AIThrowBrain.decide()</code> sobre los parametros del arbol. A menor dificultad: arbol mas superficial + mas noise = IA menos precisa.</p>
+
+<h3>15.2 Flujo de Entrenamiento</h3>
+<div class="phase">
+<pre>
+1. Abrir training_AI.tscn en Godot
+2. Seleccionar dificultad en el dropdown
+3. Click "Train"
+4. La escena corre simulaciones a 3x velocidad:
+   a. Genera contexto aleatorio (posicion bochin, tipo cancha, stats)
+   b. Genera parametros aleatorios de lanzamiento
+   c. Lanza TrainingBall con impulso + ThrowFlight
+   d. Espera a que la bola se detenga
+   e. Calcula reward (cercania al bochin)
+   f. Registra (contexto, params, reward)
+5. Al terminar, construye arbol CART con AITrainer
+6. Click "Save" → guarda ai_tree_diff_N.tres en resources/ai_config/
+</pre>
+</div>
+
+<h3>15.3 Flujo de Test</h3>
+<div class="phase">
+<pre>
+1. Abrir test_AI.tscn en Godot
+2. Seleccionar dificultad (carga el arbol correspondiente)
+3. Click "AI Throw"
+4. La IA:
+   a. Lee contexto del juego (posicion bochin, bochas existentes)
+   b. Evalua el arbol de decisiones
+   c. Aplica noise segun dificultad
+   d. Ejecuta ThrowFlight.launch() con los parametros
+5. Click "Reset" para limpiar y lanzar de nuevo
+</pre>
+</div>
+
+<div class="warn">
+<strong>Fisica de Godot:</strong> La simulacion de entrenamiento DEBE usar la misma fisica que el juego real. Esto significa que debemos lanzar RigidBody3D reales en una escena de simulacion y esperar a que se detengan. No podemos predecir el resultado solo con matematicas porque las colisiones con paredes y otras bochas son fundamentales.
+</div>
+
+<div class="ok">
+<strong>Optimizacion:</strong> Podemos pre-entrenar arboles para cada combinacion de personaje+cancha y guardarlos como .tres. En runtime solo cargamos el arbol correspondiente.
+</div>
+
+<div class="phase">
+<strong>Alternativa simplificada:</strong> Si el entrenamiento es muy lento, podemos empezar con un arbol hardcodeado basado en las estrategias de la tabla en seccion 8, y refinarlo con simulacion despues.
+</div>
+
+</body>
+</html>

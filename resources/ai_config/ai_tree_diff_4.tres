@@ -1,0 +1,734 @@
+[gd_resource type="Resource" script_class="AITrainingResult" format=3]
+
+[ext_resource type="Script" path="res://scenes/04_game/ai/ai_training_result.gd" id="1_otapi"]
+[ext_resource type="Script" path="res://scenes/04_game/ai/ai_throw_params.gd" id="2_tcaen"]
+[ext_resource type="Script" path="res://scenes/04_game/ai/ai_tree_node.gd" id="3_no7mi"]
+
+[sub_resource type="Resource" id="Resource_1c1lp"]
+script = ExtResource("2_tcaen")
+power = 0.4213433800312829
+angle_offset = 0.04606547242765169
+curve_intensity = 0.30448827
+curve_side = -1.0
+
+[sub_resource type="Resource" id="Resource_jfqc4"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_1c1lp")
+
+[sub_resource type="Resource" id="Resource_rsbmt"]
+script = ExtResource("2_tcaen")
+power = 0.8324724626012541
+angle_offset = -0.09681851835633737
+curve_intensity = 0.2389019
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_f1b43"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_rsbmt")
+
+[sub_resource type="Resource" id="Resource_bj884"]
+script = ExtResource("3_no7mi")
+feature = "nearest_ally_dist"
+threshold = 0.6520548271946609
+left = SubResource("Resource_jfqc4")
+right = SubResource("Resource_f1b43")
+
+[sub_resource type="Resource" id="Resource_cskr6"]
+script = ExtResource("2_tcaen")
+power = 0.3518646786178316
+angle_offset = 0.02753401553670265
+curve_intensity = 0.033574205
+curve_side = -1.0
+
+[sub_resource type="Resource" id="Resource_tln4i"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_cskr6")
+
+[sub_resource type="Resource" id="Resource_0l1qr"]
+script = ExtResource("2_tcaen")
+power = 0.632923631449181
+angle_offset = 0.29685393227931045
+curve_intensity = 0.61956507
+curve_side = -1.0
+
+[sub_resource type="Resource" id="Resource_5q1iv"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_0l1qr")
+
+[sub_resource type="Resource" id="Resource_lo203"]
+script = ExtResource("2_tcaen")
+power = 0.5072109902388023
+angle_offset = 0.2641908893860614
+curve_intensity = 0.6020851
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_lnr7x"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_lo203")
+
+[sub_resource type="Resource" id="Resource_0gev3"]
+script = ExtResource("3_no7mi")
+feature = "bochin_angle"
+threshold = 0.641395069205326
+left = SubResource("Resource_5q1iv")
+right = SubResource("Resource_lnr7x")
+
+[sub_resource type="Resource" id="Resource_myckn"]
+script = ExtResource("3_no7mi")
+feature = "bochin_angle"
+threshold = -0.7357384389259229
+left = SubResource("Resource_tln4i")
+right = SubResource("Resource_0gev3")
+
+[sub_resource type="Resource" id="Resource_4co4o"]
+script = ExtResource("3_no7mi")
+feature = "nearest_ally_dist"
+threshold = 9.143297851085663
+left = SubResource("Resource_bj884")
+right = SubResource("Resource_myckn")
+
+[sub_resource type="Resource" id="Resource_p2tbx"]
+script = ExtResource("2_tcaen")
+power = 0.22079929574949037
+angle_offset = 0.18576464738885412
+curve_intensity = 0.19373938
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_0ixhu"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_p2tbx")
+
+[sub_resource type="Resource" id="Resource_gipkj"]
+script = ExtResource("2_tcaen")
+power = 0.3991837487349186
+angle_offset = -0.027775816505779316
+curve_intensity = 0.19264053
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_puh5h"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_gipkj")
+
+[sub_resource type="Resource" id="Resource_sbfeh"]
+script = ExtResource("3_no7mi")
+feature = "bochin_angle"
+threshold = -0.23237679468850658
+left = SubResource("Resource_0ixhu")
+right = SubResource("Resource_puh5h")
+
+[sub_resource type="Resource" id="Resource_gkxnc"]
+script = ExtResource("2_tcaen")
+power = 0.8278298655988299
+angle_offset = -0.23618142208253792
+curve_intensity = 0.6708749
+
+[sub_resource type="Resource" id="Resource_q30gy"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_gkxnc")
+
+[sub_resource type="Resource" id="Resource_f3fk3"]
+script = ExtResource("3_no7mi")
+feature = "bochin_angle"
+threshold = 0.3210656229783659
+left = SubResource("Resource_sbfeh")
+right = SubResource("Resource_q30gy")
+
+[sub_resource type="Resource" id="Resource_3opnv"]
+script = ExtResource("2_tcaen")
+power = 0.23719771107745818
+angle_offset = -0.03270120260501813
+curve_intensity = 0.5801107
+curve_side = -1.0
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_np5ai"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_3opnv")
+
+[sub_resource type="Resource" id="Resource_jtsi3"]
+script = ExtResource("2_tcaen")
+power = 0.30542284836999223
+angle_offset = 0.1551743081069623
+curve_intensity = 0.41132444
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_jex2t"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_jtsi3")
+
+[sub_resource type="Resource" id="Resource_ch2ht"]
+script = ExtResource("3_no7mi")
+feature = "bochin_angle"
+threshold = 0.27802702827129466
+left = SubResource("Resource_np5ai")
+right = SubResource("Resource_jex2t")
+
+[sub_resource type="Resource" id="Resource_00bkb"]
+script = ExtResource("2_tcaen")
+power = 0.26534105393759017
+angle_offset = 0.28198878496231305
+curve_intensity = 0.8854657
+curve_side = -1.0
+
+[sub_resource type="Resource" id="Resource_17y37"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_00bkb")
+
+[sub_resource type="Resource" id="Resource_g4ar1"]
+script = ExtResource("3_no7mi")
+feature = "bochin_dist_norm"
+threshold = 0.8212892532348633
+left = SubResource("Resource_ch2ht")
+right = SubResource("Resource_17y37")
+
+[sub_resource type="Resource" id="Resource_ai70b"]
+script = ExtResource("3_no7mi")
+feature = "nearest_enemy_dist"
+threshold = 2.709743931889534
+left = SubResource("Resource_f3fk3")
+right = SubResource("Resource_g4ar1")
+
+[sub_resource type="Resource" id="Resource_vcaeu"]
+script = ExtResource("3_no7mi")
+feature = "nearest_enemy_dist"
+threshold = 2.3544440530240536
+left = SubResource("Resource_4co4o")
+right = SubResource("Resource_ai70b")
+
+[sub_resource type="Resource" id="Resource_6gvbq"]
+script = ExtResource("2_tcaen")
+power = 0.4143998290628352
+angle_offset = -0.21205031885177325
+curve_intensity = 0.3996881
+
+[sub_resource type="Resource" id="Resource_0rhd0"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_6gvbq")
+
+[sub_resource type="Resource" id="Resource_h2jvq"]
+script = ExtResource("2_tcaen")
+power = 0.29295021217620404
+angle_offset = 0.1788511418207377
+curve_intensity = 0.38560918
+curve_side = -1.0
+
+[sub_resource type="Resource" id="Resource_p1ich"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_h2jvq")
+
+[sub_resource type="Resource" id="Resource_6q25r"]
+script = ExtResource("3_no7mi")
+feature = "bochin_dist_norm"
+threshold = 0.625435733795166
+left = SubResource("Resource_0rhd0")
+right = SubResource("Resource_p1ich")
+
+[sub_resource type="Resource" id="Resource_blx28"]
+script = ExtResource("2_tcaen")
+power = 0.5778901092723272
+angle_offset = -0.09940568527228272
+curve_intensity = 0.4565424
+
+[sub_resource type="Resource" id="Resource_6qody"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_blx28")
+
+[sub_resource type="Resource" id="Resource_7bkwo"]
+script = ExtResource("3_no7mi")
+feature = "nearest_enemy_dist"
+threshold = 8.277923792600632
+left = SubResource("Resource_6q25r")
+right = SubResource("Resource_6qody")
+
+[sub_resource type="Resource" id="Resource_rdilk"]
+script = ExtResource("2_tcaen")
+power = 0.20409038901178492
+angle_offset = -0.39822135281467264
+curve_intensity = 0.184391
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_k32ts"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_rdilk")
+
+[sub_resource type="Resource" id="Resource_v27lr"]
+script = ExtResource("2_tcaen")
+power = 0.2587592512275273
+angle_offset = 0.018321506234376117
+curve_intensity = 0.48678818
+curve_side = -1.0
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_s07l5"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_v27lr")
+
+[sub_resource type="Resource" id="Resource_10aby"]
+script = ExtResource("3_no7mi")
+feature = "nearest_enemy_dist"
+threshold = 12.760511070489883
+left = SubResource("Resource_k32ts")
+right = SubResource("Resource_s07l5")
+
+[sub_resource type="Resource" id="Resource_27kxg"]
+script = ExtResource("2_tcaen")
+power = 0.3028996374283494
+angle_offset = 0.313025568610363
+curve_intensity = 0.76540273
+curve_side = -1.0
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_glinq"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_27kxg")
+
+[sub_resource type="Resource" id="Resource_yxs80"]
+script = ExtResource("2_tcaen")
+power = 0.2129504508741184
+angle_offset = -0.3678045112697229
+curve_intensity = 0.28228667
+curve_side = -1.0
+
+[sub_resource type="Resource" id="Resource_n0whr"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_yxs80")
+
+[sub_resource type="Resource" id="Resource_mx3rc"]
+script = ExtResource("3_no7mi")
+feature = "nearest_ally_dist"
+threshold = 12.164249300956726
+left = SubResource("Resource_glinq")
+right = SubResource("Resource_n0whr")
+
+[sub_resource type="Resource" id="Resource_h5017"]
+script = ExtResource("3_no7mi")
+feature = "nearest_ally_dist"
+threshold = 3.6621699780225754
+left = SubResource("Resource_10aby")
+right = SubResource("Resource_mx3rc")
+
+[sub_resource type="Resource" id="Resource_h40kx"]
+script = ExtResource("3_no7mi")
+feature = "nearest_ally_dist"
+threshold = 1.8805554434657097
+left = SubResource("Resource_7bkwo")
+right = SubResource("Resource_h5017")
+
+[sub_resource type="Resource" id="Resource_gbd3w"]
+script = ExtResource("2_tcaen")
+power = 0.3031923240855692
+angle_offset = 0.35576718596237755
+curve_intensity = 0.28291237
+curve_side = -1.0
+
+[sub_resource type="Resource" id="Resource_3wuou"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_gbd3w")
+
+[sub_resource type="Resource" id="Resource_bvhy2"]
+script = ExtResource("2_tcaen")
+power = 0.8209825507102722
+angle_offset = -0.18383380358747403
+curve_intensity = 0.8894725
+curve_side = -1.0
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_bf2u0"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_bvhy2")
+
+[sub_resource type="Resource" id="Resource_u3s1j"]
+script = ExtResource("3_no7mi")
+feature = "bochin_dist_norm"
+threshold = 0.8975075721740723
+left = SubResource("Resource_3wuou")
+right = SubResource("Resource_bf2u0")
+
+[sub_resource type="Resource" id="Resource_ej3c1"]
+script = ExtResource("3_no7mi")
+feature = "bochin_dist_norm"
+threshold = 0.8934175729751588
+left = SubResource("Resource_h40kx")
+right = SubResource("Resource_u3s1j")
+
+[sub_resource type="Resource" id="Resource_7tiuu"]
+script = ExtResource("3_no7mi")
+feature = "nearest_enemy_dist"
+threshold = 5.8613122552633286
+left = SubResource("Resource_vcaeu")
+right = SubResource("Resource_ej3c1")
+
+[sub_resource type="Resource" id="Resource_6q5hf"]
+script = ExtResource("2_tcaen")
+power = 0.24426406822361219
+angle_offset = -0.36794487673870574
+curve_intensity = 0.4836264
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_6hr78"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_6q5hf")
+
+[sub_resource type="Resource" id="Resource_jrigp"]
+script = ExtResource("2_tcaen")
+power = 0.5721883214107135
+angle_offset = 0.26189858204848515
+curve_intensity = 0.5028521
+
+[sub_resource type="Resource" id="Resource_0ug1a"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_jrigp")
+
+[sub_resource type="Resource" id="Resource_udchc"]
+script = ExtResource("2_tcaen")
+power = 0.39382741206577965
+angle_offset = -0.2504745406303426
+curve_intensity = 0.23316856
+curve_side = -1.0
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_xb65c"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_udchc")
+
+[sub_resource type="Resource" id="Resource_3pnbv"]
+script = ExtResource("2_tcaen")
+power = 0.3082381666316184
+angle_offset = -0.25868964770051806
+curve_intensity = 0.61319774
+curve_side = -1.0
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_2ogk6"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_3pnbv")
+
+[sub_resource type="Resource" id="Resource_irb6g"]
+script = ExtResource("3_no7mi")
+feature = "nearest_enemy_dist"
+threshold = 14.905742287635803
+left = SubResource("Resource_xb65c")
+right = SubResource("Resource_2ogk6")
+
+[sub_resource type="Resource" id="Resource_r7jpm"]
+script = ExtResource("2_tcaen")
+power = 0.8629208636423129
+angle_offset = 0.06317380377447285
+curve_intensity = 0.49529025
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_ftg2q"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_r7jpm")
+
+[sub_resource type="Resource" id="Resource_8qqcg"]
+script = ExtResource("3_no7mi")
+feature = "nearest_enemy_dist"
+threshold = 15.436411082744598
+left = SubResource("Resource_irb6g")
+right = SubResource("Resource_ftg2q")
+
+[sub_resource type="Resource" id="Resource_bscjw"]
+script = ExtResource("3_no7mi")
+feature = "bochin_angle"
+threshold = -0.654902380350775
+left = SubResource("Resource_0ug1a")
+right = SubResource("Resource_8qqcg")
+
+[sub_resource type="Resource" id="Resource_v0kmn"]
+script = ExtResource("3_no7mi")
+feature = "nearest_ally_dist"
+threshold = 1.592426236718893
+left = SubResource("Resource_6hr78")
+right = SubResource("Resource_bscjw")
+
+[sub_resource type="Resource" id="Resource_rdrq2"]
+script = ExtResource("2_tcaen")
+power = 0.25619686050349844
+angle_offset = 0.38336918790121277
+curve_intensity = 0.4899251
+curve_side = -1.0
+
+[sub_resource type="Resource" id="Resource_5bhph"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_rdrq2")
+
+[sub_resource type="Resource" id="Resource_h7o4f"]
+script = ExtResource("2_tcaen")
+power = 0.35068019295013947
+angle_offset = 0.3523968867972186
+curve_intensity = 0.4879081
+curve_side = -1.0
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_y3qjy"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_h7o4f")
+
+[sub_resource type="Resource" id="Resource_brh2c"]
+script = ExtResource("3_no7mi")
+feature = "bochin_dist_norm"
+threshold = 0.48808257579803466
+left = SubResource("Resource_5bhph")
+right = SubResource("Resource_y3qjy")
+
+[sub_resource type="Resource" id="Resource_vbpmo"]
+script = ExtResource("3_no7mi")
+feature = "nearest_ally_dist"
+threshold = 14.586204469203949
+left = SubResource("Resource_v0kmn")
+right = SubResource("Resource_brh2c")
+
+[sub_resource type="Resource" id="Resource_dk445"]
+script = ExtResource("3_no7mi")
+feature = "nearest_enemy_dist"
+threshold = 14.4235115
+left = SubResource("Resource_7tiuu")
+right = SubResource("Resource_vbpmo")
+
+[sub_resource type="Resource" id="Resource_eupt1"]
+script = ExtResource("2_tcaen")
+power = 0.23289019765798397
+angle_offset = 0.2919958304618513
+curve_intensity = 0.19882575
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_1p0i6"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_eupt1")
+
+[sub_resource type="Resource" id="Resource_cc7fl"]
+script = ExtResource("2_tcaen")
+power = 0.21819623311524647
+angle_offset = -0.3753707374591541
+curve_intensity = 0.088322155
+curve_side = -1.0
+
+[sub_resource type="Resource" id="Resource_p2gok"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_cc7fl")
+
+[sub_resource type="Resource" id="Resource_r8fr3"]
+script = ExtResource("3_no7mi")
+feature = "bochin_dist_norm"
+threshold = 0.4740264773368836
+left = SubResource("Resource_1p0i6")
+right = SubResource("Resource_p2gok")
+
+[sub_resource type="Resource" id="Resource_bd14w"]
+script = ExtResource("2_tcaen")
+power = 0.49227160706403
+angle_offset = -0.17715702818739387
+curve_intensity = 0.08389578
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_cj731"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_bd14w")
+
+[sub_resource type="Resource" id="Resource_3q30n"]
+script = ExtResource("2_tcaen")
+power = 0.767850908627935
+angle_offset = -0.32803797022500913
+curve_intensity = 0.46315557
+curve_side = -1.0
+
+[sub_resource type="Resource" id="Resource_ysmvg"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_3q30n")
+
+[sub_resource type="Resource" id="Resource_3n0w2"]
+script = ExtResource("3_no7mi")
+feature = "bochin_dist_norm"
+threshold = 0.1864877700805664
+left = SubResource("Resource_cj731")
+right = SubResource("Resource_ysmvg")
+
+[sub_resource type="Resource" id="Resource_aq5pr"]
+script = ExtResource("2_tcaen")
+power = 0.3861725697519542
+angle_offset = -0.23314274079122577
+curve_intensity = 0.81417865
+curve_side = -1.0
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_frc4x"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_aq5pr")
+
+[sub_resource type="Resource" id="Resource_gf15c"]
+script = ExtResource("3_no7mi")
+feature = "bochin_dist_norm"
+threshold = 0.6766511
+left = SubResource("Resource_3n0w2")
+right = SubResource("Resource_frc4x")
+
+[sub_resource type="Resource" id="Resource_plk4c"]
+script = ExtResource("3_no7mi")
+feature = "nearest_ally_dist"
+threshold = 1.6933114379644394
+left = SubResource("Resource_r8fr3")
+right = SubResource("Resource_gf15c")
+
+[sub_resource type="Resource" id="Resource_imx6g"]
+script = ExtResource("2_tcaen")
+power = 0.3111419813207806
+angle_offset = -0.2701159675005613
+curve_intensity = 0.9220836
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_qxpil"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_imx6g")
+
+[sub_resource type="Resource" id="Resource_xi868"]
+script = ExtResource("2_tcaen")
+power = 0.2542977175147521
+angle_offset = 0.0968926143055927
+curve_intensity = 0.58491457
+curve_side = -1.0
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_ke1it"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_xi868")
+
+[sub_resource type="Resource" id="Resource_rxrb6"]
+script = ExtResource("3_no7mi")
+feature = "bochin_dist_norm"
+threshold = 0.8556504487991333
+left = SubResource("Resource_qxpil")
+right = SubResource("Resource_ke1it")
+
+[sub_resource type="Resource" id="Resource_ubc10"]
+script = ExtResource("2_tcaen")
+power = 0.5030123122397825
+angle_offset = 0.11495326885894808
+curve_intensity = 0.6698702
+
+[sub_resource type="Resource" id="Resource_xm6a6"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_ubc10")
+
+[sub_resource type="Resource" id="Resource_a54gp"]
+script = ExtResource("3_no7mi")
+feature = "bochin_angle"
+threshold = 0.7698734470787991
+left = SubResource("Resource_rxrb6")
+right = SubResource("Resource_xm6a6")
+
+[sub_resource type="Resource" id="Resource_n03a0"]
+script = ExtResource("3_no7mi")
+feature = "nearest_ally_dist"
+threshold = 4.5710557252168655
+left = SubResource("Resource_plk4c")
+right = SubResource("Resource_a54gp")
+
+[sub_resource type="Resource" id="Resource_8jdbt"]
+script = ExtResource("2_tcaen")
+power = 0.21620021081900603
+angle_offset = 0.35783475498456474
+curve_intensity = 0.27527967
+is_straight = true
+
+[sub_resource type="Resource" id="Resource_hjdsb"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_8jdbt")
+
+[sub_resource type="Resource" id="Resource_yfarm"]
+script = ExtResource("2_tcaen")
+power = 0.962828468440527
+angle_offset = 0.37380424347441965
+curve_intensity = 0.9462766
+curve_side = -1.0
+
+[sub_resource type="Resource" id="Resource_m4r1y"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_yfarm")
+
+[sub_resource type="Resource" id="Resource_85tu2"]
+script = ExtResource("2_tcaen")
+power = 0.7022454401381115
+angle_offset = 0.0809701385984603
+curve_intensity = 0.03605511
+curve_side = -1.0
+
+[sub_resource type="Resource" id="Resource_bpvyj"]
+script = ExtResource("3_no7mi")
+is_leaf = true
+params = SubResource("Resource_85tu2")
+
+[sub_resource type="Resource" id="Resource_fj7q7"]
+script = ExtResource("3_no7mi")
+feature = "nearest_enemy_dist"
+threshold = 14.013056188821793
+left = SubResource("Resource_m4r1y")
+right = SubResource("Resource_bpvyj")
+
+[sub_resource type="Resource" id="Resource_jdj10"]
+script = ExtResource("3_no7mi")
+feature = "nearest_enemy_dist"
+threshold = 1.5192278027534485
+left = SubResource("Resource_hjdsb")
+right = SubResource("Resource_fj7q7")
+
+[sub_resource type="Resource" id="Resource_y8lob"]
+script = ExtResource("3_no7mi")
+feature = "nearest_ally_dist"
+threshold = 7.823128208518028
+left = SubResource("Resource_n03a0")
+right = SubResource("Resource_jdj10")
+
+[sub_resource type="Resource" id="Resource_kafsn"]
+script = ExtResource("3_no7mi")
+feature = "bochin_angle"
+threshold = 0.7319848394125874
+left = SubResource("Resource_dk445")
+right = SubResource("Resource_y8lob")
+
+[resource]
+script = ExtResource("1_otapi")
+difficulty = 4
+difficulty_name = "Hard"
+epochs = 400
+avg_reward = -0.09244410454978552
+tree = SubResource("Resource_kafsn")
+stats_name = "Raul"
+trained_at = "2026-05-28T15:05:33"

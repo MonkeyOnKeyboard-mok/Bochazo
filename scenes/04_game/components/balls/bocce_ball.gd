@@ -26,23 +26,24 @@ func _ready():
 	_define_settings()
 
 func _physics_process(_delta):
-	calc_distance_to_bochin()
+	if GameManager and GameManager.bochin: calc_distance_to_bochin()
 	if _is_stopped: return
 	if linear_velocity.length() < stop_velocity_threshold:
 		_is_stopped = true
 		freeze = true
 		stopped_moving.emit(self)
-		print("me frene")
-		GameManager.deduct_turn(player)
 		if debug_verbose: print("[BocceBall] Se detuvo")
 		freeze = false
-		GameManager.bochas_thrown.append(self)
-		if GameManager.first_turn == false and GameManager.bochin: return
-		else: 
-			GameManager.first_bocha(self.global_position.distance_to(GameManager.bochin.global_position))
-			GameManager.first_turn = false
+		if GameManager:
+			GameManager.deduct_turn(player)
+			GameManager.bochas_thrown.append(self)
+			if GameManager.first_turn == false and GameManager.bochin: return
+			if GameManager.bochin:
+				GameManager.first_bocha(self.global_position.distance_to(GameManager.bochin.global_position))
+				GameManager.first_turn = false
 
 func calc_distance_to_bochin() -> void:
+	if not GameManager or not GameManager.bochin: return
 	distance_to_bochin = self.global_position.distance_to(GameManager.bochin.global_position)
 
 func _apply_physics():
@@ -67,10 +68,9 @@ func _define_settings() -> void:
 	if settings_set : return
 	var mat = $BochaMesh.material_override as StandardMaterial3D
 	if mat:
-		mat = mat.duplicate()  # <-- creates a unique instance for this ball
+		mat = mat.duplicate()
 		$BochaMesh.material_override = mat
-
-		if GameManager.p1_turn:
+		if GameManager and GameManager.p1_turn:
 			mat.albedo_texture = rojo
 			player = "player1"
 		else:

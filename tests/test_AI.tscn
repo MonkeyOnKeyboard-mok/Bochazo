@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://clhkbob7hf6a8"]
+
+[ext_resource type="Script" uid="uid://8cv0kmincg0x" path="res://scenes/04_game/ai/ai_test_controller.gd" id="1_ctrl"]
+[ext_resource type="PackedScene" uid="uid://khh2to667k2u" path="res://scenes/04_game/components/balls/bocce_ball.tscn" id="2_ball"]
+[ext_resource type="Resource" uid="uid://24rsp1vhri2o" path="res://resources/game_config/stats_raul.tres" id="4_stats"]
+[ext_resource type="PackedScene" uid="uid://c8k2m4n6p8qr" path="res://scenes/04_game/components/throw_system/throw_flight.tscn" id="5_flt"]
+
+[sub_resource type="StandardMaterial3D" id="BochinMat"]
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="SphereMesh" id="BochinMesh"]
+radius = 0.2
+height = 0.4
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+
+[node name="TestAI" type="Node3D" unique_id=181894750]
+script = ExtResource("1_ctrl")
+ball_scene = ExtResource("2_ball")
+stats = ExtResource("4_stats")
+
+[node name="BochinMarker" type="Node3D" parent="." unique_id=943589697]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1, 0)
+
+[node name="BochinVisual" type="MeshInstance3D" parent="BochinMarker" unique_id=975713646]
+material_override = SubResource("BochinMat")
+mesh = SubResource("BochinMesh")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=735692757]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -36.500763, 4.550576, 0)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1186744621]
+transform = Transform3D(1, 0, 0, 0, -0.4, 0.9, 0, -0.9, -0.4, 0, 10, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1061788230]
+environment = SubResource("Env")
+
+[node name="ThrowFlight" parent="." unique_id=1055516921 instance=ExtResource("5_flt")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1502884855]
+
+[node name="ThrowBtn" type="Button" parent="CanvasLayer" unique_id=1188533564]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 180.0
+offset_bottom = 50.0
+text = "AI Throw"
+
+[node name="ResetBtn" type="Button" parent="CanvasLayer" unique_id=263944494]
+offset_left = 200.0
+offset_top = 20.0
+offset_right = 360.0
+offset_bottom = 50.0
+text = "Reset"
+
+[node name="DiffOpt" type="OptionButton" parent="CanvasLayer" unique_id=150329591]
+offset_left = 380.0
+offset_top = 20.0
+offset_right = 520.0
+offset_bottom = 50.0
+
+[node name="CourtOpt" type="OptionButton" parent="CanvasLayer" unique_id=2008182482]
+offset_left = 540.0
+offset_top = 20.0
+offset_right = 680.0
+offset_bottom = 50.0
+
+[node name="StatusLbl" type="Label" parent="CanvasLayer" unique_id=405354808]
+offset_left = 20.0
+offset_top = 60.0
+offset_right = 700.0
+offset_bottom = 80.0
+text = "Ready"
+
+[node name="ParamsLbl" type="Label" parent="CanvasLayer" unique_id=777888999]
+offset_left = 20.0
+offset_top = 85.0
+offset_right = 700.0
+offset_bottom = 140.0
