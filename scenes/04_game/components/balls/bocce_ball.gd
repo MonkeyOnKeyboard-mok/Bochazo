@@ -6,8 +6,8 @@ signal collision_occurred(impulse: Vector3)
 
 @export_group("Configuración")
 @export var physics_config: PhysicsConfig
-@export var stop_velocity_threshold: float = 0.1
-@export var debug_verbose: bool = false
+@export var stop_velocity_threshold: float = 0.5
+@export var debug_verbose: bool = true
 @export var training_mode: bool = false
 
 @onready var ball_collision: CollisionShape3D = $BallCollision
@@ -61,8 +61,8 @@ func _physics_process(delta):
 		if debug_verbose: print("[BocceBall] Se detuvo")
 		freeze = false
 		if GameManager:
-			GameManager.deduct_turn(player)
 			GameManager.bochas_thrown.append(self)
+			GameManager.deduct_turn(player)
 			if GameManager.first_turn == false and GameManager.bochin: return
 			if GameManager.bochin:
 				GameManager.first_bocha(self.global_position.distance_to(GameManager.bochin.global_position))
