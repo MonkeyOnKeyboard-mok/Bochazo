@@ -85,3 +85,4 @@ func animation_fix_and_etc() -> void:
 	ball.linear_velocity = Vector3.ZERO
 	ball.angular_velocity = Vector3.ZERO
 	ball.freeze = false
+	GameManager.emit_signal("recover_alpha")

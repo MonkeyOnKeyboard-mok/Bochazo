@@ -19,7 +19,8 @@ signal throw
 signal win
 @warning_ignore("unused_signal")
 signal lose
-
+@warning_ignore("unused_signal")
+signal recover_alpha
 ## Vs AI flag
 var vsAI : bool = false
 
