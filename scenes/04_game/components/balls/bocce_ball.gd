@@ -23,6 +23,7 @@ var _max_sim_time: float = 8.0
 var is_thrown: bool = false
 var player : String = ""
 var settings_set : bool = false
+var distance_to_bochin 
 
 func _ready():
 	_apply_physics()
@@ -43,24 +44,24 @@ func _physics_process(_delta):
 		if GameManager:
 			GameManager.deduct_turn(player)
 			GameManager.bochas_thrown.append(self)
-			if GameManager.first_turn == false and GameManager.bochin: return
-			if GameManager.bochin:
-				GameManager.first_bocha(self.global_position.distance_to(GameManager.bochin.global_position))
-				GameManager.first_turn = false
+		if GameManager.first_turn == false and GameManager.bochin:
+			return
+		if GameManager.bochin:
+			GameManager.first_bocha(self.global_position.distance_to(GameManager.bochin.global_position))
+			GameManager.first_turn = false
 
 func calc_distance_to_bochin() -> void:
 	if not GameManager or not GameManager.bochin: return
 	distance_to_bochin = self.global_position.distance_to(GameManager.bochin.global_position)
-
-		print("me frene")
-		GameManager.bochas_thrown.append(self)
-		GameManager.deduct_turn(player)
-		if debug_verbose: print("[BocceBall] Se detuvo")
-		freeze = false
-		if GameManager.first_turn == false and GameManager.bochin: return
-		else: 
-			GameManager.first_bocha(self.global_position.distance_to(GameManager.bochin.global_position))
-			GameManager.first_turn = false
+	print("me frene")
+	GameManager.bochas_thrown.append(self)
+	GameManager.deduct_turn(player)
+	if debug_verbose: print("[BocceBall] Se detuvo")
+	freeze = false
+	if GameManager.first_turn == false and GameManager.bochin: return
+	else: 
+		GameManager.first_bocha(self.global_position.distance_to(GameManager.bochin.global_position))
+		GameManager.first_turn = false
 
 func _apply_physics():
 	if physics_config:
