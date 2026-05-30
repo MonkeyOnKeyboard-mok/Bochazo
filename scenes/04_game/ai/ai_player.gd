@@ -3,33 +3,27 @@ extends Node3D
 
 @export var stats: PlayerThrowStats
 @export var ball: RigidBody3D
-@export var weights_path: String = ""
-@export var difficulty: int = 0
+@export var difficulty: int = 2
 
 @onready var brain: AIThrowBrain = $AIThrowBrain
 
 signal throw_completed()
 
 func _ready():
-	if brain and weights_path != "":
-		brain.load_weights(weights_path)
 	if brain:
+		brain.load_data()
 		brain.set_difficulty(difficulty)
 
-func take_turn(bochin_pos: Vector3, court_type: int, bochas: Array):
+func take_turn(bochin_pos: Vector3, court_type: int, _bochas: Array):
 	if not ball or not brain:
 		return
-
-	if not brain.policies[0]:
-		brain.load_weights(weights_path)
-
-	var ball_pos = ball.global_position
-
+	if not brain.is_loaded():
+		push_warning("AIPlayer: Brain data not loaded!")
+	brain.court_type = court_type
 	brain.stats = stats
 	brain.ball = ball
 	brain.flight = _get_flight()
-	brain.execute_throw(ball_pos, bochin_pos, court_type, bochas)
-
+	brain.execute_throw(ball.global_position, bochin_pos)
 	if ball.has_signal("stopped_moving"):
 		ball.stopped_moving.connect(_on_ball_stopped, CONNECT_ONE_SHOT)
 

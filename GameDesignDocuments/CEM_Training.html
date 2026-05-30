@@ -25,16 +25,40 @@
 </head>
 <body>
 
-<h1>🧠 CEM Training - Entrenamiento de IA por Cross-Entropy</h1>
+<h1>🎯 IA de Tiro - Sistema Data-Driven (v2)</h1>
 
 <h2>Resumen</h2>
-<p>El sistema usa el algoritmo <strong>CEM (Cross-Entropy Method)</strong> para entrenar pol&iacute;ticas lineales que deciden c&oacute;mo lanzar la bocha. Se entrena una pol&iacute;tica <strong>por cada tipo de cancha</strong> (Flat, Dirty, Grass, Pro, Sand) porque cada cancha tiene fricci&oacute;n diferente y los par&aacute;metros &oacute;ptimos var&iacute;an entre ellas.</p>
+<p>El sistema de IA usa <strong>datos de simulación</strong> en vez de entrenamiento iterativo. Se tira miles de bochas con parámetros aleatorios, se guardan los resultados, y luego la IA busca en esa base de datos el tiro más adecuado para llegar a donde quiere.</p>
 
 <div class="ok">
-<strong>Principio:</strong> La IA NO usa gestos ni aiming manual. Recibe el estado del juego y produce par&aacute;metros de lanzamiento. Se entrena lanzando bochas reales en la cancha f&iacute;sica y midiendo qu&eacute; tan cerca quedan del bochin.
+<strong>Principio:</strong> Invierte el problema: en vez de "dado el estado, qué tiro hago", tenemos "dada la posición final deseada, qué parámetros me llevan ahí". Los datos se generan una vez y se consultan en tiempo real.
 </div>
 
-<h2>1. El Problema: Qu&eacute; Decide la IA</h2>
+<h2>1. Flujo de Datos</h2>
+
+<div class="flow">
+<span class="flow-step">simulation_AI.tscn</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">5000 tiros/cancha</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">throws_*.json</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">training_AI.tscn</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">inverse_model.tres</span>
+</div>
+
+<div class="flow">
+<span class="flow-step">En juego</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">AIThrowBrain.decide()</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">find_function()</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">AIThrowParams</span>
+<span class="flow-arrow">→</span>
+<span class="flow-step">ThrowFlight.launch()</span>
+</div>
 <p>Dada una situaci&oacute;n de juego, la IA debe decidir <strong>4 n&uacute;meros</strong>:</p>
 
 <table>
