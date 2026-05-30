@@ -1,92 +1,58 @@
-[gd_scene format=3 uid="uid://cen24joivpmtr"]
+[gd_scene format=3 uid="uid://e6nxn4gytwr"]
 
-[ext_resource type="Script" uid="uid://buymju6xs4sm5" path="res://scenes/04_game/ai/ai_training_controller.gd" id="1_ctrl"]
-[ext_resource type="PackedScene" path="res://scenes/04_game/ai/ai_training_ball.tscn" id="2_ball"]
+[ext_resource type="Script" path="res://scenes/04_game/ai/data/ai_training_controller.gd" id="1_ctrl"]
+[ext_resource type="PackedScene" uid="uid://khh2to667k2u" path="res://scenes/04_game/components/balls/bocce_ball.tscn" id="2_ball"]
 [ext_resource type="Resource" uid="uid://24rsp1vhri2o" path="res://resources/game_config/stats_raul.tres" id="3_stats"]
-[ext_resource type="Script" uid="uid://bov21nolswaop" path="res://scenes/04_game/ai/ai_training_runner.gd" id="5_run"]
 
-[sub_resource type="StandardMaterial3D" id="BochinMat"]
-albedo_color = Color(1, 1, 0, 1)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tr"]
 
-[sub_resource type="SphereMesh" id="BochinMesh"]
-radius = 0.2
-height = 0.4
+[sub_resource type="Sky" id="Sky_tr"]
+sky_material = SubResource("ProceduralSkyMaterial_tr")
 
-[sub_resource type="Environment" id="Env"]
+[sub_resource type="Environment" id="Env_tr"]
 background_mode = 2
+sky = SubResource("Sky_tr")
 
-[node name="TrainingAI" type="Node3D" unique_id=1065646582]
+[node name="TrainingAI" type="Node3D"]
 script = ExtResource("1_ctrl")
 ball_scene = ExtResource("2_ball")
 stats = ExtResource("3_stats")
 
-[node name="BochinMarker" type="Node3D" parent="." unique_id=930206369]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1, -6.0717697)
-
-[node name="BochinVisual" type="MeshInstance3D" parent="BochinMarker" unique_id=351638935]
-material_override = SubResource("BochinMat")
-mesh = SubResource("BochinMesh")
-
-[node name="SpawnPoint" type="Node3D" parent="." unique_id=2110301292]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 1, 0)
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=1533624253]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -31.47077, 9.227369, 0)
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -12.27, 7.24, 0)
 current = true
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=779171147]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 12.005243, 0)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 12, 0)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=547405487]
-environment = SubResource("Env")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_tr")
 
-[node name="Runner" type="Node" parent="." unique_id=1140720918]
-script = ExtResource("5_run")
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1196223860]
-
-[node name="TrainBtn" type="Button" parent="CanvasLayer" unique_id=406535773]
+[node name="LoadBtn" type="Button" parent="CanvasLayer"]
 offset_left = 20.0
 offset_top = 20.0
-offset_right = 140.0
+offset_right = 180.0
 offset_bottom = 50.0
-text = "Train"
+text = "Load Data"
 
-[node name="CancelBtn" type="Button" parent="CanvasLayer" unique_id=1508845123]
-offset_left = 160.0
+[node name="SaveBtn" type="Button" parent="CanvasLayer"]
+offset_left = 200.0
 offset_top = 20.0
-offset_right = 280.0
+offset_right = 360.0
 offset_bottom = 50.0
-text = "Cancel"
+text = "Save Model"
 
-[node name="SaveBtn" type="Button" parent="CanvasLayer" unique_id=1085493678]
-offset_left = 300.0
-offset_top = 20.0
-offset_right = 420.0
-offset_bottom = 50.0
-text = "Save DB"
-
-[node name="DiffOpt" type="OptionButton" parent="CanvasLayer" unique_id=1915524914]
-offset_left = 620.0
-offset_top = 20.0
-offset_right = 760.0
-offset_bottom = 50.0
-
-[node name="StatusLbl" type="Label" parent="CanvasLayer" unique_id=1168915787]
+[node name="StatusLbl" type="Label" parent="CanvasLayer"]
 offset_left = 20.0
 offset_top = 60.0
-offset_right = 400.0
+offset_right = 600.0
 offset_bottom = 80.0
-text = "Ready"
+text = "Load simulation data to build inverse model"
 
-[node name="ProgressLbl" type="Label" parent="CanvasLayer" unique_id=1398021518]
+[node name="StatsLbl" type="Label" parent="CanvasLayer"]
 offset_left = 20.0
 offset_top = 85.0
-offset_right = 600.0
-offset_bottom = 105.0
-
-[node name="ParamsLbl" type="Label" parent="CanvasLayer" unique_id=888123456]
-offset_left = 20.0
-offset_top = 110.0
 offset_right = 800.0
-offset_bottom = 155.0
+offset_bottom = 280.0

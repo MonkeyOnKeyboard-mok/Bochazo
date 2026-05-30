@@ -8,6 +8,7 @@ signal collision_occurred(impulse: Vector3)
 @export var physics_config: PhysicsConfig
 @export var stop_velocity_threshold: float = 0.1
 @export var debug_verbose: bool = false
+@export var training_mode: bool = false
 
 @onready var ball_collision: CollisionShape3D = $BallCollision
 
@@ -15,6 +16,10 @@ var rojo = load("res://assets/textures/texture_bocha_rosa.png")
 var azul = load("res://assets/textures/texture_bocha_blue.png")
 
 var _is_stopped: bool = false
+var _min_active_frames: int = 3
+var _active_frames: int = 0
+var _sim_time: float = 0.0
+var _max_sim_time: float = 8.0
 var player : String = ""
 var settings_set : bool = false
 
@@ -25,7 +30,22 @@ func _ready():
 	body_entered.connect(_on_body_entered)
 	_define_settings()
 
-func _physics_process(_delta):
+func _physics_process(delta):
+	if training_mode:
+		if _is_stopped: return
+		_sim_time += delta
+		_active_frames += 1
+		if _sim_time > _max_sim_time or global_position.y < -5.0:
+			_is_stopped = true
+			freeze = true
+			stopped_moving.emit(self)
+			return
+		if _active_frames < _min_active_frames: return
+		if linear_velocity.length() < stop_velocity_threshold:
+			_is_stopped = true
+			freeze = true
+			stopped_moving.emit(self)
+		return
 	if GameManager and GameManager.bochin: calc_distance_to_bochin()
 	if _is_stopped: return
 	if linear_velocity.length() < stop_velocity_threshold:

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>CEM Training - Entrenamiento de IA</title>
+<style>
+  body { font-family: 'Segoe UI', sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; background: #1e1e2e; color: #cdd6f4; }
+  h1 { color: #f38ba8; border-bottom: 2px solid #f38ba8; padding-bottom: .5rem; }
+  h2 { color: #89b4fa; margin-top: 2rem; }
+  h3 { color: #a6e3a1; }
+  h4 { color: #f9e2af; }
+  code { background: #313244; padding: .15rem .4rem; border-radius: 4px; font-size: .9em; }
+  pre { background: #313244; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { border: 1px solid #45475a; padding: .5rem .8rem; text-align: left; }
+  th { background: #313244; color: #89b4fa; }
+  .phase { background: #313244; border-left: 4px solid #89b4fa; padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+  .warn { background: #4a1e2e; border-left: 4px solid #f38ba8; padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+  .ok { background: #1e4a2e; border-left: 4px solid #a6e3a1; padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+  .formula { background: #313244; padding: 1rem 1.5rem; border-radius: 8px; text-align: center; font-size: 1.1rem; margin: 1rem 0; }
+  .flow { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin: 1rem 0; }
+  .flow-step { background: #45475a; padding: .4rem .8rem; border-radius: 6px; font-size: .9rem; }
+  .flow-arrow { color: #89b4fa; font-size: 1.2rem; }
+</style>
+</head>
+<body>
+
+<h1>🧠 CEM Training - Entrenamiento de IA por Cross-Entropy</h1>
+
+<h2>Resumen</h2>
+<p>El sistema usa el algoritmo <strong>CEM (Cross-Entropy Method)</strong> para entrenar pol&iacute;ticas lineales que deciden c&oacute;mo lanzar la bocha. Se entrena una pol&iacute;tica <strong>por cada tipo de cancha</strong> (Flat, Dirty, Grass, Pro, Sand) porque cada cancha tiene fricci&oacute;n diferente y los par&aacute;metros &oacute;ptimos var&iacute;an entre ellas.</p>
+
+<div class="ok">
+<strong>Principio:</strong> La IA NO usa gestos ni aiming manual. Recibe el estado del juego y produce par&aacute;metros de lanzamiento. Se entrena lanzando bochas reales en la cancha f&iacute;sica y midiendo qu&eacute; tan cerca quedan del bochin.
+</div>
+
+<h2>1. El Problema: Qu&eacute; Decide la IA</h2>
+<p>Dada una situaci&oacute;n de juego, la IA debe decidir <strong>4 n&uacute;meros</strong>:</p>
+
+<table>
+<tr><th>Nro</th><th>Par&aacute;metro</th><th>Rango</th><th>Significado</th></tr>
+<tr><td>1</td><td><code>power</code></td><td>[0, 1]</td><td>Fuerza del lanzamiento (0 = suave, 1 = full potencia)</td></tr>
+<tr><td>2</td><td><code>angle_offset</code></td><td>[-0.3, 0.3] rad</td><td>Correcci&oacute;n angular respecto a la l&iacute;nea recta al bochin</td></tr>
+<tr><td>3</td><td><code>curve_magnitude</code></td><td>[0, 1]</td><td>Intensidad de la curva (0 = recto, 1 = curva m&aacute;xima)</td></tr>
+<tr><td>4</td><td><code>curve_direction</code></td><td>[-1, 1]</td><td>Lado de la curva (-1 = izquierda, +1 = derecha)</td></tr>
+</table>
+
+<p>Estos 4 valores se convierten en par&aacute;metros que <code>ThrowFlight.launch()</code> o <code>ThrowFlight.launch_straight()</code> usan para lanzar la bocha f&iacute;sicamente.</p>
+
+<h2>2. Los Inputs: Qu&eacute; Ve la IA (Estado)</h2>
+<p>La IA recibe un vector de <strong>10 valores normalizados [0-1]</strong>:</p>
+
+<table>
+<tr><th>#</th><th>Valor</th><th>Descripci&oacute;n</th></tr>
+<tr><td>0</td><td><code>dir_x</code></td><td>Componente X de la direcci&oacute;n al bochin</td></tr>
+<tr><td>1</td><td><code>dir_z</code></td><td>Componente Z de la direcci&oacute;n al bochin</td></tr>
+<tr><td>2</td><td><code>dist_norm</code></td><td>Distancia al bochin normalizada (0=cerca, 1=lejos)</td></tr>
+<tr><td>3</td><td><code>friction_norm</code></td><td>Fricci&oacute;n de la cancha normalizada</td></tr>
+<tr><td>4</td><td><code>potencia_norm</code></td><td>Potencia del jugador normalizada</td></tr>
+<tr><td>5</td><td><code>efecto</code></td><td>Efecto/curva del jugador [0-1]</td></tr>
+<tr><td>6</td><td><code>nearest_threat_dist</code></td><td>Proximidad del obst&aacute;culo m&aacute;s cercano en la l&iacute;nea de tiro</td></tr>
+<tr><td>7</td><td><code>nearest_threat_angle</code></td><td>&Aacute;ngulo lateral del obst&aacute;culo m&aacute;s cercano</td></tr>
+<tr><td>8</td><td><code>obstacle_density</code></td><td>Densidad de obst&aacute;culos alrededor del bochin</td></tr>
+<tr><td>9</td><td><code>nearby_count</code></td><td>Cantidad de bochas cercanas al bochin (normalizado)</td></tr>
+</table>
+
+<div class="phase">
+<strong>Encoding en juego:</strong> <code>AICEMState.encode_from_game(ball_pos, bochin_pos, court_type, stats, bochas)</code> construye este vector a partir de la escena real.
+</div>
+
+<h2>3. La Pol&iacute;tica: C&oacute;mo Decide</h2>
+<p>Cada cancha tiene su propia pol&iacute;tica lineal:</p>
+
+<div class="formula">
+<strong>acci&oacute;n = W &times; estado + b</strong>
+</div>
+
+<p>Donde:</p>
+<ul>
+<li><code>W</code> es una matriz de 4&times;10 (4 acciones, 10 inputs)</li>
+<li><code>b</code> es un vector de 4 (bias)</li>
+<li>El resultado es un vector de 4 valores que se mapean a los par&aacute;metros del tiro</li>
+</ul>
+
+<p>Esto significa que cada pol&iacute;tica tiene <strong>44 par&aacute;metros entrenables</strong> (40 de W + 4 de b). Es un modelo muy simple pero suficiente para el problema.</p>
+
+<h2>4. La Recompensa: Qu&eacute; es Bueno</h2>
+<p>Despu&eacute;s de lanzar la bocha, medimos la distancia al bochin. La recompensa es:</p>
+
+<div class="formula">
+<strong>r = 1 / (1 + distancia) + bonus - penalty</strong>
+</div>
+
+<table>
+<tr><th>Condici&oacute;n</th><th>Bonus/Penalty</th></tr>
+<tr><td>dist &lt; 0.5m</td><td>+0.5 (excelente)</td></tr>
+<tr><td>dist &lt; 1.0m</td><td>+0.3</td></tr>
+<tr><td>dist &lt; 2.0m</td><td>+0.15</td></tr>
+<tr><td>dist &lt; 3.0m</td><td>+0.05</td></tr>
+<tr><td>dist &gt; 10m</td><td>-0.15</td></tr>
+<tr><td>dist &gt; 15m</td><td>-0.3</td></tr>
+</table>
+
+<p>La recompensa se clampa entre [0, 2]. Cerca = m&aacute;s recompensa. Lejos = menos.</p>
+
+<h2>5. C&oacute;mo Funciona el Entrenamiento (CEM)</h2>
+
+<h3>5.1 Algoritmo Paso a Paso</h3>
+<div class="phase">
+<ol>
+<li><strong>Inicializar:</strong> Cada cancha empieza con W=0, b=0 y sigma=0.5</li>
+<li><strong>Por cada iteraci&oacute;n:</strong>
+  <ol>
+    <li>Generar <strong>M escenarios</strong> (posiciones aleatorias de bochin, bola, obst&aacute;culos)</li>
+    <li>Por cada escenario, crear <strong>K variantes</strong> del tiro (ruido gaussiano sobre la acci&oacute;n media)</li>
+    <li>Lanzar cada variante con la f&iacute;sica real del juego (<code>ThrowFlight</code> + <code>BocceBall</code>)</li>
+    <li>Medir distancia final al bochin → calcular recompensa</li>
+    <li>Seleccionar los <strong>K &times; 20% mejores</strong> (los &eacute;lites)</li>
+    <li>Actualizar W y b con <strong>regresi&oacute;n por m&iacute;nimos cuadrados</strong> sobre los &eacute;lites</li>
+    <li>Reducir <strong>sigma</strong> multiplic&aacute;;ndolo por 0.92 (explorar menos, explotar m&aacute;s)</li>
+  </ol>
+</li>
+<li><strong>Convergencia:</strong> Cuando sigma < 0.02 por 5 iteraciones seguidas, se detiene</li>
+</ol>
+</div>
+
+<h3>5.2 Significado de los Par&aacute;metros</h3>
+
+<table>
+<tr><th>Par&aacute;metro</th><th>Variable</th><th>Qu&eacute; Significa</th></tr>
+<tr><td><strong>M</strong></td><td><code>scenarios_per_iter</code></td><td>Cu&aacute;ntos escenarios aleatorios diferentes se generan por iteraci&oacute;n. M&aacute;s = m&aacute;s variedad de situaciones, entrenamiento m&aacute;s robusto.</td></tr>
+<tr><td><strong>K</strong></td><td><code>samples_per_scenario</code></td><td>Cu&aacute;ntas variantes con ruido se lanzan por cada escenario. M&aacute;s = m&aacute;s datos para elegir &eacute;lites, mejor estimaci&oacute;n de la pol&iacute;tica.</td></tr>
+<tr><td><strong>iter</strong></td><td><code>max_iterations</code></td><td>N&uacute;mero m&aacute;ximo de iteraciones del loop CEM. M&aacute;s = m&aacute;s oportunidad de converger.</td></tr>
+<tr><td><strong>sigma</strong></td><td><code>sigmas[court_idx]</code></td><td>Desviaci&oacute;n est&aacute;ndar del ruido gaussiano. Grande = explora, peque&ntilde;o = explota. Arranca en 0.5 y decae &times;0.92 por iteraci&oacute;n.</td></tr>
+<tr><td><strong>&eacute;lites</strong></td><td>top 20%</td><td>Los mejores tiros de cada batch. Solo ellos actualizan la pol&iacute;tica.</td></tr>
+</table>
+
+<h3>5.3 Configuraciones Predefinidas</h3>
+
+<table>
+<tr><th>Preset</th><th>M</th><th>K</th><th>Iter</th><th>sigma</th><th>Uso</th></tr>
+<tr><td>Quick</td><td>15</td><td>50</td><td>20</td><td>0.5</td><td>Prueba r&aacute;pida, resultado grosero</td></tr>
+<tr><td>Normal</td><td>25</td><td>50</td><td>40</td><td>0.5</td><td>Buen balance velocidad/calidad</td></tr>
+<tr><td>Good</td><td>40</td><td>50</td><td>60</td><td>0.5</td><td>Entrenamiento s&oacute;lido</td></tr>
+<tr><td>Deep</td><td>50</td><td>50</td><td>80</td><td>0.5</td><td>Alta precisi&oacute;n</td></tr>
+<tr><td>Full</td><td>60</td><td>50</td><td>100</td><td>0.5</td><td>Entrenamiento completo, mejor resultado</td></tr>
+</table>
+
+<h2>6. Entrenamiento por Cancha</h2>
+<p>Cada cancha tiene SU propia pol&iacute;tica (W, b, sigma) porque los par&aacute;metros &oacute;ptimos dependen de la fricci&oacute;n:</p>
+
+<table>
+<tr><th>Cancha</th><th>Fricci&oacute;n</th><th>Efecto</th></tr>
+<tr><td>Flat</td><td>1.0</td><td>Deslizamiento normal</td></tr>
+<tr><td>Dirty</td><td>0.8</td><td>Un poco m&aacute;s arrastre</td></tr>
+<tr><td>Grass</td><td>0.9</td><td>Ligeramente m&aacute;s lento</td></tr>
+<tr><td>Pro</td><td>1.1</td><td>M&aacute;s deslizante</td></tr>
+<tr><td>Sand</td><td>0.6</td><td>Mucha fricci&oacute;n, la bola frena r&aacute;pido</td></tr>
+</table>
+
+<div class="warn">
+<strong>Importante:</strong> El selector de cancha en el UI permite entrenar una cancha espec&iacute;fica. Seleccionando "All Courts" rota entre canchas en cada iteraci&oacute;n (repartiendo los M escenarios entre las 5). Seleccionando una cancha espec&iacute;fica concentra todos los escenarios en esa cancha, logrando mejor convergencia r&aacute;pida.
+</div>
+
+<h2>7. Flujo del Entrenamiento</h2>
+
+<div class="flow">
+<span class="flow-step">Generar Scenario</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Calcular Estado (10 floats)</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">W&times;S+b = Acci&oacute;n Media</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">+ Ruido Gaussiano (sigma)</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">ThrowFlight.lanzar()</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">BocceBall f&iacute;sica</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Medir Distancia</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Recompensa</span>
+</div>
+
+<p>Esto se repite K veces por escenario, M escenarios por iteraci&oacute;n. Despu&eacute;s:</p>
+
+<div class="flow">
+<span class="flow-step">Ordenar por recompensa</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Tomar top 20% (&eacute;lites)</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Regresi&oacute;n por m&iacute;nimos cuadrados</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Actualizar W y b</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">sigma &times;= 0.92</span>
+</div>
+
+<h2>8._archivos del Sistema CEM</h2>
+
+<table>
+<tr><th>Archivo</th><th>Rol</th></tr>
+<tr><td><code>ai_cem_trainer.gd</code></td><td>Loop principal CEM: genera escenarios, lanza tiros, selecciona &eacute;lites, actualiza pol&iacute;tica. Soporta <code>target_court</code> para entrenar cancha espec&iacute;fica.</td></tr>
+<tr><td><code>ai_cem_policy.gd</code></td><td>Pol&iacute;tica lineal W&times;S+b. Convierte acci&oacute;n a par&aacute;metros de tiro. Serializa a JSON.</td></tr>
+<tr><td><code>ai_cem_state.gd</code></td><td>Encoder del estado: posiciones, fricci&oacute;n, stats, obst&aacute;culos &rarr; 10 floats normalizados.</td></tr>
+<tr><td><code>ai_cem_scenario.gd</code></td><td>Genera escenarios aleatorios: posici&oacute;n de bochin, bola, obst&aacute;culos, potencia, efecto. Puede generar para cancha espec&iacute;fica.</td></tr>
+<tr><td><code>ai_cem_simulator.gd</code></td><td>Pool de 20 BocceBalls y ThrowFlights. Lanza tiros en batch, espera que se detengan, mide posici&oacute;n final.</td></tr>
+<tr><td><code>ai_cem_matrix.gd</code></td><td>Álgebra lineal: multiplicaci&oacute;n, transposici&oacute;n, inversi&oacute;n, m&iacute;nimos cuadrados con ridge regression.</td></tr>
+<tr><td><code>ai_cem_weights.gd</code></td><td>Resource que guarda las 5 pol&iacute;ticas (W, b, sigma) en un .tres + JSONs individuales.</td></tr>
+<tr><td><code>ai_cem_training_controller.gd</code></td><td>UI de entrenamiento: botones, labels, selector de dificultad y cancha.</td></tr>
+<tr><td><code>ai_cem_testing_controller.gd</code></td><td>UI de testing: lanza una bocha con la pol&iacute;tica entrenada y muestra el resultado.</td></tr>
+</table>
+
+<h2>9. Uso en Tiempo de Juego</h2>
+<p>Durante el juego real, <code>AIThrowBrain</code> carga las 5 pol&iacute;ticas y selecciona la correspondiente al tipo de cancha:</p>
+
+<pre>
+var policy = policies[court_type]  # Selecciona pol&iacute;tica de esta cancha
+var state = AICEMState.encode_from_game(ball_pos, bochin_pos, court_type, stats, bochas)
+var action = policy.compute_action(state)
+var params = AICEMPolicy.map_action_to_params(action)
+# params.power, params.angle_offset, params.curve_intensity, params.curve_side
+</pre>
+
+<p>La dificultad del juego controla cu&aacute;nto ruido se agrega a la acci&oacute;n (sigma m&aacute;s alto = tiros m&aacute;s impredecibles).</p>
+
+</body>
+</html>

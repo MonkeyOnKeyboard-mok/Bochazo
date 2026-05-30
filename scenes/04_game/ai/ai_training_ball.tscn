@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/04_game/ai/ai_training_ball.gd" id="1"]
+[ext_resource type="Resource" uid="uid://bk2osp5qyya1y" path="res://resources/game_config/BocceBall.tres" id="2_phys"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_1"]
 radius = 0.5
@@ -21,9 +22,9 @@ mass = 1.0
 linear_damp = 0.2
 angular_damp = 0.3
 contact_monitor = true
-continuous_cd = 1
 physics_material_override = SubResource("PhysMat")
 script = ExtResource("1")
+physics_config = ExtResource("2_phys")
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_1")

@@ -1,81 +1,111 @@
-[gd_scene format=3 uid="uid://clhkbob7hf6a8"]
+[gd_scene format=3 uid="uid://bl7l3wgskr1y6"]
 
-[ext_resource type="Script" uid="uid://8cv0kmincg0x" path="res://scenes/04_game/ai/ai_test_controller.gd" id="1_ctrl"]
+[ext_resource type="Script" uid="uid://2qhv4qjn4746" path="res://scenes/04_game/ai/data/ai_test_controller.gd" id="1_ctrl"]
 [ext_resource type="PackedScene" uid="uid://khh2to667k2u" path="res://scenes/04_game/components/balls/bocce_ball.tscn" id="2_ball"]
-[ext_resource type="Resource" uid="uid://24rsp1vhri2o" path="res://resources/game_config/stats_raul.tres" id="4_stats"]
-[ext_resource type="PackedScene" uid="uid://c8k2m4n6p8qr" path="res://scenes/04_game/components/throw_system/throw_flight.tscn" id="5_flt"]
+[ext_resource type="Resource" uid="uid://24rsp1vhri2o" path="res://resources/game_config/stats_raul.tres" id="3_stats"]
 
-[sub_resource type="StandardMaterial3D" id="BochinMat"]
+[sub_resource type="StandardMaterial3D" id="TargetMat"]
 albedo_color = Color(1, 1, 0, 1)
 
-[sub_resource type="SphereMesh" id="BochinMesh"]
+[sub_resource type="SphereMesh" id="TargetMesh"]
 radius = 0.2
 height = 0.4
 
-[sub_resource type="Environment" id="Env"]
-background_mode = 2
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_test"]
 
-[node name="TestAI" type="Node3D" unique_id=181894750]
+[sub_resource type="Sky" id="Sky_test"]
+sky_material = SubResource("ProceduralSkyMaterial_test")
+
+[sub_resource type="Environment" id="Env_test"]
+background_mode = 2
+sky = SubResource("Sky_test")
+
+[node name="TestAI" type="Node3D" unique_id=469674710]
 script = ExtResource("1_ctrl")
 ball_scene = ExtResource("2_ball")
-stats = ExtResource("4_stats")
+stats = ExtResource("3_stats")
 
-[node name="BochinMarker" type="Node3D" parent="." unique_id=943589697]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1, 0)
+[node name="TargetMarker" type="Node3D" parent="." unique_id=602595696]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1, 0)
 
-[node name="BochinVisual" type="MeshInstance3D" parent="BochinMarker" unique_id=975713646]
-material_override = SubResource("BochinMat")
-mesh = SubResource("BochinMesh")
+[node name="TargetVisual" type="MeshInstance3D" parent="TargetMarker" unique_id=1656411119]
+material_override = SubResource("TargetMat")
+mesh = SubResource("TargetMesh")
 
-[node name="Camera3D" type="Camera3D" parent="." unique_id=735692757]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -36.500763, 4.550576, 0)
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1210989452]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 1.0717621, 27.403172, 0)
 current = true
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1186744621]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=785435867]
 transform = Transform3D(1, 0, 0, 0, -0.4, 0.9, 0, -0.9, -0.4, 0, 10, 0)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1061788230]
-environment = SubResource("Env")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1922537770]
+environment = SubResource("Env_test")
 
-[node name="ThrowFlight" parent="." unique_id=1055516921 instance=ExtResource("5_flt")]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=660816258]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1502884855]
-
-[node name="ThrowBtn" type="Button" parent="CanvasLayer" unique_id=1188533564]
+[node name="ThrowBtn" type="Button" parent="CanvasLayer" unique_id=1278279830]
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 180.0
 offset_bottom = 50.0
-text = "AI Throw"
+text = "Test Throw"
 
-[node name="ResetBtn" type="Button" parent="CanvasLayer" unique_id=263944494]
+[node name="ResetBtn" type="Button" parent="CanvasLayer" unique_id=1504603774]
 offset_left = 200.0
 offset_top = 20.0
 offset_right = 360.0
 offset_bottom = 50.0
 text = "Reset"
 
-[node name="DiffOpt" type="OptionButton" parent="CanvasLayer" unique_id=150329591]
+[node name="LoadBtn" type="Button" parent="CanvasLayer" unique_id=1281897504]
 offset_left = 380.0
 offset_top = 20.0
-offset_right = 520.0
+offset_right = 540.0
 offset_bottom = 50.0
+text = "Load Data"
 
-[node name="CourtOpt" type="OptionButton" parent="CanvasLayer" unique_id=2008182482]
-offset_left = 540.0
+[node name="CourtOpt" type="OptionButton" parent="CanvasLayer" unique_id=943587868]
+offset_left = 560.0
 offset_top = 20.0
-offset_right = 680.0
+offset_right = 700.0
 offset_bottom = 50.0
 
-[node name="StatusLbl" type="Label" parent="CanvasLayer" unique_id=405354808]
+[node name="NoiseSlider" type="HSlider" parent="CanvasLayer" unique_id=1654131070]
 offset_left = 20.0
 offset_top = 60.0
-offset_right = 700.0
-offset_bottom = 80.0
-text = "Ready"
+offset_right = 400.0
+offset_bottom = 76.0
 
-[node name="ParamsLbl" type="Label" parent="CanvasLayer" unique_id=777888999]
+[node name="NoiseLbl" type="Label" parent="CanvasLayer" unique_id=849265363]
+offset_left = 410.0
+offset_top = 58.0
+offset_right = 600.0
+offset_bottom = 78.0
+text = "Noise: 0.50m"
+
+[node name="CurveSlider" type="HSlider" parent="CanvasLayer" unique_id=772310001]
 offset_left = 20.0
-offset_top = 85.0
+offset_top = 80.0
+offset_right = 400.0
+offset_bottom = 96.0
+
+[node name="CurveLbl" type="Label" parent="CanvasLayer" unique_id=883421002]
+offset_left = 410.0
+offset_top = 78.0
+offset_right = 600.0
+offset_bottom = 98.0
+text = "Curve Pref: 0.5"
+
+[node name="StatusLbl" type="Label" parent="CanvasLayer" unique_id=1433364682]
+offset_left = 20.0
+offset_top = 105.0
 offset_right = 700.0
-offset_bottom = 140.0
+offset_bottom = 125.0
+text = "Load data and click Test Throw"
+
+[node name="ResultLbl" type="Label" parent="CanvasLayer" unique_id=907914612]
+offset_left = 20.0
+offset_top = 125.0
+offset_right = 800.0
+offset_bottom = 200.0

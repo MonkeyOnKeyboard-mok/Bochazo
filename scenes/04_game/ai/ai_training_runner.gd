@@ -16,8 +16,8 @@ var balls_per_batch: int = 10
 var court_configs: Array[AICourtConfig] = []
 var current_court: Node = null
 
-const COURT_LENGTH: float = 30.0
-const COURT_WIDTH: float = 12.0
+const COURT_LENGTH: float = 35.0
+const COURT_WIDTH: float = 13.0
 const BALL_Y: float = 1.0
 const SPAWN_X: float = -25.0
 

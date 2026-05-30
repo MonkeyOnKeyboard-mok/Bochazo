@@ -21,8 +21,8 @@ var _current_court: Node = null
 var _auto_court: bool = false
 
 const SPAWN_POS: Vector3 = Vector3(-25, 1, 0)
-const COURT_LENGTH: float = 30.0
-const COURT_WIDTH: float = 12.0
+const COURT_LENGTH: float = 35.0
+const COURT_WIDTH: float = 13.0
 const BALL_Y: float = 1.0
 
 const COURT_NAMES: Array[String] = ["Flat", "Dirty", "Grass", "Pro", "Sand"]
@@ -44,11 +44,12 @@ func _ready():
 	_randomize_bochin()
 
 func _populate_opts():
-	diff_opt.add_item("Easy (best)", 0)
-	diff_opt.add_item("Medium", 1)
-	diff_opt.add_item("Med-Hard", 2)
-	diff_opt.add_item("Hard", 3)
-	diff_opt.add_item("Worst", 4)
+	diff_opt.add_item("QuickTest (10)", 0)
+	diff_opt.add_item("Quick (200)", 1)
+	diff_opt.add_item("Normal (500)", 2)
+	diff_opt.add_item("Good (1000)", 3)
+	diff_opt.add_item("Deep (2000)", 4)
+	diff_opt.add_item("Full (4000)", 5)
 	court_opt.add_item("Auto")
 	for name in COURT_NAMES:
 		court_opt.add_item(name)

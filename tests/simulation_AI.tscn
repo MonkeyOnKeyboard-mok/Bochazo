@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://875iljsbshsj"]
+
+[ext_resource type="Script" uid="uid://dhfg61o5s10ka" path="res://scenes/04_game/ai/data/ai_simulation_controller.gd" id="1_ctrl"]
+[ext_resource type="PackedScene" uid="uid://khh2to667k2u" path="res://scenes/04_game/components/balls/bocce_ball.tscn" id="2_ball"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sim"]
+
+[sub_resource type="Sky" id="Sky_sim"]
+sky_material = SubResource("ProceduralSkyMaterial_sim")
+
+[sub_resource type="Environment" id="Env_sim"]
+background_mode = 2
+sky = SubResource("Sky_sim")
+
+[node name="SimulationAI" type="Node3D" unique_id=449864279]
+script = ExtResource("1_ctrl")
+ball_scene = ExtResource("2_ball")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1550269360]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -1.8048286, 35.34, 0)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1002657062]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 12, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=436692306]
+environment = SubResource("Env_sim")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=27289497]
+
+[node name="RunBtn" type="Button" parent="CanvasLayer" unique_id=182293765]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 180.0
+offset_bottom = 50.0
+text = "Run Simulation"
+
+[node name="CancelBtn" type="Button" parent="CanvasLayer" unique_id=1689545208]
+offset_left = 200.0
+offset_top = 20.0
+offset_right = 360.0
+offset_bottom = 50.0
+text = "Cancel"
+
+[node name="StatusLbl" type="Label" parent="CanvasLayer" unique_id=154895128]
+offset_left = 20.0
+offset_top = 60.0
+offset_right = 600.0
+offset_bottom = 80.0
+text = "Ready - Click Run to start simulation"
+
+[node name="ProgressLbl" type="Label" parent="CanvasLayer" unique_id=1182298462]
+offset_left = 20.0
+offset_top = 85.0
+offset_right = 800.0
+offset_bottom = 105.0
