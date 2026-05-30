@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://b0vtkxrcsio02"]
+
+[ext_resource type="PackedScene" uid="uid://cgbihbwqeb6d1" path="res://assets/models/scoreboard/score.glb" id="1_247nn"]
+[ext_resource type="Script" uid="uid://bi5wii2vu85ag" path="res://scenes/04_game/components/scoreboard/punteador.gd" id="3_ngcbg"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_bjfic"]
+load_path = "res://.godot/imported/score2_score.png-135c175da350598350c9a14f55000c3c.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g1fbt"]
+shading_mode = 0
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.796243, 0.796243, 0.796243, 1)
+albedo_texture = SubResource("CompressedTexture2D_bjfic")
+texture_filter = 0
+
+[node name="score" unique_id=1936129887 instance=ExtResource("1_247nn")]
+
+[node name="scoreboard" parent="." index="0" unique_id=1766375130]
+surface_material_override/0 = SubResource("StandardMaterial3D_g1fbt")
+
+[node name="bolita azul" parent="." index="1" unique_id=219499065]
+script = ExtResource("3_ngcbg")

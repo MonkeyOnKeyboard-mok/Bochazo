@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cp1167q7xdrtn"
-path="res://.godot/imported/Modelo_jugador_rig_nuevo.glb-5c18c67d295861953923397ea9877711.scn"
+path="res://.godot/imported/Modelo_jugador_rig_nuevo.glb-087e745f0c2bf18d8607e8afe92fdd88.scn"
 
 [deps]
 
-source_file="res://assets/models/raul/Modelo_jugador_rig_nuevo.glb"
-dest_files=["res://.godot/imported/Modelo_jugador_rig_nuevo.glb-5c18c67d295861953923397ea9877711.scn"]
+source_file="res://assets/models/player/Modelo_jugador_rig_nuevo.glb"
+dest_files=["res://.godot/imported/Modelo_jugador_rig_nuevo.glb-087e745f0c2bf18d8607e8afe92fdd88.scn"]
 
 [params]
 
