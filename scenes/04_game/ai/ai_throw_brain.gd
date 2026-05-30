@@ -46,6 +46,7 @@
 ##                     Prioriza tiros vistosos según curve_preference.
 ##   find_nearest()  — Busca el tiro más cercano directamente (sin promediar).
 ##
+
 class_name AIThrowBrain
 extends Node
 
