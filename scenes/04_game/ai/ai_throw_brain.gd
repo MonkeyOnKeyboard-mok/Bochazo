@@ -64,9 +64,9 @@ var curve_preference: float = 0.5
 var noise_radius: float = 0.0
 var difficulty_sigma: float = 0.0
 
-var stats: PlayerThrowStats
-var flight: ThrowFlight
-var ball: RigidBody3D
+@export var stats: PlayerThrowStats
+@export var flight: ThrowFlight
+@export var ball: RigidBody3D
 
 func _ready():
 	rng = RandomNumberGenerator.new()
@@ -178,3 +178,11 @@ func _fallback_throw(ball_pos: Vector3, bochin_pos: Vector3) -> AIThrowParams:
 	p.curve_side = 1.0
 	p.compute_direction(ball_pos, bochin_pos)
 	return p
+
+
+func _on_button_pressed() -> void:
+	self.court_type = 2
+	self.set_difficulty(4)       # 0=facil, 4=dificil
+	self.curve_preference = 1.0  # 0=sin preferencia, 2=max curva
+	self.setup_for_throw(stats, ball, flight)
+	self.execute_throw(Vector3(-27.54,1.184,0), GameManager.bochin.global_position + Vector3(randf_range(-2,2),0,randf_range(-2,2)))

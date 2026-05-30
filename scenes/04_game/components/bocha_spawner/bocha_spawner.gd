@@ -25,4 +25,5 @@ func spawn_bocha() -> void:
 	add_child(bochin)
 	ball = bochin
 	ball.global_position = bocha_pos.global_position
+	%brain.ball = ball
 	GameManager.bocha_spawned.emit(ball)

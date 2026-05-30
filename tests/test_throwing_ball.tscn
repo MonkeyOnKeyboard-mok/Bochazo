@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://h7l4bjedpvxx" path="res://scenes/04_game/components/throw_system/throw_system.tscn" id="4"]
 [ext_resource type="Script" uid="uid://clwp0gamlbqfs" path="res://scenes/04_game/components/bocha_spawner/bocha_spawner.gd" id="4_0u7gl"]
 [ext_resource type="Resource" uid="uid://24rsp1vhri2o" path="res://resources/game_config/stats_raul.tres" id="5"]
+[ext_resource type="Script" uid="uid://dgxg2qvvewmb1" path="res://scenes/04_game/ai/ai_throw_brain.gd" id="5_8fyj8"]
 [ext_resource type="PackedScene" uid="uid://b6kn74l0pgn83" path="res://scenes/04_game/components/court/flat_court.tscn" id="5_r5rj8"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
@@ -99,4 +100,20 @@ script = ExtResource("4_0u7gl")
 [node name="BochaPos" type="Marker3D" parent="BochaSpawner" unique_id=456937765]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.539896, 1.1839142, 0)
 
+[node name="Button" type="Button" parent="." unique_id=1048060749]
+offset_left = 528.0
+offset_top = 89.0
+offset_right = 615.0
+offset_bottom = 120.0
+text = "IA THROW"
+
+[node name="brain" type="Node" parent="." unique_id=1517923749 node_paths=PackedStringArray("flight")]
+unique_name_in_owner = true
+script = ExtResource("5_8fyj8")
+stats = ExtResource("5")
+flight = NodePath("../ThrowSystem/ThrowFlight")
+
 [connection signal="pressed" from="CanvasLayer/ResetButton" to="Reset" method="_on_reset_button_pressed"]
+[connection signal="pressed" from="Button" to="brain" method="_on_button_pressed"]
+
+[editable path="ThrowSystem"]
