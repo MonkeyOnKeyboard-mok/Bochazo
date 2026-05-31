@@ -49,20 +49,19 @@ func _on_salir_creditos_pressed() -> void:
 	pass
 
 func _on_vs_player_pressed() -> void:
-	#button_type = "start"
-	#fade_transition.show()
+	button_type = "start"
+	$FadeTransition.show()
 	##Audio.menu_out()
-	##$fade_transition/Fade_timer.start()
-	##$fade_transition/AnimationPlayer.play("fade_in")
-	pass
+	$FadeTransition/Timer.start()
+	$FadeTransition/ColorRect/FadeRect.play("fade_in")
 	
 func _on_vs_cpu_pressed() -> void:
 	GameManager.vsAI = true
-	#button_type = "start"
-	#fade_transition.show()
+	button_type = "start"
+	$FadeTransition.show()
 	##Audio.menu_out()
-	##$fade_transition/Fade_timer.start()
-	##$fade_transition/AnimationPlayer.play("fade_in")
+	$FadeTransition/Timer.start()
+	$FadeTransition/ColorRect/FadeRect.play("fade_in")
 
 func _on_back_pressed() -> void:
 	choose_opp.hide()
@@ -70,5 +69,5 @@ func _on_back_pressed() -> void:
 func _on_timer_timeout() -> void:
 	match button_type:
 		"start": 
-			#get_tree().change_scene_to_file("res://Main/main.tscn")
-			print("Cargando escena principal")
+			get_tree().change_scene_to_file("res://scenes/03_character_select/character_select.tscn")
+			print("Cargando selección de personajes")

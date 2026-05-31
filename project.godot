@@ -21,7 +21,7 @@ GameManager="*uid://dhkuavhm3fuvk"
 [display]
 
 window/size/viewport_width=1920
-window/size/viewport_height=1080
+window/size/viewport_height=590
 
 [filesystem]
 

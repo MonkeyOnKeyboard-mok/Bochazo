@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PlayerData" format=3 uid="uid://c5niecv510no4"]
+
+[ext_resource type="Script" uid="uid://dgypgrm7fkoc3" path="res://scenes/04_game/components/players/player_resource.gd" id="1_tac2u"]
+[ext_resource type="ArrayMesh" uid="uid://dt2q8300627vh" path="res://scenes/03_character_select/Modelo_jugador2.obj" id="1_x35cc"]
+[ext_resource type="Texture2D" uid="uid://by2la1mjqboei" path="res://assets/models/player/jorge_texture_jorge.png" id="3_f7kd0"]
+
+[resource]
+script = ExtResource("1_tac2u")
+mesh = ExtResource("1_x35cc")
+texture = ExtResource("3_f7kd0")
+name = "Jorge"
+metadata/_custom_type_script = "uid://dgypgrm7fkoc3"

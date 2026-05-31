@@ -17,7 +17,6 @@ var index : int = 0
 func _ready() -> void:
 	for character in players.get_children():
 		player_list.append(character)
-	print(player_list)
 	current_character = player_list [index]
 	label_player.text = "Player 1"
 	$FadeTransition/ColorRect/FadeRect.play("fade_out")
@@ -25,12 +24,12 @@ func _ready() -> void:
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	print(current_character)
 	if !moving:
 		move_left()
 		move_right()
 		choose()
-	nombre.text = current_character.data.name
+	if current_character.data:
+		nombre.text = current_character.data.name
 
 func move_left() -> void:
 	if Input.is_action_just_pressed("move_right"):
@@ -48,7 +47,7 @@ func choose() -> void:
 	if Input.is_action_just_pressed("choose"):
 		if p1_chose and p2_chose: return
 		if !p1_chose:
-			GameManager.player1_char = current_character
+			GameManager.player1_char = current_character.data.name
 			p1_chose = true
 			current_character.player_num = "player1"
 			## Change Flecha to P2 instead of P1
@@ -58,8 +57,9 @@ func choose() -> void:
 			else: 
 				label_player.text = "CPU"
 		else:
-			GameManager.player2_char = current_character
+			GameManager.player2_char = current_character.data.name
 			p2_chose = true
+			trans()
 
 func _handle_movement(mov: Vector3, rot: Vector3, side: String) ->void:
 	hud.visible = false
@@ -83,4 +83,13 @@ func _handle_movement(mov: Vector3, rot: Vector3, side: String) ->void:
 		"right":
 			index -= 1
 	current_character = player_list[index]
-	
+
+func trans() -> void: 
+	$FadeTransition.show()
+	##Audio.menu_out()
+	$FadeTransition/Timer.start()
+	$FadeTransition/ColorRect/FadeRect.play("fade_in")
+
+func _on_timer_timeout() -> void:
+			get_tree().change_scene_to_file("res://tests/test_throwing_ball.tscn")
+			print("Cargando selección de personajes")

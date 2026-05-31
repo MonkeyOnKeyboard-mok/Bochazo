@@ -8,6 +8,12 @@ signal spawn_bocha()
 @warning_ignore("unused_signal")
 signal bocha_spawned(bocha : RigidBody3D)
 
+## Player Manager Signals
+@warning_ignore("unused_signal")
+signal despawn
+@warning_ignore("unused_signal")
+signal respawn (char_name : String)
+
 ## Player Animation Signals
 @warning_ignore("unused_signal")
 signal idle
@@ -24,8 +30,8 @@ signal recover_alpha
 ## Vs AI flag
 var vsAI : bool = false
 
-var player1_char = null
-var player2_char = null
+var player1_char : String = "Raul"
+var player2_char : String = "Jorge"
 
 ## Match Variables 
 var first_turn : bool = true
@@ -79,6 +85,12 @@ func who_is_closer() -> void:
 
 	if p1_turns <= 0 and p2_turns <= 0:
 		who_won()
+	if p1_turn:
+		emit_signal("respawn", player1_char)
+		print("Spawnear al player 1")
+	else:
+		emit_signal("respawn", player2_char)
+		print("Spawnear al player 2")
 	print("Más cerca: ", closest_bocha.player)
 	print("Bochas en la cancha: ", bochas_thrown)
 

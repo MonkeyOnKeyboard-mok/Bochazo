@@ -32,7 +32,8 @@ func _ready():
 
 func _physics_process(delta):
 	if !is_thrown:
-		global_position = GameManager.current_player.marker.global_position
+		if GameManager.current_player:
+			global_position = GameManager.current_player.marker.global_position
 	if _is_stopped: return
 
 	if training_mode:
@@ -63,6 +64,7 @@ func _physics_process(delta):
 		if GameManager:
 			GameManager.bochas_thrown.append(self)
 			GameManager.deduct_turn(player)
+			GameManager.emit_signal("despawn")
 			if GameManager.first_turn == false and GameManager.bochin: return
 			if GameManager.bochin:
 				GameManager.first_bocha(self.global_position.distance_to(GameManager.bochin.global_position))

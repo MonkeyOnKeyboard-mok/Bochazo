@@ -3,7 +3,8 @@ class_name Bochin
 
 func _physics_process(_delta):
 	if !is_thrown:
-		global_position = GameManager.current_player.marker.global_position
+		if GameManager.current_player:
+			global_position = GameManager.current_player.marker.global_position
 	if _is_stopped: return
 	if linear_velocity.length() < stop_velocity_threshold:
 		if !is_thrown: return

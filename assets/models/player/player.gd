@@ -1,12 +1,13 @@
 extends Node3D
 
 var current_player : bool = false
+
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var marker: Marker3D = $Armature_001/Skeleton3D/BoneAttachment3D/BallPos
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	make_model_transparent(self, 0.2)
+	
 	#enable_shadows(self) ### Not working
 	GameManager.connect("idle", play_idle_anim)
 	GameManager.connect("charge_throw", play_charge_throw_anim)
@@ -14,7 +15,8 @@ func _ready() -> void:
 	GameManager.connect("win", play_win_anim)
 	GameManager.connect("lose", play_lose_anim)
 	#GameManager.connect("recover_alpha", recover_alpha)
-	GameManager.current_player = self
+	await get_tree().create_timer(1).timeout
+	make_model_transparent(self, 0.2)
 
 func _process(_delta: float) -> void:
 	pass
@@ -33,10 +35,6 @@ func play_lose_anim() -> void:
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "throw_2":
 		GameManager.throw_for_real = true
-
-func recover_alpha() -> void:
-	make_model_transparent(self, 1.0) ## Le devuelve la transparencia, pero creo que está duplicando todos
-	# los meshes
 
 func make_model_transparent(node: Node, alpha: float):
 	if node is MeshInstance3D:
@@ -59,3 +57,8 @@ func enable_shadows(node: Node):
 		
 	for child in node.get_children():
 		enable_shadows(child)
+
+func be_gone()-> void:
+	#GameManager.current_player = null
+	#queue_free()
+	pass
