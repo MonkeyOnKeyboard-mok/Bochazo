@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="3_khmfb"]
 [ext_resource type="PackedScene" uid="uid://u7mfkd0qeypc" path="res://scenes/03_character_select/raul_char_select.tscn" id="3_r1baj"]
 [ext_resource type="PackedScene" uid="uid://8li1vjxqgthv" path="res://scenes/03_character_select/jorge_char_select.tscn" id="4_r1baj"]
+[ext_resource type="PackedScene" uid="uid://vm7xhcn14t0u" path="res://scenes/03_character_select/beto_char_select.tscn" id="5_8yjhp"]
 
 [sub_resource type="Gradient" id="Gradient_d67qk"]
 colors = PackedColorArray(0, 0, 0, 1, 0.23537052, 0.23537052, 0.23537052, 1)
@@ -40,6 +41,9 @@ transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -1, 0)
 [node name="JorgeCharSelect" parent="Players" unique_id=1320814174 instance=ExtResource("4_r1baj")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 2, -1, 0)
 
+[node name="BetoCharSelect" parent="Players" unique_id=1611621103 instance=ExtResource("5_8yjhp")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 4, -1, 0)
+
 [node name="Hud" type="Node3D" parent="." unique_id=650910728]
 
 [node name="Flecha" type="Sprite3D" parent="Hud" unique_id=520986656]
@@ -63,5 +67,9 @@ text = "Nombre"
 transform = Transform3D(1, 0, 0, 0, 0.7468007, 0.6650479, 0, -0.6650479, 0.7468007, 0, 1.1826861, -1.6394984)
 light_color = Color(0.80680394, 0.6834999, 7.70092e-07, 1)
 light_energy = 7.883
+
+[node name="PressSpaceToSelect" type="Label3D" parent="." unique_id=1483303682]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099277735, 1.3917619, 0)
+text = "Presiona Espacio para elegir"
 
 [connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]

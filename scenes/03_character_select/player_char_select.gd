@@ -6,7 +6,7 @@ var data: PlayerData = null
 var chars : Array = [
 	load("res://scenes/04_game/components/players/raul.tres"),
 	load("res://scenes/04_game/components/players/jorge.tres"),
-	load("res://scenes/04_game/components/players/jorge.tres"),
+	load("res://scenes/04_game/components/players/beto.tres"),
 	]
 
 # Called when the node enters the scene tree for the first time.

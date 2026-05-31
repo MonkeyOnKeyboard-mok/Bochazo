@@ -32,6 +32,7 @@ func launch(power: float, direction: Vector3, waypoints: PackedVector3Array):
 	ball.apply_central_impulse(dir * power * max_force)
 	ball.is_thrown = true ## Agregado Santi
 	GameManager.throw_for_real = false
+	GameManager.permission_to_throw = false
 	if control < 1.0:
 		var wobble = (1.0 - control) * 0.1
 		ball.apply_central_impulse(Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)).normalized() * wobble)
@@ -49,6 +50,7 @@ func launch_straight(power: float, direction: Vector3):
 	ball.apply_central_impulse(dir * power * max_force)
 	ball.is_thrown = true ## Agregado Santi
 	GameManager.throw_for_real = false
+	GameManager.permission_to_throw = false
 
 func _physics_process(_delta):
 	if not _active or not ball: return

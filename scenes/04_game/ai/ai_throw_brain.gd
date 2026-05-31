@@ -75,8 +75,8 @@ func _ready():
 	model = AIInverseModel.new()
 	load_data()
 	## Temporal:
-	court_type = 2          # 0=Flat,1=Dirty,2=Grass,3=Pro,4=Sand
-	set_difficulty(2)       # 0=facil, 4=dificil
+	court_type = 3          # 0=Flat,1=Dirty,2=Grass,3=Pro,4=Sand
+	set_difficulty(4)       # 0=facil, 4=dificil
 
 ## Carga los archivos JSON de datos de simulación.
 ## data_path: carpeta donde están los throws_*.json

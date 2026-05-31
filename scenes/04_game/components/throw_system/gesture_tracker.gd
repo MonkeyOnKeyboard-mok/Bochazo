@@ -23,9 +23,16 @@ var aim_start_y: float = 0.0
 @onready var charge_line: Line2D = $ChargeLine
 @onready var aim_line: Line2D = $AimLine
 
+func _ready() -> void:
+	GameManager.connect("throw", reset)
+
 func _input(event: InputEvent):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		_on_click(event)
+		if GameManager.permission_to_throw:
+			print("You have permission to throw")
+			_on_click(event)
+		else: 
+			print("You DON'T have permission to throw")
 	elif event is InputEventMouseMotion and phase in [Phase.CHARGE, Phase.AIM]:
 		_on_motion(event)
 

@@ -11,21 +11,28 @@ config_version=5
 [application]
 
 config/name="Bochazo"
+run/main_scene="uid://d1xjsj86bd7ch"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameManager="*uid://dhkuavhm3fuvk"
+Audio="*uid://cd2hv2t8atvtu"
 
 [display]
 
 window/size/viewport_width=1920
-window/size/viewport_height=590
+window/size/viewport_height=1080
+window/size/mode=3
 
 [filesystem]
 
 import/blender/enabled=false
+
+[global_group]
+
+brain=""
 
 [input]
 

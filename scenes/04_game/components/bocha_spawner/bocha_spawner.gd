@@ -17,6 +17,9 @@ func _process(_delta: float) -> void:
 	pass
 
 func spawn_bocha() -> void:
+	GameManager.permission_to_throw = true
+	if !GameManager.p1_turn and GameManager.vsAI:
+		GameManager.permission_to_throw = false
 	var bochin = null
 	if GameManager.bochin_thrown == false: 
 		bochin = BOCHIN.instantiate()

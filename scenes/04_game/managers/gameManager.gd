@@ -31,6 +31,16 @@ signal recover_alpha
 ## Game Signals
 @warning_ignore("unused_signal")
 signal update_scoreboard(score: int, inc_player: String)
+@warning_ignore("unused_signal")
+signal brain_connect
+@warning_ignore("unused_signal")
+signal soft_reset
+@warning_ignore("unused_signal")
+signal full_reset
+@warning_ignore("unused_signal")
+signal victory
+@warning_ignore("unused_signal")
+signal soft_reset_end
 
 ## Vs AI flag
 var vsAI : bool = false
@@ -39,6 +49,9 @@ var player1_char : String = "Raul"
 var player2_char : String = "Jorge"
 
 ## Match Variables 
+var court : String = "Pro"
+var permission_to_throw : bool = false
+
 var first_turn : bool = true
 var first_bocha_thrown : bool = false
 
@@ -109,8 +122,6 @@ func who_is_closer() -> void:
 	elif not p1_turn and p2_turns <= 0:
 		p1_turn = true
 
-	if p1_turns <= 0 and p2_turns <= 0:
-		who_won()
 	if p1_turn:
 		emit_signal("respawn", player1_char)
 		print("Spawnear al player 1")
@@ -124,7 +135,15 @@ func who_is_closer() -> void:
 	else:
 		#  Añadir Animacion de score  y reset de la cancha 
 		print("Reset scene")
-		pass
+		if p1_score >= 15 or p2_score >= 15:
+			emit_signal("full_reset")
+			emit_signal("victory")
+			run_full_reset()
+		else: 
+			emit_signal("soft_reset")
+			run_soft_reset()
+			emit_signal("spawn_bocha")
+
 
 func who_won() -> void:
 	var bochas_1 : Array = []
@@ -138,6 +157,7 @@ func who_won() -> void:
 			bochas_2.append(value)
 	if bochas_1.size() >0 and  bochas_2.size() > 0:
 		print("BEEP BOOP ANALIZANDO DATOS")
+		await get_tree().create_timer(1.0).timeout
 		if bochas_1.min() < bochas_2.min():
 			for bocha in bochas_1:
 				if bocha < bochas_2.min():
@@ -157,7 +177,7 @@ func first_bocha(distance: float) -> void:
 	first_bocha_thrown = true
 	p1_turn = false
 
-func reset_all() -> void:
+func run_soft_reset() -> void:
 	p1_turn = true  
 	p1_turns = 6
 	p2_turns = 6
@@ -165,3 +185,25 @@ func reset_all() -> void:
 	bochin_thrown = false
 	bochas_thrown  = []
 	bochas_distance  = []
+	first_bocha_thrown = false
+	first_turn = true
+	permission_to_throw = false
+
+func run_full_reset() -> void:
+	p1_turn = true  
+	p1_turns = 6
+	p2_turns = 6
+	bochin = null
+	bochin_thrown = false
+	bochas_thrown  = []
+	bochas_distance  = []
+	player1_char = "Raul"
+	player2_char  = "Jorge"
+	court  = "Dirty"
+	vsAI = false
+	first_bocha_thrown = false
+	first_turn = true
+	p1_score = 0
+	p2_score = 0
+	current_player = null
+	permission_to_throw = false

@@ -99,9 +99,9 @@ func _define_settings() -> void:
 		mat = mat.duplicate()
 		$BochaMesh.material_override = mat
 		if GameManager and GameManager.p1_turn:
-			mat.albedo_texture = rojo
+			mat.albedo_texture = azul
 			player = "player1"
 		else:
-			mat.albedo_texture = azul
+			mat.albedo_texture = rojo
 			player = "player2"
 	settings_set = true

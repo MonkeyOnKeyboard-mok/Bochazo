@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cgbihbwqeb6d1" path="res://assets/models/scoreboard/score.glb" id="1_247nn"]
 [ext_resource type="Script" uid="uid://b2t182tldavrt" path="res://scenes/04_game/components/scoreboard/bolita_azul.gd" id="2_bjfic"]
+[ext_resource type="Script" uid="uid://cpjffxpaqq8cg" path="res://scenes/04_game/components/scoreboard/scoreboard.gd" id="2_g1fbt"]
 [ext_resource type="Script" uid="uid://c7lrf8iwlrfgy" path="res://scenes/04_game/components/scoreboard/bolita_rosa.gd" id="3_ngcbg"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_bjfic"]
@@ -16,6 +17,7 @@ albedo_texture = SubResource("CompressedTexture2D_bjfic")
 texture_filter = 0
 
 [node name="score" unique_id=1936129887 instance=ExtResource("1_247nn")]
+script = ExtResource("2_g1fbt")
 
 [node name="scoreboard" parent="." index="0" unique_id=1766375130]
 surface_material_override/0 = SubResource("StandardMaterial3D_g1fbt")

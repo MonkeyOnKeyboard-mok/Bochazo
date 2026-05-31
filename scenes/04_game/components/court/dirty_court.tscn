@@ -29,7 +29,7 @@ court_config = ExtResource("2_h8fr1")
 
 [node name="DirtyCourtV2" parent="." unique_id=1458229510 instance=ExtResource("3_dw1pf")]
 
-[node name="Cube_007" parent="DirtyCourtV2" index="0" unique_id=1106282110]
+[node name="Cube_007" parent="DirtyCourtV2" index="0" unique_id=643469053]
 surface_material_override/0 = SubResource("StandardMaterial3D_h25tw")
 surface_material_override/1 = SubResource("StandardMaterial3D_62xdc")
 surface_material_override/2 = SubResource("StandardMaterial3D_e64oa")

@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://h7l4bjedpvxx" path="res://scenes/04_game/components/throw_system/throw_system.tscn" id="4"]
 [ext_resource type="Script" uid="uid://clwp0gamlbqfs" path="res://scenes/04_game/components/bocha_spawner/bocha_spawner.gd" id="4_0u7gl"]
 [ext_resource type="Resource" uid="uid://24rsp1vhri2o" path="res://resources/game_config/stats_raul.tres" id="5"]
-[ext_resource type="PackedScene" uid="uid://b6kn74l0pgn83" path="res://scenes/04_game/components/court/flat_court.tscn" id="5_r5rj8"]
 [ext_resource type="PackedScene" uid="uid://b0vtkxrcsio02" path="res://scenes/04_game/components/scoreboard/scoreboard.tscn" id="6_8fyj8"]
 [ext_resource type="PackedScene" uid="uid://47q000na4tmm" path="res://scenes/04_game/ai/brain.tscn" id="7_b6v23"]
 [ext_resource type="Script" uid="uid://dgxg2qvvewmb1" path="res://scenes/04_game/ai/ai_throw_brain.gd" id="8_kybjp"]
@@ -136,8 +135,6 @@ script = SubResource("ResetScript")
 
 [node name="ThrowSystem" parent="." unique_id=864086691 instance=ExtResource("4")]
 stats = ExtResource("5")
-
-[node name="Court" parent="." unique_id=1767025561 instance=ExtResource("5_r5rj8")]
 
 [node name="BochaSpawner" type="Node3D" parent="." unique_id=1619815305]
 script = ExtResource("4_0u7gl")

@@ -96,5 +96,5 @@ func trans() -> void:
 	$FadeTransition/ColorRect/FadeRect.play("fade_in")
 
 func _on_timer_timeout() -> void:
-	get_tree().change_scene_to_file("res://tests/test_throwing_ball.tscn")
-	print("Cargando selección de personajes")
+	get_tree().change_scene_to_file("res://scenes/03_character_select/court_select.tscn")
+	print("Cargando selección de cancha")

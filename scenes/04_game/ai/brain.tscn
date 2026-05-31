@@ -1,3 +1,6 @@
 [gd_scene format=3 uid="uid://47q000na4tmm"]
 
-[node name="brain" type="Node" unique_id=215514912]
+[ext_resource type="Script" uid="uid://dgxg2qvvewmb1" path="res://scenes/04_game/ai/ai_throw_brain.gd" id="1_r366m"]
+
+[node name="brain" type="Node" unique_id=215514912 groups=["brain"]]
+script = ExtResource("1_r366m")

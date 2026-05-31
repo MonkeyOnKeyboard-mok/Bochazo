@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="PlayerData" format=3 uid="uid://c2ttw3uqs5wrq"]
+
+[ext_resource type="Script" uid="uid://dgypgrm7fkoc3" path="res://scenes/04_game/components/players/player_resource.gd" id="1_jemkk"]
+
+[resource]
+script = ExtResource("1_jemkk")
+name = "Beto"
+metadata/_custom_type_script = "uid://dgypgrm7fkoc3"

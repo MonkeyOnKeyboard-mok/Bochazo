@@ -19,9 +19,9 @@ var ball : RigidBody3D = null
 
 func _ready():
 	GameManager.connect("bocha_spawned", update_bocha)
+	GameManager.connect("brain_connect", connect_to_brain)
 	_wire()
-	if %brain:
-		%brain.flight = flight
+	
 	if stats: _apply_stats() 
 
 func _wire():
@@ -84,3 +84,9 @@ func update_bocha(bocha : RigidBody3D) -> void:
 	ball = bocha
 	flight.ball = ball
 	if stats: _apply_stats()
+
+func connect_to_brain() -> void:
+	if get_tree().get_first_node_in_group("brain"):
+			print("Cerebro encontrado")
+			get_tree().get_first_node_in_group("brain").flight = flight
+	else: print("Cerebro NO  encontrado")
