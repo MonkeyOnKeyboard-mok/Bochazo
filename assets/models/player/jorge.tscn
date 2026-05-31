@@ -3,14 +3,14 @@
 [ext_resource type="PackedScene" uid="uid://vj81wtcr5ymy" path="res://assets/models/player/jorge.glb" id="1_tkdqs"]
 [ext_resource type="Script" uid="uid://bq7xpv16i6s4r" path="res://assets/models/player/player.gd" id="2_0bp81"]
 
-[node name="Jorge" unique_id=354427700 instance=ExtResource("1_tkdqs")]
+[node name="Jorge" unique_id=1320814174 instance=ExtResource("1_tkdqs")]
 script = ExtResource("2_0bp81")
 
-[node name="Skeleton3D" parent="Armature_001" parent_id_path=PackedInt32Array(1726226129) index="0" unique_id=1431397619]
+[node name="Skeleton3D" parent="Armature_001" parent_id_path=PackedInt32Array(1358772478) index="0" unique_id=131147545]
 bones/0/position = Vector3(0.5147745, 2.4210439, -0.013984388)
-bones/0/rotation = Quaternion(0.7144573, 0.6993745, 0.015468519, 0.013670545)
-bones/0/scale = Vector3(1, 1.0000002, 1.0000001)
-bones/1/rotation = Quaternion(-0.0009070727, -0.0018911308, -0.019411303, 0.9998094)
+bones/0/rotation = Quaternion(0.9487583, 0.31532764, 0.007908862, 0.019068532)
+bones/0/scale = Vector3(1.0000001, 1.0000001, 1.0000001)
+bones/1/rotation = Quaternion(-0.00090707507, -0.0018911305, -0.01941132, 0.9998094)
 bones/2/position = Vector3(0.03323814, 0.93617964, -0.014487102)
 bones/2/rotation = Quaternion(-0.0023275448, 0.31721961, 0.0016808794, 0.9483478)
 bones/3/rotation = Quaternion(0.0002367425, -1.1186081e-07, -7.391354e-05, 1)
@@ -20,21 +20,24 @@ bones/4/scale = Vector3(0.99999994, 0.9999998, 1)
 bones/5/position = Vector3(0.35601562, 0.9378478, 0.04237796)
 bones/5/rotation = Quaternion(0.10585371, 0.0039225826, 0.9940035, -0.027142404)
 bones/6/position = Vector3(-0.5147745, 2.4210439, -0.013984388)
-bones/6/rotation = Quaternion(0.7144573, -0.6993745, -0.015468519, 0.013670545)
-bones/6/scale = Vector3(1, 1.0000002, 1.0000001)
-bones/7/rotation = Quaternion(-0.0009070727, 0.0018911308, 0.019411303, 0.9998094)
+bones/6/rotation = Quaternion(0.9487583, -0.31532764, -0.007908862, 0.019068532)
+bones/6/scale = Vector3(1.0000001, 1.0000001, 1.0000001)
+bones/7/rotation = Quaternion(-0.00090707507, 0.0018911305, 0.01941132, 0.9998094)
 bones/8/position = Vector3(-0.35601562, 0.9378478, 0.04237796)
 bones/8/rotation = Quaternion(-0.10585372, 0.0039225826, 0.9940035, 0.027142404)
 
-[node name="Cabeza_2" parent="Armature_001/Skeleton3D" index="0" unique_id=216769081]
+[node name="Cabeza_2" parent="Armature_001/Skeleton3D" index="0" unique_id=510810840]
 transform = Transform3D(-0.60133624, -0.020436032, 0.7987347, 0.023415718, 0.9987925, 0.043183405, -0.7986527, 0.044670686, -0.6001318, 0.02595012, 2.5780902, -0.01971816)
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="Armature_001/Skeleton3D" index="6" unique_id=508301466]
-transform = Transform3D(-0.017356839, -0.99892336, -0.043029994, -0.99984664, 0.017445203, -0.001683288, 0.0024321468, 0.04299417, -0.9990726, -1.1332793, 2.4078076, 0.011507284)
+transform = Transform3D(0.7772949, -0.62863344, -0.025160413, -0.62913203, -0.77651274, -0.034948077, 0.0024321498, 0.042994175, -0.9990726, -0.8850621, 1.925453, 0.011507284)
 bone_name = "mano.R"
 bone_idx = 7
 
 [node name="BallPos" type="Marker3D" parent="Armature_001/Skeleton3D/BoneAttachment3D" index="0" unique_id=1860039991]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.047560334, 0.69555575, -0.3491177)
+
+[node name="AnimationPlayer" parent="." index="2" unique_id=2023664963]
+autoplay = &"idle"
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

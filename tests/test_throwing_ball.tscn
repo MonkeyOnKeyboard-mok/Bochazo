@@ -66,9 +66,10 @@ script/source = "extends Node
 
 func _on_reset_button_pressed() -> void:
 	#get_tree().reload_current_scene()
-	if GameManager.p1_turns != 0 or GameManager.p2_turns != 0:
-		GameManager.emit_signal(\"idle\")
-		GameManager.spawn_bocha.emit()
+	#if GameManager.p1_turns != 0 or GameManager.p2_turns != 0:
+		#GameManager.spawn_bocha.emit()
+	#GameManager.emit_signal(\"idle\")
+	pass
 "
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_r5rj8"]

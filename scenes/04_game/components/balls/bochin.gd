@@ -14,5 +14,7 @@ func _physics_process(_delta):
 		print("me frene y encima soy el bochin")
 		GameManager.bochin_thrown = true
 		GameManager.bochin = self
+		GameManager.spawn_bocha.emit()
+		GameManager.idle.emit()
 		if debug_verbose: print("[BocceBall] Se detuvo")
 		freeze = false

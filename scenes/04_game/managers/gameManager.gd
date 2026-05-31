@@ -27,6 +27,11 @@ signal win
 signal lose
 @warning_ignore("unused_signal")
 signal recover_alpha
+
+## Game Signals
+@warning_ignore("unused_signal")
+signal update_scoreboard(score: int, inc_player: String)
+
 ## Vs AI flag
 var vsAI : bool = false
 
@@ -55,12 +60,33 @@ var bochin_thrown : bool = false
 var bochas_thrown : Array = []
 var bochas_distance : Array = []
 
+var speed_threshold : float = 0.2
+
 func deduct_turn(player: String) -> void:
 	match player:
 		"player1":
 			p1_turns -= 1
 		"player2":
 			p2_turns -= 1
+	have_all_balls_stopped()
+	#who_is_closer()
+
+func have_all_balls_stopped()-> void:
+	if bochas_thrown.size() == 0: return
+	if !bochin: return
+	var full_array : Array = bochas_thrown.duplicate()
+	full_array.append(bochin)
+	while true:
+		await get_tree().process_frame
+		var all_stopped = true
+		for bocha in full_array:
+			if bocha.linear_velocity.length() > speed_threshold:
+				all_stopped = false
+				print("Not all balls have stopped, trying again")
+				break
+		if all_stopped:
+				print("All balls have stopped")
+				break
 	who_is_closer()
 
 func who_is_closer() -> void:
@@ -93,6 +119,12 @@ func who_is_closer() -> void:
 		print("Spawnear al player 2")
 	print("Más cerca: ", closest_bocha.player)
 	print("Bochas en la cancha: ", bochas_thrown)
+	if p1_turns != 0 or p2_turns != 0:
+		GameManager.spawn_bocha.emit()
+	else:
+		#  Añadir Animacion de score  y reset de la cancha 
+		print("Reset scene")
+		pass
 
 func who_won() -> void:
 	var bochas_1 : Array = []
@@ -111,11 +143,13 @@ func who_won() -> void:
 				if bocha < bochas_2.min():
 					score+=1
 			p1_score += score
+			emit_signal("update_scoreboard", score, player1_char)
 		else: 
 			for bocha in bochas_2:
 				if bocha < bochas_1.min():
 					score+=1
 			p2_score += score
+			emit_signal("update_scoreboard", score, player2_char)
 	
 
 func first_bocha(distance: float) -> void:
