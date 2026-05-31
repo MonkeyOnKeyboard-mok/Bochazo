@@ -1,6 +1,6 @@
 extends Node3D
 
-const RAUL = preload("uid://dthwcwy1nnmin")
+const RAUL = preload("uid://foi2dahuh4rr")
 const JORGE = preload("uid://dwbsw52v2sis3")
 
 var characters : Dictionary

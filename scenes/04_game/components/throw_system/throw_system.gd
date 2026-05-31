@@ -20,6 +20,8 @@ var ball : RigidBody3D = null
 func _ready():
 	GameManager.connect("bocha_spawned", update_bocha)
 	_wire()
+	if %brain:
+		%brain.flight = flight
 	if stats: _apply_stats() 
 
 func _wire():

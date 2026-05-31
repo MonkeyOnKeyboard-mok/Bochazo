@@ -64,15 +64,19 @@ var curve_preference: float = 0.5
 var noise_radius: float = 0.0
 var difficulty_sigma: float = 0.0
 
-var stats: PlayerThrowStats
+@export var stats: PlayerThrowStats
 var flight: ThrowFlight
 var ball: RigidBody3D
 
 func _ready():
+	GameManager.connect("bocha_spawned", update_bocha)
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
 	model = AIInverseModel.new()
 	load_data()
+	## Temporal:
+	court_type = 2          # 0=Flat,1=Dirty,2=Grass,3=Pro,4=Sand
+	set_difficulty(2)       # 0=facil, 4=dificil
 
 ## Carga los archivos JSON de datos de simulación.
 ## data_path: carpeta donde están los throws_*.json
@@ -127,6 +131,7 @@ func decide(ball_pos: Vector3, bochin_pos: Vector3) -> AIThrowParams:
 func execute_throw(ball_pos: Vector3, bochin_pos: Vector3):
 	var p = decide(ball_pos, bochin_pos)
 	if not flight or not ball:
+		print("returned")
 		return
 	_setup_flight()
 	if p.is_straight or p.waypoints.size() < 2:
@@ -143,6 +148,9 @@ func setup_for_throw(stats_res: PlayerThrowStats, ball_ref: RigidBody3D, flight_
 	stats = stats_res
 	ball = ball_ref
 	flight = flight_ref
+	if not flight:
+		print("no flight")
+	execute_throw(Vector3(-27.54,1.184,0), GameManager.bochin.global_position)
 
 ## Configura la dificultad de la IA (ruido en los parámetros).
 ## level: 0=muy fácil (mucho error), 4=muy difícil (casi perfecto)
@@ -178,3 +186,16 @@ func _fallback_throw(ball_pos: Vector3, bochin_pos: Vector3) -> AIThrowParams:
 	p.curve_side = 1.0
 	p.compute_direction(ball_pos, bochin_pos)
 	return p
+
+func update_bocha(bocha : RigidBody3D) -> void:
+	ball = bocha
+	if !GameManager.p1_turn and GameManager.vsAI:
+		await get_tree().create_timer(1).timeout
+		setup_for_throw(stats, ball, flight)
+		print("playing vs ai ... computer throwing")
+	else:
+		print("not playing against ai")
+
+func _on_button_pressed() -> void:
+	setup_for_throw(stats, ball, flight)
+	

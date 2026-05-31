@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://8li1vjxqgthv"]
+
+[ext_resource type="PackedScene" uid="uid://dwbsw52v2sis3" path="res://assets/models/player/jorge.tscn" id="1_g6k6q"]
+[ext_resource type="Script" uid="uid://bwye0s87m28mp" path="res://scenes/03_character_select/playerReal.gd" id="2_jmej3"]
+
+[node name="JorgeCharSelect" unique_id=1320814174 instance=ExtResource("1_g6k6q")]
+script = ExtResource("2_jmej3")
+
+[node name="Skeleton3D" parent="Armature_001" parent_id_path=PackedInt32Array(1529796791) index="0" unique_id=1024613053]
+bones/0/position = Vector3(0.51477444, 2.4210443, -0.01398439)
+bones/0/rotation = Quaternion(0.7144573, 0.6993745, 0.01546852, 0.013670542)
+bones/0/scale = Vector3(1, 1.0000001, 1)
+bones/1/rotation = Quaternion(-0.0009070736, -0.0018911306, -0.019411303, 0.9998094)
+bones/2/position = Vector3(0.03323814, 0.9361795, -0.014487103)
+bones/2/rotation = Quaternion(-0.0023275455, 0.3172196, 0.0016808792, 0.9483478)
+bones/3/rotation = Quaternion(0.00023674243, -1.0437088e-07, -7.3913536e-05, 0.99999994)
+bones/3/scale = Vector3(1, 1, 1)
+bones/4/rotation = Quaternion(-0.0046765083, 0.7065822, 0.02476728, 0.707182)
+bones/4/scale = Vector3(1, 0.9999998, 1)
+bones/5/position = Vector3(0.35601562, 0.93784773, 0.04237796)
+bones/5/rotation = Quaternion(0.10585373, 0.003922583, 0.9940035, -0.027142407)
+bones/6/position = Vector3(-0.51477444, 2.4210443, -0.01398439)
+bones/6/rotation = Quaternion(0.7144573, -0.6993745, -0.01546852, 0.013670542)
+bones/6/scale = Vector3(1, 1.0000001, 1)
+bones/7/rotation = Quaternion(-0.0009070736, 0.0018911306, 0.019411303, 0.9998094)
+bones/8/position = Vector3(-0.35601562, 0.93784773, 0.04237796)
+bones/8/rotation = Quaternion(-0.10585373, 0.003922583, 0.9940035, 0.027142407)
+
+[node name="Cabeza_2" parent="Armature_001/Skeleton3D" index="0" unique_id=1640569753]
+transform = Transform3D(-0.60133624, -0.020436028, 0.7987346, 0.02341572, 0.9987925, 0.043183398, -0.79865277, 0.044670686, -0.60013175, 0.02595012, 2.57809, -0.019718163)
+
+[node name="BoneAttachment3D" parent="Armature_001/Skeleton3D" index="6" unique_id=508301466]
+transform = Transform3D(-0.017356835, -0.99892324, -0.043029983, -0.99984664, 0.017445207, -0.0016832822, 0.0024321384, 0.042994168, -0.9990725, -1.1332791, 2.407808, 0.011507278)

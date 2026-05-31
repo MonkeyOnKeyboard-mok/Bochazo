@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://barypadvayqwp"]
 
 [ext_resource type="Script" uid="uid://dcmyrb6u2xmc0" path="res://scenes/03_character_select/character_select.gd" id="1_d67qk"]
-[ext_resource type="PackedScene" uid="uid://db5blw52kmb24" path="res://scenes/03_character_select/raul.tscn" id="2_h5lt7"]
 [ext_resource type="Script" uid="uid://dvufbnlkdpnfa" path="res://scenes/03_character_select/players_container.gd" id="2_haxf1"]
 [ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="3_khmfb"]
+[ext_resource type="PackedScene" uid="uid://u7mfkd0qeypc" path="res://scenes/03_character_select/raul_char_select.tscn" id="3_r1baj"]
+[ext_resource type="PackedScene" uid="uid://8li1vjxqgthv" path="res://scenes/03_character_select/jorge_char_select.tscn" id="4_r1baj"]
 
 [sub_resource type="Gradient" id="Gradient_d67qk"]
 colors = PackedColorArray(0, 0, 0, 1, 0.23537052, 0.23537052, 0.23537052, 1)
@@ -33,14 +34,11 @@ texture = SubResource("GradientTexture2D_h5lt7")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.0755513)
 script = ExtResource("2_haxf1")
 
-[node name="Raul" parent="Players" unique_id=2082799831 instance=ExtResource("2_h5lt7")]
-transform = Transform3D(-0.5, 0, -7.54979e-08, 0, 0.5, 0, 7.54979e-08, 0, -0.5, 0, -1, -0.088)
+[node name="RaulCharSelect" parent="Players" unique_id=1981057026 instance=ExtResource("3_r1baj")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -1, 0)
 
-[node name="Raul2" parent="Players" unique_id=1319635846 instance=ExtResource("2_h5lt7")]
-transform = Transform3D(-0.5, 0, -7.54979e-08, 0, 0.5, 0, 7.54979e-08, 0, -0.5, 2, -1, -0.088)
-
-[node name="Raul3" parent="Players" unique_id=1871043710 instance=ExtResource("2_h5lt7")]
-transform = Transform3D(-0.5, 0, -7.54979e-08, 0, 0.5, 0, 7.54979e-08, 0, -0.5, 4, -1, -0.088)
+[node name="JorgeCharSelect" parent="Players" unique_id=1320814174 instance=ExtResource("4_r1baj")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 2, -1, 0)
 
 [node name="Hud" type="Node3D" parent="." unique_id=650910728]
 
@@ -55,12 +53,15 @@ text = "Jugador"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3715466, -3.1074228)
 text = "Nombre"
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=580441235]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.370491, -0.2227335)
-light_color = Color(0, 1, 1, 1)
-
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("3_khmfb")]
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=1454924949]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=77717298]
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1139828828]
+transform = Transform3D(1, 0, 0, 0, 0.7468007, 0.6650479, 0, -0.6650479, 0.7468007, 0, 1.1826861, -1.6394984)
+light_color = Color(0.80680394, 0.6834999, 7.70092e-07, 1)
+light_energy = 7.883
 
 [connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]

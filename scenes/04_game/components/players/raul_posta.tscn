@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://foi2dahuh4rr"]
+
+[ext_resource type="PackedScene" uid="uid://ctpkshlukjly2" path="res://assets/models/player/raul_con_shading.glb" id="1_8aq4i"]
+[ext_resource type="Script" uid="uid://bq7xpv16i6s4r" path="res://assets/models/player/player.gd" id="2_asojp"]
+
+[node name="RaulPosta" unique_id=1981057026 instance=ExtResource("1_8aq4i")]
+script = ExtResource("2_asojp")
+
+[node name="Skeleton3D" parent="Armature_001" parent_id_path=PackedInt32Array(1334524161) index="0" unique_id=632903412]
+bones/0/position = Vector3(0.5147969, 2.4157631, -0.013968261)
+bones/0/rotation = Quaternion(0.9420835, 0.33474293, 0.008320745, 0.018890101)
+bones/0/scale = Vector3(0.9972616, 0.9958281, 0.9999948)
+bones/1/rotation = Quaternion(-0.00090707507, -0.0018911305, -0.01941132, 0.9998094)
+bones/2/position = Vector3(0.03323814, 0.93617964, -0.014487102)
+bones/2/rotation = Quaternion(-0.0023275448, 0.31721961, 0.0016808794, 0.9483478)
+bones/3/rotation = Quaternion(0.0002367425, -1.1186081e-07, -7.391354e-05, 1)
+bones/3/scale = Vector3(1.0000001, 0.99307215, 0.99999976)
+bones/4/rotation = Quaternion(-0.003017369, 0.7062279, 0.036540914, 0.7070345)
+bones/4/scale = Vector3(0.99981743, 0.9989565, 0.99986374)
+bones/5/position = Vector3(0.35601562, 0.9378478, 0.04237796)
+bones/5/rotation = Quaternion(0.10585371, 0.0039225826, 0.9940035, -0.027142404)
+bones/6/position = Vector3(-0.5147518, 2.4157329, -0.013968113)
+bones/6/rotation = Quaternion(0.942083, -0.33474436, -0.008320257, 0.018890157)
+bones/6/scale = Vector3(0.99720365, 0.99588585, 0.999995)
+bones/7/rotation = Quaternion(-0.00090707507, 0.0018911305, 0.01941132, 0.9998094)
+bones/8/position = Vector3(-0.35601562, 0.9378478, 0.04237796)
+bones/8/rotation = Quaternion(-0.10585372, 0.0039225826, 0.9940035, 0.027142404)
+
+[node name="BoneAttachment3D" type="BoneAttachment3D" parent="Armature_001/Skeleton3D" index="5" unique_id=882502819]
+transform = Transform3D(0.7487381, -0.6573119, -0.026609803, -0.6586326, -0.74692696, -0.03383579, 0.002385275, 0.04281838, -0.99906784, -0.9034708, 1.937739, 0.01141367)
+bone_name = "mano.R"
+bone_idx = 7
+
+[node name="BallPos" type="Marker3D" parent="Armature_001/Skeleton3D/BoneAttachment3D" index="0" unique_id=724889379]
+transform = Transform3D(0.7772947, -0.62913185, 0.0024321475, -0.6286332, -0.7765123, 0.042994156, -0.025160402, -0.03494806, -0.99907225, -0.047560334, 0.69555575, -0.3491177)
+
+[node name="AnimationPlayer" parent="." index="2" unique_id=885156540]
+autoplay = &"idle"
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
