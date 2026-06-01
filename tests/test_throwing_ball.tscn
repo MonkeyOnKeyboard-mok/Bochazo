@@ -6,7 +6,8 @@
 [ext_resource type="Resource" uid="uid://24rsp1vhri2o" path="res://resources/game_config/stats_raul.tres" id="5"]
 [ext_resource type="PackedScene" uid="uid://b0vtkxrcsio02" path="res://scenes/04_game/components/scoreboard/scoreboard.tscn" id="6_8fyj8"]
 [ext_resource type="PackedScene" uid="uid://47q000na4tmm" path="res://scenes/04_game/ai/brain.tscn" id="7_b6v23"]
-[ext_resource type="Script" uid="uid://dgxg2qvvewmb1" path="res://scenes/04_game/ai/ai_throw_brain.gd" id="8_kybjp"]
+[ext_resource type="PackedScene" uid="uid://b6kn74l0pgn83" path="res://scenes/04_game/components/court/flat_court.tscn" id="7_pay8p"]
+[ext_resource type="PackedScene" uid="uid://foi2dahuh4rr" path="res://scenes/04_game/components/players/raul_posta.tscn" id="8_b6v23"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0, 0.37690097, 0.4312564, 1)
@@ -21,6 +22,7 @@ sky_material = SubResource("SkyMat")
 background_mode = 2
 background_energy_multiplier = 1.5
 sky = SubResource("Sky")
+tonemap_exposure = 0.4
 
 [sub_resource type="GDScript" id="GDScript_0u7gl"]
 script/source = "extends Label
@@ -162,7 +164,6 @@ script = ExtResource("1_pay8p")
 
 [node name="brain" parent="." unique_id=215514912 instance=ExtResource("7_b6v23")]
 unique_name_in_owner = true
-script = ExtResource("8_kybjp")
 stats = ExtResource("5")
 
 [node name="Button" type="Button" parent="brain" unique_id=1116794379]
@@ -171,6 +172,11 @@ offset_top = 83.0
 offset_right = 991.0
 offset_bottom = 114.0
 text = "Ai Throw"
+
+[node name="Court" parent="." unique_id=1767025561 instance=ExtResource("7_pay8p")]
+
+[node name="RaulPosta" parent="." unique_id=2047245217 instance=ExtResource("8_b6v23")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -32.143974, 0.42, -0.968)
 
 [connection signal="pressed" from="CanvasLayer/ResetButton" to="Reset" method="_on_reset_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Test_Who_Won" to="CanvasLayer/Test_Who_Won" method="_on_pressed"]

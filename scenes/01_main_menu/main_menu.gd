@@ -16,7 +16,7 @@ var button_type = null
 func _ready() -> void:
 	choose_opp.hide()
 	#creditos_png.hide()
-	Audio.main_theme()
+	Audio.menu_theme()
 	$FadeTransition/ColorRect/FadeRect.play("fade_out")
 	pass
 	

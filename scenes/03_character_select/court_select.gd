@@ -77,6 +77,7 @@ func trans() -> void:
 	##Audio.menu_out()
 	$FadeTransition/Timer.start()
 	$FadeTransition/ColorRect/FadeRect.play("fade_in")
+	Audio.menu_theme_out()
 
 func _on_timer_timeout() -> void:
 	get_tree().change_scene_to_file("res://scenes/04_game/components/GameCourt/game_court.tscn")

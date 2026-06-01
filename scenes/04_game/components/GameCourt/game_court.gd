@@ -12,6 +12,7 @@ func _ready() -> void:
 	GameManager.connect("victory", victory)
 	rtm.sub_view = sub_view_balls
 	rtm.court = court_setter
+	Audio.main_theme()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

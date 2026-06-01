@@ -49,6 +49,9 @@ var player1_char : String = "Raul"
 var player2_char : String = "Jorge"
 
 ## Match Variables 
+var global_player_pos : Vector3 = Vector3(-32.144,0.42,-0.968)
+var global_ball_pos : Vector3 = global_player_pos + Vector3(3.349, 0.018, 0.548)
+
 var court : String = "Pro"
 var permission_to_throw : bool = false
 

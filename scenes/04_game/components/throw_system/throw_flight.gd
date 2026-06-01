@@ -3,7 +3,7 @@ class_name ThrowFlight
 
 var ball: RigidBody3D
 
-var throw_pos : Vector3 = Vector3 (-25.8,0.438, -0.42)	
+#var throw_pos : Vector3 = Vector3 (-25.8,0.438, -0.42)	
 # Del testing print: bola pos: (-27.8862, 1.800941, -0.42152)
 
 var efecto: float = 0.5
@@ -83,8 +83,7 @@ func _physics_process(_delta):
 
 func animation_fix_and_etc() -> void:
 	ball.freeze = true
-	ball.global_position = throw_pos
+	ball.global_position = GameManager.global_ball_pos
 	ball.linear_velocity = Vector3.ZERO
 	ball.angular_velocity = Vector3.ZERO
 	ball.freeze = false
-	GameManager.emit_signal("recover_alpha")

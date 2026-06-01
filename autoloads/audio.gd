@@ -1,6 +1,7 @@
 extends Node
 
 @onready var main_loop: AudioStreamPlayer = $main_loop
+@onready var menu: AudioStreamPlayer = $menu
 
 const LOSE = preload("uid://blnuv0cnxlras")
 const WIN = preload("uid://cr7flxb1il8ls")
@@ -9,8 +10,18 @@ const WIN = preload("uid://cr7flxb1il8ls")
 func _ready() -> void:
 	pass # Replace with function body.
 
+func menu_theme() -> void:
+	menu.play()
+
 func main_theme() -> void:
 	main_loop.play()
+
+func menu_theme_out() -> void:
+	var tween = create_tween()
+	tween.tween_property(menu, "volume_db", -45 , 2.0)
+	tween.tween_callback(func ll(): 
+		menu.stop() 
+		menu.volume_db = -13)
 
 func main_loop_out() -> void:
 	var tween = create_tween()

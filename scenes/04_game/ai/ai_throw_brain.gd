@@ -82,9 +82,9 @@ func _ready():
 	rng.randomize()
 	model = AIInverseModel.new()
 	load_data()
-	## Temporal:
 	court_type = courts_array[GameManager.court] # 0=Flat,1=Dirty,2=Grass,3=Pro,4=Sand
 	print("LA IA ESTA EN LA CANCHA: ", court_type)
+	## Temporal:
 	set_difficulty(4)       # 0=facil, 4=dificil
 	curve_preference = 1.0
 

@@ -7,7 +7,7 @@ const BETO = preload("uid://dl76ybg055mod")
 
 var characters : Dictionary
 var current_player : Node3D = null
-var player_pos : Vector3 = Vector3(-29.149, 0.42,-0.968)
+#var player_pos : Vector3 = Vector3(-29.149, 0.42,-0.968)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -41,6 +41,6 @@ func spawn_character(char_name : String) -> void:
 	current_player = character
 	GameManager.current_player = current_player
 	add_child(character)
-	character.global_position = player_pos
+	character.global_position = GameManager.global_player_pos
 	character.rotation_degrees  = Vector3(0,90,0)
 	print("finished spawning")

@@ -171,7 +171,6 @@ theme_override_font_sizes/font_size = 25
 text = "Volver"
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("8_6prxp")]
-visible = false
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=32502218]
 

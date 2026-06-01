@@ -80,9 +80,10 @@ wait_time = 2.0
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=77717298]
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1139828828]
-transform = Transform3D(1, 0, 0, 0, 0.7468007, 0.6650479, 0, -0.6650479, 0.7468007, 0, 2.1789129, -1.6394984)
-light_color = Color(0.80680394, 0.6834999, 7.70092e-07, 1)
+transform = Transform3D(1, 0, 0, 0, 0.7468007, 0.6650479, 0, -0.6650479, 0.7468007, 0, 2.1789129, -0.7279792)
 light_energy = 7.883
+light_specular = 0.0
+shadow_enabled = true
 
 [node name="PressSpaceToSelect" type="Label3D" parent="." unique_id=57241988]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099277735, 1.436731, 0)
