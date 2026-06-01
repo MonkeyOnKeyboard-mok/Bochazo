@@ -83,6 +83,8 @@ sky_material = SubResource("SkyMat")
 background_mode = 2
 background_energy_multiplier = 1.5
 sky = SubResource("Sky")
+tonemap_mode = 2
+tonemap_exposure = 0.4
 
 [sub_resource type="GDScript" id="GDScript_f5t13"]
 script/source = "extends Label

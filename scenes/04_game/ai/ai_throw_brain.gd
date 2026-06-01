@@ -60,6 +60,7 @@ const COURT_FRICTIONS: Array[float] = [1.0, 0.8, 0.9, 1.1, 0.6]
 const MIN_POWER: float = 0.4
 
 var court_type: int = 0
+var courts_array : Dictionary
 var curve_preference: float = 0.5
 var noise_radius: float = 0.0
 var difficulty_sigma: float = 0.0
@@ -69,14 +70,23 @@ var flight: ThrowFlight
 var ball: RigidBody3D
 
 func _ready():
+	courts_array = {
+		"Flat" : 0,
+		"Dirty" : 1,
+		"Grass" : 2,
+		"Pro" : 3,
+		"Sand" : 4,
+	}
 	GameManager.connect("bocha_spawned", update_bocha)
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
 	model = AIInverseModel.new()
 	load_data()
 	## Temporal:
-	court_type = 3          # 0=Flat,1=Dirty,2=Grass,3=Pro,4=Sand
+	court_type = courts_array[GameManager.court] # 0=Flat,1=Dirty,2=Grass,3=Pro,4=Sand
+	print("LA IA ESTA EN LA CANCHA: ", court_type)
 	set_difficulty(4)       # 0=facil, 4=dificil
+	curve_preference = 1.0
 
 ## Carga los archivos JSON de datos de simulación.
 ## data_path: carpeta donde están los throws_*.json
