@@ -17,6 +17,7 @@ func _process(_delta: float) -> void:
 	pass
 
 func spawn_bocha() -> void:
+	print("corriendo spawn bocha")
 	GameManager.permission_to_throw = true
 	if !GameManager.p1_turn and GameManager.vsAI:
 		GameManager.permission_to_throw = false

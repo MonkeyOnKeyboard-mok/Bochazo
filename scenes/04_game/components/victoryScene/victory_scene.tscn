@@ -1,0 +1,85 @@
+[gd_scene format=3 uid="uid://dr6qdfllwspd4"]
+
+[ext_resource type="Script" uid="uid://dk3q3okqrfnsc" path="res://scenes/04_game/components/victoryScene/victory_scene.gd" id="1_73vyi"]
+
+[node name="VictoryScene" type="Node3D" unique_id=1193199637]
+script = ExtResource("1_73vyi")
+
+[node name="p1" type="SubViewportContainer" parent="." unique_id=1083323790]
+offset_left = 318.0
+offset_top = 298.0
+offset_right = 830.0
+offset_bottom = 810.0
+mouse_filter = 2
+
+[node name="SubVP1" type="SubViewport" parent="p1" unique_id=871515285]
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="p1/SubVP1" unique_id=1397295048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -499.63354)
+
+[node name="MarkerP1" type="Marker3D" parent="p1/SubVP1" unique_id=1040865727]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -500)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="p1/SubVP1" unique_id=2061872411]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1.4445088, -500)
+light_energy = 3.728
+spot_range = 1.736
+spot_angle = 19.51
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="p1/SubVP1" unique_id=1294214283]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.31457752, -498.5532)
+light_energy = 3.728
+spot_range = 1.736
+spot_angle = 71.86
+
+[node name="p2" type="SubViewportContainer" parent="." unique_id=1247646323]
+offset_left = 1138.0
+offset_top = 298.0
+offset_right = 1650.0
+offset_bottom = 810.0
+mouse_filter = 2
+
+[node name="SubVP2" type="SubViewport" parent="p2" unique_id=1722306191]
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="p2/SubVP2" unique_id=605996791]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.2, -499.634)
+
+[node name="MarkerP2" type="Marker3D" parent="p2/SubVP2" unique_id=460886612]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -500)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="p2/SubVP2" unique_id=12642939]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 4, 1.4445088, -500)
+light_energy = 3.728
+spot_range = 1.736
+spot_angle = 19.51
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="p2/SubVP2" unique_id=723619080]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.31457752, -498.5532)
+light_energy = 3.728
+spot_range = 1.736
+spot_angle = 71.86
+
+[node name="Menu" type="Button" parent="." unique_id=546416235]
+offset_left = 486.0
+offset_top = 797.0
+offset_right = 771.0
+offset_bottom = 942.0
+theme_override_font_sizes/font_size = 100
+text = "Menu"
+
+[node name="Rematch" type="Button" parent="." unique_id=1510961681]
+offset_left = 1084.0
+offset_top = 797.0
+offset_right = 1537.0
+offset_bottom = 948.0
+theme_override_font_sizes/font_size = 104
+text = "Rematch"
+
+[connection signal="pressed" from="Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="Rematch" to="." method="_on_rematch_pressed"]

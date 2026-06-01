@@ -4,12 +4,14 @@ extends Node3D
 @onready var sub_view_balls: TextureRect = $TextureRect
 @onready var rtm: Node3D = $RoundTransitionManager
 @onready var court_setter: Node3D = $CourtSetter
+@onready var victory_scene: Node3D = $VictoryScene
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$FadeTransition/ColorRect/FadeRect.play("fade_out")
 	GameManager.connect("soft_reset", soft_reset)
 	GameManager.connect("victory", victory)
+	victory_scene.connect("rematch",trans)
 	rtm.sub_view = sub_view_balls
 	rtm.court = court_setter
 	Audio.main_theme()

@@ -27,6 +27,10 @@ signal win
 signal lose
 @warning_ignore("unused_signal")
 signal recover_alpha
+@warning_ignore("unused_signal")
+signal spawn_victory_anims
+@warning_ignore("unused_signal")
+signal rematch
 
 ## Game Signals
 @warning_ignore("unused_signal")
@@ -52,6 +56,8 @@ var player2_char : String = "Jorge"
 var global_player_pos : Vector3 = Vector3(-32.144,0.42,-0.968)
 var global_ball_pos : Vector3 = global_player_pos + Vector3(3.349, 0.018, 0.548)
 
+var is_rematch : bool = false
+
 var court : String = "Flat"
 var permission_to_throw : bool = false
 
@@ -60,7 +66,8 @@ var first_bocha_thrown : bool = false
 
 var p1_turn = true  ## If false, it's P2 or CPU turn
 
-var amount_of_turns : int = 4
+var amount_of_turns : int = 1
+var score_to_win : int = 1
 
 var p1_turns : int = amount_of_turns
 var p2_turns : int = amount_of_turns
@@ -70,6 +77,9 @@ var p2_score : int = 0
 
 var current_player : Node3D = null
 var throw_for_real : bool = false ## Fix rústico para un problema con la animación
+
+var game_ended : bool = false
+var winner : String = ""
 
 ## Bochas Variables
 var bochin : Bochin = null
@@ -98,6 +108,8 @@ func have_all_balls_stopped()-> void:
 		await get_tree().process_frame
 		var all_stopped = true
 		for bocha in full_array:
+			if !is_instance_valid(bocha):
+				continue
 			if bocha.linear_velocity.length() > speed_threshold:
 				all_stopped = false
 				print("Not all balls have stopped, trying again")
@@ -138,16 +150,7 @@ func who_is_closer() -> void:
 	if p1_turns != 0 or p2_turns != 0:
 		GameManager.spawn_bocha.emit()
 	else:
-		#  Añadir Animacion de score  y reset de la cancha 
-		print("Reset scene")
-		if p1_score >= 15 or p2_score >= 15:
-			emit_signal("full_reset")
-			emit_signal("victory")
-			run_full_reset()
-		else: 
-			emit_signal("soft_reset")
-			run_soft_reset()
-			emit_signal("spawn_bocha")
+		who_won()
 
 
 func who_won() -> void:
@@ -175,7 +178,21 @@ func who_won() -> void:
 					score+=1
 			p2_score += score
 			emit_signal("update_scoreboard", score, player2_char)
-	
+	check_if_game_is_over()
+
+func check_if_game_is_over() -> void:
+	#  Añadir Animacion de score  y reset de la cancha 
+	print("Reset scene")
+	if p1_score >= score_to_win:
+		winner = "player1" 
+		end_game()
+	elif p2_score >= score_to_win:
+		winner = "player2" 
+		end_game()
+	else: 
+		emit_signal("soft_reset")
+		run_soft_reset()
+		emit_signal("spawn_bocha")
 
 func first_bocha(distance: float) -> void:
 	bochas_distance.append(distance)
@@ -202,13 +219,23 @@ func run_full_reset() -> void:
 	bochin_thrown = false
 	bochas_thrown  = []
 	bochas_distance  = []
-	player1_char = "Raul"
-	player2_char  = "Jorge"
 	court  = "Flat"
-	vsAI = false
 	first_bocha_thrown = false
 	first_turn = true
 	p1_score = 0
 	p2_score = 0
 	current_player = null
 	permission_to_throw = false
+	if is_rematch: 
+		return
+	else:
+		player1_char = "Raul"
+		player2_char  = "Jorge"
+	is_rematch = false
+
+func end_game() ->void:
+	print("corriendo funcion end game")
+	game_ended = true   ## CAMBIAR
+	emit_signal("full_reset")
+	emit_signal("victory")
+	emit_signal("spawn_victory_anims")

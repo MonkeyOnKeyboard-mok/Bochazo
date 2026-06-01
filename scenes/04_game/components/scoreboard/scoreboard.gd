@@ -15,6 +15,7 @@ func _ready() -> void:
 	original_pos = global_position
 	original_rot.y = global_rotation.y
 	GameManager.connect("soft_reset", show_scores)
+	GameManager.connect("full_reset", show_scores)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -38,7 +39,9 @@ func show_scores() -> void:
 
 ## Etapa 2 — quedarse en el centro (acá podés emitir señal, actualizar texto, etc.)
 	tween.tween_interval(hold_duration)
-	GameManager.who_won()
+	if GameManager.game_ended:
+		print("Is the game over?", GameManager.game_ended)
+		return
 
 ## Etapa 3 — volver a la posición original
 	tween.tween_property(self, "global_position", original_pos, move_duration) \

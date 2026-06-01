@@ -6,8 +6,11 @@ var court : Node3D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	anim.play("fade_out")
 	GameManager.connect("soft_reset", start_reset)
 	GameManager.connect("soft_reset_end", end_reset)
+	GameManager.connect("spawn_victory_anims", start_reset)
+	GameManager.connect("rematch", end_reset)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

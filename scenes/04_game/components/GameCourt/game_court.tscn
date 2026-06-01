@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://dchay5e0lmxuw" path="res://scenes/04_game/components/GameCourt/round_transition_manager.gd" id="5_f5t13"]
 [ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="7_sqrn6"]
 [ext_resource type="PackedScene" uid="uid://cfa4vs0vlvdus" path="res://scenes/04_game/components/UI/turnos.tscn" id="8_8p2ir"]
+[ext_resource type="PackedScene" uid="uid://dr6qdfllwspd4" path="res://scenes/04_game/components/victoryScene/victory_scene.tscn" id="11_1v2qn"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5t0ms"]
 transparency = 1
@@ -159,6 +160,8 @@ transform = Transform3D(-2.1855694e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.1855694e-
 [node name="ThrowSystem" parent="." unique_id=864086691 instance=ExtResource("1_sqrn6")]
 stats = ExtResource("2_5t0ms")
 
+[node name="VictoryScene" parent="." unique_id=1193199637 instance=ExtResource("11_1v2qn")]
+
 [node name="RoundTransitionManager" type="Node3D" parent="." unique_id=374198219]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.868855, 0, 0)
 script = ExtResource("5_f5t13")
@@ -186,9 +189,9 @@ shadow_enabled = true
 
 [node name="Test_Turns" type="Label" parent="CanvasLayer" unique_id=1632470463]
 offset_left = 104.0
-offset_top = 54.0
+offset_top = 478.0
 offset_right = 144.0
-offset_bottom = 77.0
+offset_bottom = 501.0
 script = SubResource("GDScript_f5t13")
 
 [node name="Turnos" parent="CanvasLayer" unique_id=1137314364 instance=ExtResource("8_8p2ir")]
@@ -219,16 +222,14 @@ script = ExtResource("3_f5t13")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.225138, 0.43813962, -0.063742846)
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("7_sqrn6")]
-visible = false
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=1162270110]
 
 [node name="Reset_Test" type="Button" parent="." unique_id=803866598]
-visible = false
 offset_left = 122.0
-offset_top = 71.0
+offset_top = 229.0
 offset_right = 208.0
-offset_bottom = 102.0
+offset_bottom = 260.0
 text = "Soft Reset"
 script = SubResource("GDScript_5t0ms")
 
