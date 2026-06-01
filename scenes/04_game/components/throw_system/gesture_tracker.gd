@@ -22,6 +22,7 @@ var aim_start_y: float = 0.0
 
 @onready var charge_line: Line2D = $ChargeLine
 @onready var aim_line: Line2D = $AimLine
+@onready var power_bar: ProgressBar = %PowerBar
 
 func _ready() -> void:
 	GameManager.connect("throw", reset)
@@ -75,9 +76,18 @@ func _start_aim(pos: Vector2):
 
 func _on_motion(event: InputEventMouseMotion):
 	var pos = event.position
+	power_bar.show()
 	if phase == Phase.CHARGE:
-		if charge_line: charge_line.add_point(Vector2(charge_start.x, pos.y))
-		charge_dragging.emit(pos, charge_start)
+		if charge_line:
+			var dist = absf(pos.y - charge_start.y)
+			var frac = clampf(dist / max_charge_distance, 0.0, 1.0)
+			charge_line.clear_points()
+			charge_line.add_point(charge_start)
+		 	# Clamp the drawn point so it never goes beyond max distance
+			var clamped_y = charge_start.y - frac * max_charge_distance
+			charge_line.add_point(Vector2(charge_start.x, clamped_y))
+			charge_line.default_color = _power_color(frac)
+			charge_dragging.emit(pos, charge_start)
 	elif phase == Phase.AIM:
 		var clamped = Vector2(pos.x, minf(pos.y, aim_start_y))
 		if aim_points.size() < max_aim_points:
@@ -85,11 +95,19 @@ func _on_motion(event: InputEventMouseMotion):
 			if debug_enabled and aim_line: aim_line.add_point(clamped)
 			aim_drawing.emit(aim_points)
 
+func _power_color(frac: float) -> Color:
+	# Verde (débil) → Amarillo → Rojo (fuerte)
+	if frac < 0.5:
+		return Color.GREEN.lerp(Color.YELLOW, frac * 2.0)
+	else:
+		return Color.YELLOW.lerp(Color.RED, (frac - 0.5) * 2.0)
+
 func _end_aim():
 	phase = Phase.IDLE
 	aim_ended.emit(aim_points)
 
 func reset():
+	power_bar.hide()
 	phase = Phase.IDLE
 	aim_points.clear()
 	if charge_line: charge_line.clear_points()

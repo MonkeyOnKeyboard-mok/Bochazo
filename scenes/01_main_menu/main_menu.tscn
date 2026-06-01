@@ -17,6 +17,9 @@
 [ext_resource type="Texture2D" uid="uid://dyb21e2rgg8e7" path="res://scenes/01_main_menu/boton_2p_highlight.png" id="13_gi7kl"]
 [ext_resource type="Texture2D" uid="uid://bweuudwi1tlah" path="res://scenes/01_main_menu/boton_cpu_press.png" id="15_ssy2f"]
 [ext_resource type="Texture2D" uid="uid://b87pcgwh07dfl" path="res://scenes/01_main_menu/boton_cpu_highlight.png" id="16_qtf3s"]
+[ext_resource type="PackedScene" uid="uid://cbav1836sl41w" path="res://assets/models/player/robotto.glb" id="18_gi7kl"]
+[ext_resource type="PackedScene" uid="uid://foi2dahuh4rr" path="res://scenes/04_game/components/players/raul_posta.tscn" id="19_ssy2f"]
+[ext_resource type="Texture2D" uid="uid://beh5j6rc3srhg" path="res://scenes/01_main_menu/seleccion de modo.png" id="20_qtf3s"]
 
 [sub_resource type="GDScript" id="GDScript_11rdk"]
 resource_name = "PlayButton"
@@ -62,6 +65,12 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	pass
 "
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gi7kl"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gi7kl"]
+size = Vector2(30, 25)
 
 [node name="MainMenu" type="Control" unique_id=1520225919]
 layout_mode = 3
@@ -137,6 +146,7 @@ offset_bottom = 1080.0
 color = Color(0, 0, 0, 1)
 
 [node name="VsPlayer" type="TextureButton" parent="ChooseOpp" unique_id=468685631]
+z_index = 1
 layout_mode = 0
 offset_left = 387.0
 offset_top = 234.0
@@ -148,6 +158,7 @@ texture_pressed = ExtResource("12_w4mt7")
 texture_hover = ExtResource("13_gi7kl")
 
 [node name="VsCPU" type="TextureButton" parent="ChooseOpp" unique_id=1188958406]
+z_index = 1
 texture_filter = 1
 layout_mode = 0
 offset_left = 1040.0
@@ -170,9 +181,89 @@ scale = Vector2(3, 3)
 theme_override_font_sizes/font_size = 25
 text = "Volver"
 
+[node name="SeleccionDeModo" type="Sprite2D" parent="ChooseOpp" unique_id=338101220]
+texture_filter = 1
+position = Vector2(978, 129)
+scale = Vector2(3, 3)
+texture = ExtResource("20_qtf3s")
+
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("8_6prxp")]
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=32502218]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=654026193]
+layout_mode = 0
+offset_left = 1142.0
+offset_top = 278.0
+offset_right = 1392.0
+offset_bottom = 528.0
+scale = Vector2(1.2428453, 1.1926568)
+mouse_filter = 2
+
+[node name="SubViewportCPU" type="SubViewport" parent="SubViewportContainer" unique_id=1570680514]
+handle_input_locally = false
+size = Vector2i(250, 250)
+render_target_update_mode = 4
+
+[node name="robotto" parent="SubViewportContainer/SubViewportCPU" unique_id=226378677 instance=ExtResource("18_gi7kl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.12067032, 0)
+
+[node name="Skeleton3D" parent="SubViewportContainer/SubViewportCPU/robotto/Armature_001" parent_id_path=PackedInt32Array(226378677, 895606788) index="0" unique_id=1352458038]
+bones/0/position = Vector3(0.7590719, 2.4727151, 0.0050603338)
+bones/0/rotation = Quaternion(0.94951266, 0.3136822, 0.0037638152, 0.003879658)
+bones/0/scale = Vector3(0.9999999, 1, 1.0000001)
+bones/1/rotation = Quaternion(-0.015157775, -0.0018436357, -0.051685337, 0.9985468)
+bones/2/position = Vector3(0.03323814, 0.93617964, -0.014487102)
+bones/2/rotation = Quaternion(-0.0023275448, 0.31721961, 0.0016808794, 0.9483478)
+bones/3/rotation = Quaternion(0.0011981798, 0.0003742829, 0.019543495, 0.99980825)
+bones/3/scale = Vector3(1, 1, 1)
+bones/4/rotation = Quaternion(0.019493695, 0.7065539, 0.0015017021, 0.7073891)
+bones/4/scale = Vector3(0.99999994, 1.0000001, 1)
+bones/5/position = Vector3(0.35601562, 0.9378478, 0.04237796)
+bones/5/rotation = Quaternion(0.10585371, 0.0039225826, 0.9940035, -0.027142404)
+bones/6/position = Vector3(-0.8069313, 2.4254239, 0.0059660636)
+bones/6/rotation = Quaternion(0.9585462, -0.28487605, -0.0041939206, 0.0041728504)
+bones/6/scale = Vector3(0.99999994, 1.0000001, 1.0000001)
+bones/7/rotation = Quaternion(-0.015157773, 0.001843635, 0.051685363, 0.99854666)
+bones/8/position = Vector3(-0.35601562, 0.9378478, 0.04237796)
+bones/8/rotation = Quaternion(-0.10585372, 0.0039225826, 0.9940035, 0.027142404)
+
+[node name="AnimationPlayer" parent="SubViewportContainer/SubViewportCPU/robotto" index="2" unique_id=423788123]
+autoplay = &"idle"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewportCPU/robotto" unique_id=652107456]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -1.1411037)
+material_override = SubResource("StandardMaterial3D_gi7kl")
+mesh = SubResource("PlaneMesh_gi7kl")
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewportCPU" unique_id=120908282]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02237232, 3.095, 3.9653883)
+fov = 44.1
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewportCPU" unique_id=283791409]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 4, 4)
+
+[node name="SubViewportContainer2" type="SubViewportContainer" parent="." unique_id=1094884092]
+layout_mode = 0
+offset_left = 494.0
+offset_top = 285.0
+offset_right = 744.0
+offset_bottom = 535.0
+scale = Vector2(1.2251219, 1.1740384)
+mouse_filter = 2
+
+[node name="SubViewport2Players" type="SubViewport" parent="SubViewportContainer2" unique_id=130242885]
+handle_input_locally = false
+size = Vector2i(250, 250)
+render_target_update_mode = 4
+
+[node name="RaulPosta" parent="SubViewportContainer2/SubViewport2Players" unique_id=2047245217 instance=ExtResource("19_ssy2f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.0636377, 0, 0)
+script = null
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer2/SubViewport2Players" unique_id=1796332663]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.067, 3.095, 3.665)
+fov = 44.1
 
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Creditos" to="." method="_on_creditos_pressed"]
@@ -181,3 +272,5 @@ text = "Volver"
 [connection signal="pressed" from="ChooseOpp/VsCPU" to="." method="_on_vs_cpu_pressed"]
 [connection signal="pressed" from="ChooseOpp/Back" to="." method="_on_back_pressed"]
 [connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]
+
+[editable path="SubViewportContainer/SubViewportCPU/robotto"]
