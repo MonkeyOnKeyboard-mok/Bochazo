@@ -52,7 +52,7 @@ var player2_char : String = "Jorge"
 var global_player_pos : Vector3 = Vector3(-32.144,0.42,-0.968)
 var global_ball_pos : Vector3 = global_player_pos + Vector3(3.349, 0.018, 0.548)
 
-var court : String = "Pro"
+var court : String = "Flat"
 var permission_to_throw : bool = false
 
 var first_turn : bool = true
@@ -60,8 +60,10 @@ var first_bocha_thrown : bool = false
 
 var p1_turn = true  ## If false, it's P2 or CPU turn
 
-var p1_turns : int = 6
-var p2_turns : int = 6
+var amount_of_turns : int = 4
+
+var p1_turns : int = amount_of_turns
+var p2_turns : int = amount_of_turns
 
 var p1_score: int = 0
 var p2_score : int = 0
@@ -182,8 +184,8 @@ func first_bocha(distance: float) -> void:
 
 func run_soft_reset() -> void:
 	p1_turn = true  
-	p1_turns = 6
-	p2_turns = 6
+	p1_turns = amount_of_turns
+	p2_turns = amount_of_turns
 	bochin = null
 	bochin_thrown = false
 	bochas_thrown  = []
@@ -194,15 +196,15 @@ func run_soft_reset() -> void:
 
 func run_full_reset() -> void:
 	p1_turn = true  
-	p1_turns = 6
-	p2_turns = 6
+	p1_turns = amount_of_turns
+	p2_turns = amount_of_turns
 	bochin = null
 	bochin_thrown = false
 	bochas_thrown  = []
 	bochas_distance  = []
 	player1_char = "Raul"
 	player2_char  = "Jorge"
-	court  = "Dirty"
+	court  = "Flat"
 	vsAI = false
 	first_bocha_thrown = false
 	first_turn = true
