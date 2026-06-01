@@ -3,6 +3,8 @@ extends Node3D
 var original_pos : Vector3
 var original_rot : Vector3
 
+var center_pos : Vector3
+
 # Distancia frente a la cámara donde aparece el marcador
 @export var camera_distance : float = 5.0
 # Cuánto tiempo está en el centro antes de volver
@@ -16,18 +18,16 @@ func _ready() -> void:
 	original_rot.y = global_rotation.y
 	GameManager.connect("soft_reset", show_scores)
 	GameManager.connect("full_reset", show_scores)
+	var camera := get_viewport().get_camera_3d()
+	if not camera: return
+	center_pos = camera.global_position \
+		+ camera.global_basis.z * -camera_distance
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	pass
 
 func show_scores() -> void:
-	var camera := get_viewport().get_camera_3d()
-	if not camera: return
-
-	# Posición centrada frente a la cámara
-	var center_pos := camera.global_position \
-		+ camera.global_basis.z * -camera_distance
 
 	var tween := create_tween()
 	tween.set_parallel(false)

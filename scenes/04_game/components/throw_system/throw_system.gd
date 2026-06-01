@@ -11,6 +11,7 @@ const BOCHIN = preload("uid://4qe83ntmmj7w")
 @onready var power_bar: ProgressBar = %PowerBar
 @onready var aim: ThrowAim = %ThrowAim
 @onready var flight: ThrowFlight = %ThrowFlight
+@onready var camera_manager: Node3D = $"../CameraManager"
 
 var start_pos : Vector3 = Vector3(-27.54,1.184,0)
 var _stored_power: float = 0.0

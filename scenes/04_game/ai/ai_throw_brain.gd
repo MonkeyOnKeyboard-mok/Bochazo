@@ -200,7 +200,7 @@ func _fallback_throw(ball_pos: Vector3, bochin_pos: Vector3) -> AIThrowParams:
 func update_bocha(bocha : RigidBody3D) -> void:
 	ball = bocha
 	if !GameManager.p1_turn and GameManager.vsAI:
-		await get_tree().create_timer(1).timeout
+		await get_tree().create_timer(3).timeout
 		setup_for_throw(stats, ball, flight)
 		print("playing vs ai ... computer throwing")
 	else:

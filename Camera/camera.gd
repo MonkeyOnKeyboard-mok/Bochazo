@@ -1,92 +1,72 @@
-class_name Camera
 extends Node3D
 
 ## Anchor Points
-var mainPos : Vector3 = Vector3(35,6.195, 00) ## In Test Scene
-var mainRot : Vector3 = Vector3(-24.0,90, 00) ## In Test Scene
+var mainPos: Vector3 = Vector3(-40.222, 4.05, 0.0)
+var mainRot: Vector3 = Vector3(0, -90.0, 0.0)
+var followRot: Vector3 = Vector3(-90.0, -90.0, 0.0)
 
-## Zoom 
-var checkPos : Vector3 = Vector3(-22,15, 00) ## In Test Scene
-var checkRot : Vector3 = Vector3(-90,90, 00) ## In Test Scene
+var followOffset : float =  13.0
 
-## Movement control
-var is_moving : bool = false
-var move_timer : float = 0.0
-var delay_before_move : float = 2.0  # Wait 2 seconds before moving
-var x_move_duration : float = 0.7    # Move on X for 1.5 seconds
-var xy_move_duration : float = 1.5   # Then move on X+Y for 1.5 seconds
-var total_move_time : float = 0.0
+@onready var main_cam: Camera3D = $TestCamera
 
-var start_pos : Vector3
-var target_pos : Vector3
-var start_rot : Vector3
-var target_rot : Vector3
+@export var follow_height: float = 30.0
+@export var pushback_distance: float = 2.5
+@export var pushback_duration: float = 0.3
+@export var rise_duration: float = 3.0
+@export var return_duration: float = 2.0
 
-# Called when the node enters the scene tree for the first time.
+var _tween: Tween = null
+
+var ball_stopped : bool = false
+var follow_in_process : bool = false
+var follow_speed : float = 0.5
+
+var _ball : RigidBody3D = null
+
 func _ready() -> void:
-	global_position = mainPos
-	global_rotation_degrees = mainRot
+	main_cam.global_position = mainPos
+	main_cam.rotation_degrees = mainRot
+	GameManager.connect("return_camera",on_ball_stopped)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if is_moving:
-		move_timer += delta
-		
-		# Wait for initial delay
-		if move_timer < delay_before_move:
-			return
-		
-		# Calculate progress after delay
-		var progress_time = move_timer - delay_before_move
-		
-		# Phase 1: Move only on X axis
-		if progress_time < x_move_duration:
-			var t = progress_time / x_move_duration
-			t = ease(t, -2.0)  # Smooth easing
-			
-			# Only interpolate X position
-			global_position.x = lerp(start_pos.x, target_pos.x, t)
-			global_position.y = start_pos.y
-			global_position.z = start_pos.z
-			
-			# Interpolate rotation
-			global_rotation_degrees = start_rot.lerp(target_rot, t)
-		
-		# Phase 2: Move on both X and Y (creates arc)
-		elif progress_time < (x_move_duration + xy_move_duration):
-			var t = (progress_time - x_move_duration) / xy_move_duration
-			t = ease(t, -2.0)
-			
-			# Interpolate both X and Y
-			global_position.x = lerp(start_pos.x, target_pos.x, 1.0)  # X already at target
-			global_position.y = lerp(start_pos.y, target_pos.y, t)
-			global_position.z = lerp(start_pos.z, target_pos.z, t)
-			
-			# Continue rotation interpolation
-			global_rotation_degrees = start_rot.lerp(target_rot, 
-				(progress_time) / (x_move_duration + xy_move_duration))
-		
-		# Movement complete
-		else:
-			global_position = target_pos
-			global_rotation_degrees = target_rot
-			is_moving = false
-			move_timer = 0.0
+	if follow_in_process:
+		main_cam.global_position.x = lerp(main_cam.global_position.x, _ball.global_position.x, follow_speed * delta)
 
-## Call this function from another node to trigger movement
-func move_to_check_position() -> void:
-	start_pos = global_position
-	target_pos = checkPos
-	start_rot = global_rotation_degrees
-	target_rot = checkRot
-	is_moving = true
-	move_timer = 0.0
+func start_follow(ball: RigidBody3D) -> void:
+	if _tween:
+		_tween.kill()
+	_ball = ball
+	var pushback_pos = Vector3(mainPos.x - pushback_distance, mainPos.y, mainPos.z)
+	var follow_pos = Vector3(ball.global_position.x+followOffset, follow_height, mainPos.z)
 
-## Return to main position
-func move_to_main_position() -> void:
-	start_pos = global_position
-	target_pos = mainPos
-	start_rot = global_rotation_degrees
-	target_rot = mainRot
-	is_moving = true
-	move_timer = 0.0
+	_tween = create_tween()
+	_tween.tween_property(main_cam, "global_position", pushback_pos, pushback_duration) \
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_tween.set_parallel(true)
+	_tween.tween_property(main_cam, "global_position", follow_pos, rise_duration) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_tween.tween_property(main_cam, "rotation_degrees", followRot, rise_duration) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await _tween.finished
+	if !ball_stopped:
+		follow_in_process = true
+
+func on_ball_stopped(ball: RigidBody3D) -> void:
+	follow_in_process = false
+	ball_stopped = true
+	if _tween:
+		_tween.kill()
+
+	var final_pos = Vector3(ball.global_position.x, follow_height, mainPos.z)
+
+	_tween = create_tween()
+	_tween.tween_property(main_cam, "global_position", final_pos, 0.4) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_tween.set_parallel(true)
+	_tween.tween_property(main_cam, "global_position", mainPos, return_duration) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_tween.tween_property(main_cam, "rotation_degrees", mainRot, return_duration) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await _tween.finished
+	_ball = null
+	ball_stopped = false

@@ -87,3 +87,8 @@ func animation_fix_and_etc() -> void:
 	ball.linear_velocity = Vector3.ZERO
 	ball.angular_velocity = Vector3.ZERO
 	ball.freeze = false
+	await get_tree().create_timer(1.5).timeout
+	camera_follow()
+
+func camera_follow() -> void:
+	get_parent().camera_manager.start_follow(ball)

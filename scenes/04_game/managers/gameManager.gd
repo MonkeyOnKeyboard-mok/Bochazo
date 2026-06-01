@@ -45,6 +45,9 @@ signal full_reset
 signal victory
 @warning_ignore("unused_signal")
 signal soft_reset_end
+@warning_ignore("unused_signal")
+signal return_camera(ball: RigidBody3D)
+
 
 ## Vs AI flag
 var vsAI : bool = false
@@ -219,7 +222,6 @@ func run_full_reset() -> void:
 	bochin_thrown = false
 	bochas_thrown  = []
 	bochas_distance  = []
-	court  = "Flat"
 	first_bocha_thrown = false
 	first_turn = true
 	p1_score = 0
@@ -231,6 +233,7 @@ func run_full_reset() -> void:
 	else:
 		player1_char = "Raul"
 		player2_char  = "Jorge"
+		court  = "Flat"
 	is_rematch = false
 
 func end_game() ->void:
