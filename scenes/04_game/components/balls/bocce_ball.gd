@@ -28,7 +28,7 @@ var distance_to_bochin
 func _ready():
 	_apply_physics()
 	body_entered.connect(_on_body_entered)
-	#_define_settings()
+	_define_settings()
 
 func _physics_process(delta):
 	if !is_thrown:

@@ -1,10 +1,6 @@
 [gd_scene format=3 uid="uid://cfa4vs0vlvdus"]
 
-[ext_resource type="PackedScene" uid="uid://cia10v6ul850a" path="res://scenes/04_game/components/UI/bocha_azul_UI_subview.tscn" id="1_8nwdo"]
 [ext_resource type="Script" uid="uid://bg5soyudb80bw" path="res://scenes/04_game/components/UI/turnos.gd" id="1_b0bss"]
-[ext_resource type="PackedScene" uid="uid://cve1f04tdwm3m" path="res://scenes/04_game/components/UI/bocha_UI_azul.tscn" id="1_t75d7"]
-[ext_resource type="PackedScene" uid="uid://s53ad56ctq4t" path="res://scenes/04_game/components/UI/bocha_UI_roja.tscn" id="2_c3bmb"]
-[ext_resource type="PackedScene" uid="uid://wpqu8kkku4tv" path="res://scenes/04_game/components/UI/bocha_roja_UI_subview.tscn" id="3_b0bss"]
 
 [node name="Turnos" type="Control" unique_id=1137314364]
 layout_mode = 3
@@ -13,113 +9,16 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_b0bss")
 
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=795345572]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8708354, 2.8768463)
+
 [node name="HBoxPlayer1" type="HBoxContainer" parent="." unique_id=234729482]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-
-[node name="BochaAzul" parent="HBoxPlayer1" unique_id=488987866 instance=ExtResource("1_8nwdo")]
-layout_mode = 2
-
-[node name="BochaAzul2" type="SubViewportContainer" parent="HBoxPlayer1" unique_id=1325103706]
-layout_mode = 2
-
-[node name="SubViewport" type="SubViewport" parent="HBoxPlayer1/BochaAzul2" unique_id=908785867]
-transparent_bg = true
-handle_input_locally = false
-size = Vector2i(50, 50)
-render_target_update_mode = 4
-
-[node name="Camera3D" type="Camera3D" parent="HBoxPlayer1/BochaAzul2/SubViewport" unique_id=1135765242]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.99949586)
-
-[node name="BocceBall" parent="HBoxPlayer1/BochaAzul2" unique_id=1757748354 instance=ExtResource("1_t75d7")]
-
-[node name="BochaAzul3" type="SubViewportContainer" parent="HBoxPlayer1" unique_id=1620693306]
-layout_mode = 2
-
-[node name="SubViewport" type="SubViewport" parent="HBoxPlayer1/BochaAzul3" unique_id=878387197]
-transparent_bg = true
-handle_input_locally = false
-size = Vector2i(50, 50)
-render_target_update_mode = 4
-
-[node name="Camera3D" type="Camera3D" parent="HBoxPlayer1/BochaAzul3/SubViewport" unique_id=705620320]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.99949586)
-
-[node name="BocceBall" parent="HBoxPlayer1/BochaAzul3" unique_id=539641748 instance=ExtResource("1_t75d7")]
-
-[node name="BochaAzul4" type="SubViewportContainer" parent="HBoxPlayer1" unique_id=2117625706]
-layout_mode = 2
-
-[node name="SubViewport" type="SubViewport" parent="HBoxPlayer1/BochaAzul4" unique_id=1779345172]
-transparent_bg = true
-handle_input_locally = false
-size = Vector2i(50, 50)
-render_target_update_mode = 4
-
-[node name="Camera3D" type="Camera3D" parent="HBoxPlayer1/BochaAzul4/SubViewport" unique_id=1925399907]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
-
-[node name="BocceBall" parent="HBoxPlayer1/BochaAzul4" unique_id=1930074450 instance=ExtResource("1_t75d7")]
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=795345572]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8708354, 2.8768463)
 
 [node name="HBoxPlayer2" type="HBoxContainer" parent="." unique_id=5855308]
 layout_mode = 0
 offset_top = 51.0
 offset_right = 212.0
 offset_bottom = 101.0
-
-[node name="BochaRoja" parent="HBoxPlayer2" unique_id=742136429 instance=ExtResource("3_b0bss")]
-layout_mode = 2
-
-[node name="BochaRoja2" type="SubViewportContainer" parent="HBoxPlayer2" unique_id=736543747]
-layout_mode = 2
-
-[node name="SubViewport" type="SubViewport" parent="HBoxPlayer2/BochaRoja2" unique_id=914860515]
-transparent_bg = true
-handle_input_locally = false
-size = Vector2i(50, 50)
-render_target_update_mode = 4
-
-[node name="Camera3D" type="Camera3D" parent="HBoxPlayer2/BochaRoja2/SubViewport" unique_id=2056791682]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 1)
-
-[node name="BocceBall" parent="HBoxPlayer2/BochaRoja2" unique_id=357459484 instance=ExtResource("2_c3bmb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
-
-[node name="BochaRoja3" type="SubViewportContainer" parent="HBoxPlayer2" unique_id=2007200942]
-layout_mode = 2
-
-[node name="SubViewport" type="SubViewport" parent="HBoxPlayer2/BochaRoja3" unique_id=1647035335]
-transparent_bg = true
-handle_input_locally = false
-size = Vector2i(50, 50)
-render_target_update_mode = 4
-
-[node name="Camera3D" type="Camera3D" parent="HBoxPlayer2/BochaRoja3/SubViewport" unique_id=2031224055]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 1)
-
-[node name="BocceBall" parent="HBoxPlayer2/BochaRoja3" unique_id=1030256638 instance=ExtResource("2_c3bmb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
-
-[node name="BochaRoja4" type="SubViewportContainer" parent="HBoxPlayer2" unique_id=740029673]
-layout_mode = 2
-
-[node name="SubViewport" type="SubViewport" parent="HBoxPlayer2/BochaRoja4" unique_id=708567462]
-transparent_bg = true
-handle_input_locally = false
-size = Vector2i(50, 50)
-render_target_update_mode = 4
-
-[node name="Camera3D" type="Camera3D" parent="HBoxPlayer2/BochaRoja4/SubViewport" unique_id=689193722]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 1)
-
-[node name="BocceBall" parent="HBoxPlayer2/BochaRoja4" unique_id=1308640228 instance=ExtResource("2_c3bmb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
-
-[editable path="HBoxPlayer1/BochaAzul2/BocceBall"]
-[editable path="HBoxPlayer1/BochaAzul3/BocceBall"]
-[editable path="HBoxPlayer1/BochaAzul4/BocceBall"]

@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://ga6bj5icvepp" path="res://scenes/04_game/managers/character_manager.gd" id="5_1v2qn"]
 [ext_resource type="Script" uid="uid://dchay5e0lmxuw" path="res://scenes/04_game/components/GameCourt/round_transition_manager.gd" id="5_f5t13"]
 [ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="7_sqrn6"]
+[ext_resource type="PackedScene" uid="uid://cfa4vs0vlvdus" path="res://scenes/04_game/components/UI/turnos.tscn" id="8_8p2ir"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5t0ms"]
 transparency = 1
@@ -190,6 +191,8 @@ offset_right = 144.0
 offset_bottom = 77.0
 script = SubResource("GDScript_f5t13")
 
+[node name="Turnos" parent="CanvasLayer" unique_id=1137314364 instance=ExtResource("8_8p2ir")]
+
 [node name="SubViewport" type="SubViewport" parent="." unique_id=731301028]
 transparent_bg = true
 size = Vector2i(256, 256)
@@ -216,6 +219,7 @@ script = ExtResource("3_f5t13")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.225138, 0.43813962, -0.063742846)
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("7_sqrn6")]
+visible = false
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=1162270110]
 
