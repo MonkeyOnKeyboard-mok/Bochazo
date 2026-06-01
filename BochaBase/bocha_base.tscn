@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://d06em422bftb7"]
+[gd_scene load_steps=8 format=4 uid="uid://d06em422bftb7"]
 
 [ext_resource type="Script" uid="uid://cwl2sx7nwu3hb" path="res://BochaBase/bocha_base.gd" id="1_3ib0r"]
 [ext_resource type="Script" uid="uid://06a5wxasjnc4" path="res://BochaBase/input_manager.gd" id="2_8hhpd"]

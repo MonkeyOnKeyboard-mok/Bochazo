@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://rirhhk5svoiv"]
+[gd_scene format=4 uid="uid://rirhhk5svoiv"]
 
 [ext_resource type="ArrayMesh" uid="uid://bb2xg0xloyp32" path="res://Cancha/CanchaBochas.obj" id="1_kwr1y"]
 
@@ -38,12 +38,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.076775, 0.18696308, 0)
 mesh = SubResource("PlaneMesh_kwr1y")
 surface_material_override/0 = SubResource("StandardMaterial3D_g54qm")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1882885419]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.179214, 0.21780157, 0)
-mesh = SubResource("PlaneMesh_kwr1y")
-surface_material_override/0 = SubResource("StandardMaterial3D_g54qm")
-
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="." unique_id=410025428]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.881815, 0.21780157, 0)
-mesh = SubResource("PlaneMesh_kwr1y")
-surface_material_override/0 = SubResource("StandardMaterial3D_g54qm")
+[node name="Cube" type="MeshInstance3D" unique_id=127404517]
+transform = Transform3D(31.383944, 0, 0, 0, 0.19734377, 0, 0, 0, 4.9250145, 0, 0, 0)
+mesh = SubResource("ArrayMesh_gxe4d")
