@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://bug232h66kc3t" path="res://scenes/04_game/components/balls/bochin.gd" id="1_fw4uf"]
 [ext_resource type="Resource" uid="uid://c5jqwdd7turwu" path="res://resources/game_config/Bochin.tres" id="2_fw4uf"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fw4uf"]
+albedo_color = Color(0, 0, 0, 1)
+
 [sub_resource type="SphereMesh" id="SphereMesh_5ugk0"]
 radius = 0.2
 height = 0.4
@@ -18,6 +21,7 @@ stop_velocity_threshold = null
 debug_verbose = null
 
 [node name="BochaMesh" type="MeshInstance3D" parent="." unique_id=123046408]
+material_override = SubResource("StandardMaterial3D_fw4uf")
 mesh = SubResource("SphereMesh_5ugk0")
 
 [node name="BallCollision" type="CollisionShape3D" parent="." unique_id=169731938]
