@@ -184,7 +184,6 @@ shadow_enabled = true
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=608851310]
 
 [node name="Test_Turns" type="Label" parent="CanvasLayer" unique_id=1632470463]
-visible = false
 offset_left = 104.0
 offset_top = 54.0
 offset_right = 144.0

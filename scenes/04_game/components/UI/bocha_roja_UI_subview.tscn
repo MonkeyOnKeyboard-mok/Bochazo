@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://wpqu8kkku4tv"]
+
+[ext_resource type="PackedScene" uid="uid://s53ad56ctq4t" path="res://scenes/04_game/components/UI/bocha_UI_roja.tscn" id="1_205yq"]
+
+[node name="BochaRoja" type="SubViewportContainer" unique_id=742136429]
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=457847135]
+transparent_bg = true
+size = Vector2i(50, 50)
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=1203169073]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 1)
+
+[node name="BocceBall" parent="." unique_id=357459484 instance=ExtResource("1_205yq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)

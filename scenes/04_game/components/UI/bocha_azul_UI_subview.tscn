@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cia10v6ul850a"]
+
+[ext_resource type="PackedScene" uid="uid://cve1f04tdwm3m" path="res://scenes/04_game/components/UI/bocha_UI_azul.tscn" id="1_f7g70"]
+
+[node name="BochaAzul" type="SubViewportContainer" unique_id=488987866]
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=469690214]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(50, 50)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=351787752]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.99949586)
+
+[node name="BocceBall" parent="." unique_id=357459484 instance=ExtResource("1_f7g70")]
+
+[editable path="BocceBall"]
