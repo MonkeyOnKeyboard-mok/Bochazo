@@ -29,6 +29,6 @@ func _physics_process(_delta):
 			freeze = false
 
 func bochin_valid_check() -> bool:
-	if self.global_position.x < 20.0:
+	if self.global_position.x < 0.0:
 		return false
 	else: return true
