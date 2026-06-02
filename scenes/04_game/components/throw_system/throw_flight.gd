@@ -75,7 +75,7 @@ func _physics_process(_delta):
 	var vel_horiz = Vector3(vel.x, 0, vel.z)
 	if vel_horiz.length() < 0.2: return
 
-	var forward = vel_horiz.normalized()
+	var forward = Vector3.UP  # Eje X positivo como direccion de avance
 	var right = forward.cross(Vector3.UP).normalized()
 	var desired = to_target.normalized()
 	var lateral = desired.dot(right)
