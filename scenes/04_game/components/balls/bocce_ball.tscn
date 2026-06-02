@@ -41,6 +41,7 @@ shadow_mesh = SubResource("ArrayMesh_5ys2v")
 
 [node name="BocceBall" type="RigidBody3D" unique_id=357459484]
 freeze_mode = 1
+continuous_cd = true
 script = ExtResource("1_qnnu0")
 physics_config = ExtResource("2_wm8ks")
 

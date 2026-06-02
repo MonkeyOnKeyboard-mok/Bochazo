@@ -15,6 +15,7 @@ radius = 0.2
 
 [node name="Bochin" type="RigidBody3D" unique_id=1841816552]
 mass = 0.4
+continuous_cd = true
 script = ExtResource("1_fw4uf")
 physics_config = ExtResource("2_fw4uf")
 stop_velocity_threshold = null
