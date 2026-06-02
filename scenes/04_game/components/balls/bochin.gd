@@ -11,11 +11,23 @@ func _physics_process(_delta):
 		_is_stopped = true
 		freeze = true
 		stopped_moving.emit(self)
-		print("me frene y encima soy el bochin")
-		GameManager.emit_signal("return_camera")
-		GameManager.bochin_thrown = true
-		GameManager.bochin = self
-		GameManager.spawn_bocha.emit()
-		GameManager.idle.emit()
-		if debug_verbose: print("[BocceBall] Se detuvo")
-		freeze = false
+		if !bochin_valid_check():
+			GameManager.emit_signal("return_camera")
+			queue_free()
+			GameManager.spawn_bocha.emit()
+			GameManager.idle.emit()
+			return
+		else: 
+			print("me frene y encima soy el bochin")
+			GameManager.emit_signal("return_camera")
+			GameManager.bochin_thrown = true
+			GameManager.bochin = self
+			GameManager.spawn_bocha.emit()
+			GameManager.idle.emit()
+			if debug_verbose: print("[BocceBall] Se detuvo")
+			freeze = false
+
+func bochin_valid_check() -> bool:
+	if self.global_position.x > 20.0:
+		return false
+	else: return true

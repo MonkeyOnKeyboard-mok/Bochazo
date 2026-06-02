@@ -5,15 +5,15 @@ var mainPos: Vector3 = Vector3(-40.222, 4.05, 0.0)
 var mainRot: Vector3 = Vector3(0, -90.0, 0.0)
 var followRot: Vector3 = Vector3(-90.0, -90.0, 0.0)
 
-var followOffset : float =  13.0
+var followOffset : float =  20.0
 
 @onready var main_cam: Camera3D = $TestCamera
 
 @export var follow_height: float = 30.0
 @export var pushback_distance: float = 2.5
 @export var pushback_duration: float = 0.3
-@export var rise_duration: float = 3.0
-@export var return_duration: float = 2.0
+@export var rise_duration: float = 2.3
+@export var return_duration: float = 1.5
 
 var _tween: Tween = null
 

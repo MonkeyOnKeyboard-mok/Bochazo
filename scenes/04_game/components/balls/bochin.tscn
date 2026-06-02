@@ -17,6 +17,9 @@ radius = 0.2
 mass = 0.4
 script = ExtResource("1_fw4uf")
 physics_config = ExtResource("2_fw4uf")
+stop_velocity_threshold = null
+debug_verbose = null
+training_mode = null
 
 [node name="BochaMesh" type="MeshInstance3D" parent="." unique_id=123046408]
 material_override = SubResource("StandardMaterial3D_fw4uf")

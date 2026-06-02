@@ -194,6 +194,7 @@ func check_if_game_is_over() -> void:
 		winner = "player2" 
 		end_game()
 	else: 
+		await get_tree().create_timer(0.3).timeout
 		emit_signal("soft_reset")
 		run_soft_reset()
 		emit_signal("spawn_bocha")
@@ -242,4 +243,5 @@ func end_game() ->void:
 	game_ended = true   ## CAMBIAR
 	emit_signal("full_reset")
 	emit_signal("victory")
+	await get_tree().create_timer(3).timeout
 	emit_signal("spawn_victory_anims")

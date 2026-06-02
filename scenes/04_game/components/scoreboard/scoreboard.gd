@@ -28,7 +28,6 @@ func _process(_delta: float) -> void:
 	pass
 
 func show_scores() -> void:
-	await get_tree().create_timer(2).timeout
 	var tween := create_tween()
 	tween.set_parallel(false)
 
