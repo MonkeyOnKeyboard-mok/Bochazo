@@ -59,7 +59,6 @@ func _physics_process(delta):
 		_is_stopped = true
 		freeze = true
 		stopped_moving.emit(self)
-		GameManager.emit_signal("return_camera",self)
 		if debug_verbose: print("[BocceBall] Se detuvo")
 		freeze = false
 		if GameManager:

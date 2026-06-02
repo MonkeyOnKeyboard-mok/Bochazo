@@ -51,17 +51,13 @@ func start_follow(ball: RigidBody3D) -> void:
 	if !ball_stopped:
 		follow_in_process = true
 
-func on_ball_stopped(ball: RigidBody3D) -> void:
+func on_ball_stopped() -> void: #
 	follow_in_process = false
 	ball_stopped = true
 	if _tween:
 		_tween.kill()
 
-	var final_pos = Vector3(ball.global_position.x, follow_height, mainPos.z)
-
 	_tween = create_tween()
-	_tween.tween_property(main_cam, "global_position", final_pos, 0.4) \
-		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_tween.set_parallel(true)
 	_tween.tween_property(main_cam, "global_position", mainPos, return_duration) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)

@@ -69,8 +69,8 @@ var first_bocha_thrown : bool = false
 
 var p1_turn = true  ## If false, it's P2 or CPU turn
 
-var amount_of_turns : int = 1
-var score_to_win : int = 1
+var amount_of_turns : int = 4
+var score_to_win : int = 6
 
 var p1_turns : int = amount_of_turns
 var p2_turns : int = amount_of_turns
@@ -119,6 +119,7 @@ func have_all_balls_stopped()-> void:
 				break
 		if all_stopped:
 				print("All balls have stopped")
+				emit_signal("return_camera")
 				break
 	who_is_closer()
 

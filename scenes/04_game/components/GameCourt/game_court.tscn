@@ -192,6 +192,7 @@ shadow_enabled = true
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=608851310]
 
 [node name="Test_Turns" type="Label" parent="CanvasLayer" unique_id=1632470463]
+visible = false
 offset_left = 104.0
 offset_top = 478.0
 offset_right = 144.0
@@ -230,6 +231,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.225138, 0.43813962, -0.06
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=1162270110]
 
 [node name="Reset_Test" type="Button" parent="." unique_id=803866598]
+visible = false
 offset_left = 122.0
 offset_top = 229.0
 offset_right = 208.0

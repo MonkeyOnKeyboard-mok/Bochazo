@@ -12,7 +12,7 @@ func _physics_process(_delta):
 		freeze = true
 		stopped_moving.emit(self)
 		print("me frene y encima soy el bochin")
-		GameManager.emit_signal("return_camera",self)
+		GameManager.emit_signal("return_camera")
 		GameManager.bochin_thrown = true
 		GameManager.bochin = self
 		GameManager.spawn_bocha.emit()
