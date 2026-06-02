@@ -38,7 +38,7 @@ func reset() -> void:
 	base_y = position.y
 
 func _add_score(score: int, inc_player: String) -> void:
-	await get_tree().create_timer(2.2).timeout
+	await get_tree().create_timer(1.8).timeout
 	if inc_player != player: 
 		print (" volviendo xd")
 		return

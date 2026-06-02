@@ -230,6 +230,7 @@ func run_full_reset() -> void:
 	p2_score = 0
 	current_player = null
 	permission_to_throw = false
+	game_ended = false
 	if is_rematch: 
 		return
 	else:

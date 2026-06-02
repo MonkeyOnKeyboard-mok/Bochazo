@@ -31,6 +31,7 @@ func _ready():
 	_define_settings()
 
 func _physics_process(delta):
+	
 	if !is_thrown:
 		if GameManager.current_player:
 			global_position = GameManager.current_player.marker.global_position
