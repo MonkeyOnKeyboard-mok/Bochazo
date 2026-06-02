@@ -42,6 +42,7 @@ func _add_score(score: int, inc_player: String) -> void:
 	if inc_player != player: 
 		print (" volviendo xd")
 		return
+
 	var target_y := base_y + score * meters_per_point
 
 	if _tween:
