@@ -44,7 +44,8 @@ func _add_score(score: int, inc_player: String) -> void:
 		return
 
 	var target_y := base_y + score * meters_per_point
-
+	if target_y < 0.4759:
+		target_y = 0.4759
 	if _tween:
 		_tween.kill()
 
