@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://u7mfkd0qeypc"]
+
+[ext_resource type="PackedScene" uid="uid://foi2dahuh4rr" path="res://scenes/04_game/components/players/raul_posta.tscn" id="1_4f2q7"]
+[ext_resource type="Script" uid="uid://bwye0s87m28mp" path="res://scenes/03_character_select/playerReal.gd" id="2_qrbp0"]
+
+[node name="RaulCharSelect" unique_id=1981057026 instance=ExtResource("1_4f2q7")]
+script = ExtResource("2_qrbp0")
+
+[node name="Skeleton3D" parent="Armature_001" parent_id_path=PackedInt32Array(1334524161) index="0" unique_id=632903412]
+bones/0/position = Vector3(0.5147745, 2.4210439, -0.013984388)
+bones/0/rotation = Quaternion(0.9487583, 0.31532764, 0.007908862, 0.019068532)
+bones/0/scale = Vector3(1.0000001, 1.0000001, 1.0000001)
+bones/3/scale = Vector3(1.0000001, 1, 0.9999999)
+bones/4/rotation = Quaternion(-0.00467651, 0.7065822, 0.024767281, 0.707182)
+bones/4/scale = Vector3(0.99999994, 0.9999998, 1)
+bones/6/position = Vector3(-0.5147745, 2.4210439, -0.013984388)
+bones/6/rotation = Quaternion(0.9487583, -0.31532764, -0.007908862, 0.019068532)
+bones/6/scale = Vector3(1.0000001, 1.0000001, 1.0000001)
+
+[node name="BoneAttachment3D" parent="Armature_001/Skeleton3D" index="5" unique_id=882502819]
+transform = Transform3D(0.7772949, -0.62863344, -0.025160413, -0.62913203, -0.77651274, -0.034948077, 0.0024321498, 0.042994175, -0.9990726, -0.8850621, 1.925453, 0.011507284)

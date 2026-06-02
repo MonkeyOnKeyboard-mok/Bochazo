@@ -1,6 +1,9 @@
-[gd_scene format=3 uid="uid://c1mrvb8qnud4t"]
+[gd_scene load_steps=2 format=3 uid="uid://c1mrvb8qnud4t"]
+
+[ext_resource type="Script" uid="uid://gbgfq1egr8m4" path="res://Camera/camera.gd" id="1_alp8d"]
 
 [node name="CameraPivot" type="Node3D" unique_id=1744960144]
+script = ExtResource("1_alp8d")
 
 [node name="Camera" type="Camera3D" parent="." unique_id=2009877200]
 current = true

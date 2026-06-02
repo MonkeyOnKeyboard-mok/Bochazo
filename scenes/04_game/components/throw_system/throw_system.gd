@@ -11,6 +11,7 @@ const BOCHIN = preload("uid://4qe83ntmmj7w")
 @onready var power_bar: ProgressBar = %PowerBar
 @onready var aim: ThrowAim = %ThrowAim
 @onready var flight: ThrowFlight = %ThrowFlight
+@onready var camera_manager: Node3D = $"../CameraManager"
 
 var start_pos : Vector3 = Vector3(-27.54,1.184,0)
 var _stored_power: float = 0.0
@@ -19,7 +20,9 @@ var ball : RigidBody3D = null
 
 func _ready():
 	GameManager.connect("bocha_spawned", update_bocha)
+	GameManager.connect("brain_connect", connect_to_brain)
 	_wire()
+	
 	if stats: _apply_stats() 
 
 func _wire():
@@ -82,3 +85,9 @@ func update_bocha(bocha : RigidBody3D) -> void:
 	ball = bocha
 	flight.ball = ball
 	if stats: _apply_stats()
+
+func connect_to_brain() -> void:
+	if get_tree().get_first_node_in_group("brain"):
+			print("Cerebro encontrado")
+			get_tree().get_first_node_in_group("brain").flight = flight
+	else: print("Cerebro NO  encontrado")

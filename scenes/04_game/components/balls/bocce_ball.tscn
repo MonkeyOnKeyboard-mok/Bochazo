@@ -5,7 +5,7 @@
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_67rmk"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kkogd"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wm8ks"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_5ys2v"]
 _surfaces = [{
@@ -41,15 +41,14 @@ shadow_mesh = SubResource("ArrayMesh_5ys2v")
 
 [node name="BocceBall" type="RigidBody3D" unique_id=357459484]
 freeze_mode = 1
+continuous_cd = true
 script = ExtResource("1_qnnu0")
 physics_config = ExtResource("2_wm8ks")
-stop_velocity_threshold = null
-debug_verbose = null
 
 [node name="BallCollision" type="CollisionShape3D" parent="." unique_id=2072604333]
 shape = SubResource("SphereShape3D_67rmk")
 
 [node name="BochaMesh" type="MeshInstance3D" parent="." unique_id=62210876]
 transform = Transform3D(33, 0, 0, 0, 33, 0, 0, 0, 33, -0.09630102, -0.5300509, -0.10585368)
-material_override = SubResource("StandardMaterial3D_kkogd")
+material_override = SubResource("StandardMaterial3D_wm8ks")
 mesh = SubResource("ArrayMesh_wm8ks")

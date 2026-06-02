@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ct26x6iw30tei"]
+
+[ext_resource type="Script" uid="uid://so7imtv8itug" path="res://scenes/04_game/components/GameCourt/court_setter.gd" id="1_460bu"]
+
+[node name="CourtSetter" type="Node3D" unique_id=448598263]
+script = ExtResource("1_460bu")

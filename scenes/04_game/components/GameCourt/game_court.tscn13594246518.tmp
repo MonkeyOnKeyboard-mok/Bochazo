@@ -1,0 +1,119 @@
+[gd_scene format=3 uid="uid://dowujklv22egs"]
+
+[ext_resource type="PackedScene" uid="uid://h7l4bjedpvxx" path="res://scenes/04_game/components/throw_system/throw_system.tscn" id="1_sqrn6"]
+[ext_resource type="Resource" uid="uid://24rsp1vhri2o" path="res://resources/game_config/stats_raul.tres" id="2_5t0ms"]
+[ext_resource type="PackedScene" uid="uid://ct26x6iw30tei" path="res://scenes/04_game/components/GameCourt/court_setter.tscn" id="2_n5e64"]
+[ext_resource type="Script" uid="uid://clwp0gamlbqfs" path="res://scenes/04_game/components/bocha_spawner/bocha_spawner.gd" id="3_f5t13"]
+[ext_resource type="PackedScene" uid="uid://b0vtkxrcsio02" path="res://scenes/04_game/components/scoreboard/scoreboard.tscn" id="4_8p2ir"]
+[ext_resource type="Script" uid="uid://ga6bj5icvepp" path="res://scenes/04_game/managers/character_manager.gd" id="5_1v2qn"]
+[ext_resource type="PackedScene" uid="uid://47q000na4tmm" path="res://scenes/04_game/ai/brain.tscn" id="6_jt8ei"]
+[ext_resource type="Script" uid="uid://dgxg2qvvewmb1" path="res://scenes/04_game/ai/ai_throw_brain.gd" id="7_8at0d"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0, 0.37690097, 0.4312564, 1)
+sky_horizon_color = Color(0.94252104, 0.3505956, 0.8400953, 1)
+ground_bottom_color = Color(0.13269839, 0.05401112, 0.48088795, 1)
+ground_horizon_color = Color(0.08235294, 0.63529414, 1, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+background_energy_multiplier = 1.5
+sky = SubResource("Sky")
+
+[sub_resource type="ViewportTexture" id="ViewportTex"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="GDScript" id="ResetScript"]
+script/source = "extends Node
+
+func _on_reset_button_pressed() -> void:
+	#get_tree().reload_current_scene()
+	#if GameManager.p1_turns != 0 or GameManager.p2_turns != 0:
+		#GameManager.spawn_bocha.emit()
+	#GameManager.emit_signal(\"idle\")
+	pass
+"
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_r5rj8"]
+viewport_path = NodePath("SubViewport2")
+
+[node name="GameCourt" type="Node3D" unique_id=1306207877]
+
+[node name="CourtSetter" parent="." unique_id=448598263 instance=ExtResource("2_n5e64")]
+
+[node name="CharacterManager" type="Node3D" parent="." unique_id=1664582644]
+script = ExtResource("5_1v2qn")
+
+[node name="score" parent="." unique_id=1936129887 instance=ExtResource("4_8p2ir")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -31.172, 2.91, 6)
+
+[node name="TestCamera" type="Camera3D" parent="." unique_id=362319183]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -40.222416, 4.0504556, 0)
+fov = 50.0
+near = 2.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=218657089]
+environment = SubResource("Env")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1531567219]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -24.691145, 29.28359, 0)
+shadow_enabled = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=608851310]
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=731301028]
+transparent_bg = true
+size = Vector2i(256, 256)
+render_target_update_mode = 3
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=689176119]
+transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, 26.705826, 12.090761, 0)
+current = true
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1251439467]
+offset_left = 1511.0
+offset_top = 18.0
+offset_right = 1852.0
+offset_bottom = 233.0
+texture = SubResource("ViewportTex")
+
+[node name="Reset" type="Node" parent="." unique_id=428890241]
+script = SubResource("ResetScript")
+
+[node name="ThrowSystem" parent="." unique_id=864086691 instance=ExtResource("1_sqrn6")]
+stats = ExtResource("2_5t0ms")
+
+[node name="BochaSpawner" type="Node3D" parent="." unique_id=1619815305]
+script = ExtResource("3_f5t13")
+
+[node name="BochaPos" type="Marker3D" parent="BochaSpawner" unique_id=456937765]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.225138, 0.43813962, -0.063742846)
+
+[node name="SubViewport2" type="SubViewport" parent="." unique_id=1015136399]
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport2" unique_id=1670840217]
+transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, -29.302715, 1.5956507, 3.0734487)
+
+[node name="SubViewport2TR" type="TextureRect" parent="." unique_id=1093010804]
+offset_left = 85.0
+offset_top = 500.0
+offset_right = 597.0
+offset_bottom = 1012.0
+texture = SubResource("ViewportTexture_r5rj8")
+
+[node name="brain" parent="." unique_id=215514912 instance=ExtResource("6_jt8ei")]
+unique_name_in_owner = true
+script = ExtResource("7_8at0d")
+stats = ExtResource("2_5t0ms")
+
+[node name="Button" type="Button" parent="brain" unique_id=1116794379]
+offset_left = 914.0
+offset_top = 83.0
+offset_right = 991.0
+offset_bottom = 114.0
+text = "Ai Throw"
+
+[connection signal="pressed" from="brain/Button" to="brain" method="_on_button_pressed"]

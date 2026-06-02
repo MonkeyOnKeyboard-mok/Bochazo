@@ -1,0 +1,65 @@
+[gd_scene format=4 uid="uid://b0vtkxrcsio02"]
+
+[ext_resource type="PackedScene" uid="uid://cgbihbwqeb6d1" path="res://assets/models/scoreboard/score.glb" id="1_247nn"]
+[ext_resource type="Script" uid="uid://b2t182tldavrt" path="res://scenes/04_game/components/scoreboard/bolita_azul.gd" id="2_bjfic"]
+[ext_resource type="Script" uid="uid://cpjffxpaqq8cg" path="res://scenes/04_game/components/scoreboard/scoreboard.gd" id="2_g1fbt"]
+[ext_resource type="Script" uid="uid://c7lrf8iwlrfgy" path="res://scenes/04_game/components/scoreboard/bolita_rosa.gd" id="3_ngcbg"]
+[ext_resource type="Texture2D" uid="uid://dhwg055usq4fj" path="res://assets/models/scoreboard/score_mini_score.png" id="5_ua2kd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s76rd"]
+albedo_texture = ExtResource("5_ua2kd")
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p4oi5"]
+resource_name = "Material.001"
+cull_mode = 2
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_aou1q"]
+_surfaces = [{
+"aabb": AABB(-1, 0.09685848, -1, 2, 0.9031415, 2),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAACAAEAAwAEAAEABQAAAAIABQADAAAABAAGAAIABQACAAYAAwAHAAQABQAHAAMABwAGAAQABwAFAAYA"),
+"name": "Material.001",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("AAAAAP//AAAAAP//AAAAAAAA/////wAAAAAAAAAAAAD/////AAAAAP//AAD//wAA////////AAD//wAAAAAAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_t3t5b"]
+resource_name = "score_mini_Cube_001"
+_surfaces = [{
+"aabb": AABB(-1, 0.09685848, -1, 2, 0.9031415, 2),
+"attribute_data": PackedByteArray("PZMAh0aQ3FY9k9xWRpAAhyCDeYsr+9P6yYKi+oH7qotu4nOqd99Qem7iUHp333Oqk3y2c5YHLAGTfCwBlge2c2Dzqm81jtRzNY6qb2Dz1HOV9rlS64wTV+uMuVKV9hNX"),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0AEAARABIAEAATABEAFAAVABYAFAAXABUA"),
+"material": SubResource("StandardMaterial3D_p4oi5"),
+"name": "Material.001",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("AAAAAP///78AAP//AAD/vwAA//////+/AAAAAAAA/78AAAAAAAD///////8AAP//AAD//wAA/////wAAAAD/////AAAAAP+//////////7//////AAD/v///AAD///+///8AAP//AIAAAP////8AgP///////wCAAAAAAP//AID/////AAD/vwAA//////+/AAD//wAA/7//////////v///AAD///+/AAAAAAAA/78AAAAA////v///AAAAAP+//3////9/////f////3////L/8n/y//J/8v/yf/L/8n//fwAA/38AAP9/AAD/fwAA/3////9/////f////3///////3////9/////f////38AAP9/AAD/fwAA/38AAP9/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_aou1q")
+
+[node name="score" unique_id=1936129887 instance=ExtResource("1_247nn")]
+script = ExtResource("2_g1fbt")
+
+[node name="scoreboard" parent="." index="0" unique_id=1766375130]
+visible = false
+mesh = null
+
+[node name="bolita azul" parent="." index="1" unique_id=219499065]
+script = ExtResource("2_bjfic")
+
+[node name="bolita rosa" parent="." index="2" unique_id=88270393]
+script = ExtResource("3_ngcbg")
+
+[node name="scoreboard2" type="MeshInstance3D" parent="." index="3" unique_id=737660755]
+transform = Transform3D(0.8831922, 0, 0, 0, 2.4939835, 0, 0, 0, 0.05021463, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_s76rd")
+mesh = SubResource("ArrayMesh_t3t5b")

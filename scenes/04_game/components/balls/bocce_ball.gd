@@ -6,8 +6,8 @@ signal collision_occurred(impulse: Vector3)
 
 @export_group("Configuración")
 @export var physics_config: PhysicsConfig
-@export var stop_velocity_threshold: float = 0.1
-@export var debug_verbose: bool = false
+@export var stop_velocity_threshold: float = 0.5
+@export var debug_verbose: bool = true
 @export var training_mode: bool = false
 
 @onready var ball_collision: CollisionShape3D = $BallCollision
@@ -20,10 +20,10 @@ var _min_active_frames: int = 3
 var _active_frames: int = 0
 var _sim_time: float = 0.0
 var _max_sim_time: float = 8.0
-var player : String = ""
-var settings_set : bool = false
-
-var distance_to_bochin 
+var is_thrown: bool = false
+var player: String = ""
+var settings_set: bool = false
+var distance_to_bochin
 
 func _ready():
 	_apply_physics()
@@ -31,8 +31,13 @@ func _ready():
 	_define_settings()
 
 func _physics_process(delta):
+	
+	if !is_thrown:
+		if GameManager.current_player:
+			global_position = GameManager.current_player.marker.global_position
+	if _is_stopped: return
+
 	if training_mode:
-		if _is_stopped: return
 		_sim_time += delta
 		_active_frames += 1
 		if _sim_time > _max_sim_time or global_position.y < -5.0:
@@ -46,17 +51,21 @@ func _physics_process(delta):
 			freeze = true
 			stopped_moving.emit(self)
 		return
-	if GameManager and GameManager.bochin: calc_distance_to_bochin()
-	if _is_stopped: return
+
+	if GameManager and GameManager.bochin:
+		calc_distance_to_bochin()
+
 	if linear_velocity.length() < stop_velocity_threshold:
+		if !is_thrown: return
 		_is_stopped = true
 		freeze = true
 		stopped_moving.emit(self)
 		if debug_verbose: print("[BocceBall] Se detuvo")
 		freeze = false
 		if GameManager:
-			GameManager.deduct_turn(player)
 			GameManager.bochas_thrown.append(self)
+			GameManager.deduct_turn(player)
+			GameManager.emit_signal("despawn")
 			if GameManager.first_turn == false and GameManager.bochin: return
 			if GameManager.bochin:
 				GameManager.first_bocha(self.global_position.distance_to(GameManager.bochin.global_position))
@@ -82,18 +91,18 @@ func _on_body_entered(body: Node):
 	collision_occurred.emit(linear_velocity)
 	if debug_verbose and linear_velocity.length() > 0.5:
 		print("[BocceBall] Colisión con %s" % body.name)
-		
+
 func _define_settings() -> void:
-	if !$BochaMesh : return
-	if settings_set : return
+	if !$BochaMesh: return
+	if settings_set: return
 	var mat = $BochaMesh.material_override as StandardMaterial3D
 	if mat:
 		mat = mat.duplicate()
 		$BochaMesh.material_override = mat
 		if GameManager and GameManager.p1_turn:
-			mat.albedo_texture = rojo
+			mat.albedo_texture = azul
 			player = "player1"
 		else:
-			mat.albedo_texture = azul
+			mat.albedo_texture = rojo
 			player = "player2"
 	settings_set = true

@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://cd2hv2t8atvtu"]
+
+[ext_resource type="Script" uid="uid://bteldwd2eglea" path="res://autoloads/audio.gd" id="1_gpi1t"]
+[ext_resource type="AudioStream" uid="uid://cub83ml2tur7m" path="res://assets/audio/BochazoMainTheme.wav" id="2_enopx"]
+[ext_resource type="AudioStream" uid="uid://7wvkcilhfwtv" path="res://assets/audio/menu.wav" id="3_3rsp6"]
+
+[node name="Audio" type="Node" unique_id=452710127]
+script = ExtResource("1_gpi1t")
+
+[node name="main_loop" type="AudioStreamPlayer" parent="." unique_id=1861159546]
+stream = ExtResource("2_enopx")
+volume_db = -13.0
+
+[node name="menu" type="AudioStreamPlayer" parent="." unique_id=1521056175]
+stream = ExtResource("3_3rsp6")
+volume_db = -13.0

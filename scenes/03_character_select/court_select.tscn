@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://ckh782yoirqa6"]
+
+[ext_resource type="Script" uid="uid://bhk8wo3wr5eub" path="res://scenes/03_character_select/court_select.gd" id="1_tt4ki"]
+[ext_resource type="Script" uid="uid://budgeqp0pio45" path="res://scenes/03_character_select/court_container.gd" id="2_tt4ki"]
+[ext_resource type="PackedScene" uid="uid://btroi2t6atcbl" path="res://scenes/04_game/components/court/dirty_court.tscn" id="4_tt4ki"]
+[ext_resource type="Script" uid="uid://hpjqydhefkn" path="res://scenes/04_game/components/court/court_for_all.gd" id="5_koilm"]
+[ext_resource type="PackedScene" uid="uid://b6kn74l0pgn83" path="res://scenes/04_game/components/court/flat_court.tscn" id="5_wx31d"]
+[ext_resource type="PackedScene" uid="uid://b4bqnwgulw6e6" path="res://scenes/04_game/components/court/grass_court.tscn" id="6_52yxm"]
+[ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="6_koilm"]
+[ext_resource type="PackedScene" uid="uid://b4jiwlexyi4s2" path="res://scenes/04_game/components/court/pro_court.tscn" id="7_ww84i"]
+[ext_resource type="PackedScene" uid="uid://ch5lpe2hjqysw" path="res://scenes/04_game/components/court/sand_court.tscn" id="8_aa36g"]
+
+[sub_resource type="Gradient" id="Gradient_d67qk"]
+colors = PackedColorArray(0, 0, 0, 1, 0.23537052, 0.23537052, 0.23537052, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_h5lt7"]
+gradient = SubResource("Gradient_d67qk")
+
+[sub_resource type="Gradient" id="Gradient_h5lt7"]
+colors = PackedColorArray(0.94028825, 0.0006804966, 0.00037272455, 1, 1, 0, 0.13725491, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_khmfb"]
+gradient = SubResource("Gradient_h5lt7")
+fill_from = Vector2(0.39529914, 0.4764957)
+
+[node name="CourtSelect" type="Node3D" unique_id=108657606]
+script = ExtResource("1_tt4ki")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=691383955]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64526874, 1.390383)
+current = true
+
+[node name="Background" type="Sprite3D" parent="." unique_id=565741794]
+transform = Transform3D(28.46582, 0, 0, 0, 16.875578, 0, 0, 0, 6.359927, 0, 0, -4.1128116)
+texture = SubResource("GradientTexture2D_h5lt7")
+
+[node name="Players" type="Node3D" parent="." unique_id=1881728522]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4054911, -3.0755513)
+script = ExtResource("2_tt4ki")
+
+[node name="Dirty" parent="Players" unique_id=1767025561 instance=ExtResource("4_tt4ki")]
+transform = Transform3D(-4.371139e-09, 2.1855697e-09, -0.05, -0.05, 2.1855695e-09, 4.371139e-09, 2.1855697e-09, 0.05, 2.1855695e-09, 0, 0, 0)
+script = ExtResource("5_koilm")
+
+[node name="Flat" parent="Players" unique_id=604990577 instance=ExtResource("5_wx31d")]
+transform = Transform3D(-4.371139e-09, 2.1855697e-09, -0.05, -0.05, 2.1855695e-09, 4.371139e-09, 2.1855697e-09, 0.05, 2.1855695e-09, 2, 0, 0)
+script = ExtResource("5_koilm")
+
+[node name="Grass" parent="Players" unique_id=2055913547 instance=ExtResource("6_52yxm")]
+transform = Transform3D(-4.371139e-09, 2.1855697e-09, -0.05, -0.05, 2.1855695e-09, 4.371139e-09, 2.1855697e-09, 0.05, 2.1855695e-09, 4, 0, 0)
+script = ExtResource("5_koilm")
+
+[node name="Pro" parent="Players" unique_id=163848809 instance=ExtResource("7_ww84i")]
+transform = Transform3D(-4.371139e-09, 2.1855697e-09, -0.05, -0.05, 2.1855695e-09, 4.371139e-09, 2.1855697e-09, 0.05, 2.1855695e-09, 6, 0, 0)
+script = ExtResource("5_koilm")
+
+[node name="Sand" parent="Players" unique_id=1102762161 instance=ExtResource("8_aa36g")]
+transform = Transform3D(-4.371139e-09, 2.1855697e-09, -0.05, -0.05, 2.1855695e-09, 4.371139e-09, 2.1855697e-09, 0.05, 2.1855695e-09, 8, 0, 0)
+script = ExtResource("5_koilm")
+
+[node name="Hud" type="Node3D" parent="." unique_id=650910728]
+
+[node name="Flecha" type="Sprite3D" parent="Hud" unique_id=520986656]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5593281, -3.1423821)
+visible = false
+texture = SubResource("GradientTexture2D_khmfb")
+
+[node name="Label3D" type="Label3D" parent="Hud/Flecha" unique_id=1141533837]
+text = "Jugador"
+
+[node name="Nombre" type="Label3D" parent="Hud" unique_id=240457869]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.095784, -3.1074228)
+text = "Nombre"
+
+[node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("6_koilm")]
+
+[node name="Timer" type="Timer" parent="FadeTransition" unique_id=1454924949]
+wait_time = 2.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=77717298]
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1139828828]
+transform = Transform3D(1, 0, 0, 0, 0.7468007, 0.6650479, 0, -0.6650479, 0.7468007, 0, 2.1789129, -0.7279792)
+light_energy = 7.883
+light_specular = 0.0
+shadow_enabled = true
+
+[node name="PressSpaceToSelect" type="Label3D" parent="." unique_id=57241988]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099277735, 1.436731, 0)
+text = "Presiona Espacio para elegir"
+
+[connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]

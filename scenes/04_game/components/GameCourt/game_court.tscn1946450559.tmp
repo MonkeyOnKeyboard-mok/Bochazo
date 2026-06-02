@@ -1,0 +1,248 @@
+[gd_scene format=3 uid="uid://dowujklv22egs"]
+
+[ext_resource type="Script" uid="uid://csa34fko2axk8" path="res://scenes/04_game/components/GameCourt/game_court.gd" id="1_5t0ms"]
+[ext_resource type="PackedScene" uid="uid://h7l4bjedpvxx" path="res://scenes/04_game/components/throw_system/throw_system.tscn" id="1_sqrn6"]
+[ext_resource type="Resource" uid="uid://24rsp1vhri2o" path="res://resources/game_config/stats_raul.tres" id="2_5t0ms"]
+[ext_resource type="PackedScene" uid="uid://ct26x6iw30tei" path="res://scenes/04_game/components/GameCourt/court_setter.tscn" id="2_n5e64"]
+[ext_resource type="Script" uid="uid://clwp0gamlbqfs" path="res://scenes/04_game/components/bocha_spawner/bocha_spawner.gd" id="3_f5t13"]
+[ext_resource type="PackedScene" uid="uid://b0vtkxrcsio02" path="res://scenes/04_game/components/scoreboard/scoreboard.tscn" id="4_8p2ir"]
+[ext_resource type="Script" uid="uid://ga6bj5icvepp" path="res://scenes/04_game/managers/character_manager.gd" id="5_1v2qn"]
+[ext_resource type="Script" uid="uid://dchay5e0lmxuw" path="res://scenes/04_game/components/GameCourt/round_transition_manager.gd" id="5_f5t13"]
+[ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="7_sqrn6"]
+[ext_resource type="PackedScene" uid="uid://cfa4vs0vlvdus" path="res://scenes/04_game/components/UI/turnos.tscn" id="8_8p2ir"]
+[ext_resource type="Script" uid="uid://gbgfq1egr8m4" path="res://Camera/camera.gd" id="8_jt8ei"]
+[ext_resource type="PackedScene" uid="uid://dr6qdfllwspd4" path="res://scenes/04_game/components/victoryScene/victory_scene.tscn" id="11_1v2qn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5t0ms"]
+transparency = 1
+albedo_color = Color(0, 0, 0, 0)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_f5t13"]
+material = SubResource("StandardMaterial3D_5t0ms")
+size = Vector2(50, 50)
+
+[sub_resource type="Animation" id="Animation_f5t13"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:mesh:material:albedo_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_1v2qn"]
+resource_name = "fade_in"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:mesh:material:albedo_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.93333334),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_8p2ir"]
+resource_name = "fade_out"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:mesh:material:albedo_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.93333334),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1v2qn"]
+_data = {
+&"RESET": SubResource("Animation_f5t13"),
+&"fade_in": SubResource("Animation_1v2qn"),
+&"fade_out": SubResource("Animation_8p2ir")
+}
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0, 0.37690097, 0.4312564, 1)
+sky_horizon_color = Color(0.94252104, 0.3505956, 0.8400953, 1)
+ground_bottom_color = Color(0.13269839, 0.05401112, 0.48088795, 1)
+ground_horizon_color = Color(0.08235294, 0.63529414, 1, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+background_energy_multiplier = 1.5
+sky = SubResource("Sky")
+tonemap_exposure = 0.4
+tonemap_white = 10.0
+
+[sub_resource type="GDScript" id="GDScript_f5t13"]
+script/source = "extends Label
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta: float) -> void:
+	text = str(\"Juega el jugador 1?  \", GameManager.p1_turn  , 
+	\"\\nTurnos de jugador 1: \", GameManager.p1_turns, 
+	\"\\nTurnos de jugador 2 : \", GameManager.p2_turns,
+	\"\\nPuntaje del jugador 1 : \", GameManager.p1_score,
+	\"\\nPuntaje del jugador 2 : \", GameManager.p2_score,
+	)
+"
+
+[sub_resource type="ViewportTexture" id="ViewportTex"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="GDScript" id="ResetScript"]
+script/source = "extends Node
+
+func _on_reset_button_pressed() -> void:
+	#get_tree().reload_current_scene()
+	#if GameManager.p1_turns != 0 or GameManager.p2_turns != 0:
+		#GameManager.spawn_bocha.emit()
+	#GameManager.emit_signal(\"idle\")
+	pass
+"
+
+[sub_resource type="GDScript" id="GDScript_5t0ms"]
+resource_name = "reset_test"
+script/source = "extends Button
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta: float) -> void:
+	pass
+
+
+
+func _on_pressed() -> void:
+	GameManager.emit_signal(\"soft_reset\")
+	GameManager.run_soft_reset()
+	GameManager.emit_signal(\"spawn_bocha\")
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f5t13"]
+size = Vector3(1, 8.431274, 14.294678)
+
+[node name="GameCourt" type="Node3D" unique_id=1306207877]
+script = ExtResource("1_5t0ms")
+
+[node name="CourtSetter" parent="." unique_id=448598263 instance=ExtResource("2_n5e64")]
+
+[node name="CharacterManager" type="Node3D" parent="." unique_id=1664582644]
+script = ExtResource("5_1v2qn")
+
+[node name="score" parent="." unique_id=1936129887 instance=ExtResource("4_8p2ir")]
+transform = Transform3D(-2.1855694e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.1855694e-08, -34.83084, 3.4408152, 3.538805)
+
+[node name="ThrowSystem" parent="." unique_id=864086691 instance=ExtResource("1_sqrn6")]
+stats = ExtResource("2_5t0ms")
+
+[node name="VictoryScene" parent="." unique_id=1193199637 instance=ExtResource("11_1v2qn")]
+
+[node name="CameraManager" type="Node3D" parent="." unique_id=393274383]
+script = ExtResource("8_jt8ei")
+
+[node name="TestCamera" type="Camera3D" parent="CameraManager" unique_id=362319183]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -40.222416, 4.0504556, 0)
+fov = 50.0
+near = 2.0
+
+[node name="RoundTransitionManager" type="Node3D" parent="." unique_id=374198219]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.868855, 0, 0)
+script = ExtResource("5_f5t13")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RoundTransitionManager" unique_id=1008357763]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 2.2866402, 0, 0)
+mesh = SubResource("PlaneMesh_f5t13")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RoundTransitionManager" unique_id=2128407715]
+libraries/ = SubResource("AnimationLibrary_1v2qn")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=218657089]
+environment = SubResource("Env")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1531567219]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -24.691145, 29.28359, 0)
+shadow_enabled = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=608851310]
+
+[node name="Test_Turns" type="Label" parent="CanvasLayer" unique_id=1632470463]
+offset_left = 104.0
+offset_top = 478.0
+offset_right = 144.0
+offset_bottom = 501.0
+script = SubResource("GDScript_f5t13")
+
+[node name="Turnos" parent="CanvasLayer" unique_id=1137314364 instance=ExtResource("8_8p2ir")]
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=731301028]
+transparent_bg = true
+size = Vector2i(256, 256)
+render_target_update_mode = 3
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=689176119]
+transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, 26.705826, 12.090761, 0)
+current = true
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1251439467]
+offset_left = 1511.0
+offset_top = 18.0
+offset_right = 1852.0
+offset_bottom = 233.0
+texture = SubResource("ViewportTex")
+
+[node name="Reset" type="Node" parent="." unique_id=428890241]
+script = SubResource("ResetScript")
+
+[node name="BochaSpawner" type="Node3D" parent="." unique_id=1619815305]
+script = ExtResource("3_f5t13")
+
+[node name="BochaPos" type="Marker3D" parent="BochaSpawner" unique_id=456937765]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.225138, 0.43813962, -0.063742846)
+
+[node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("7_sqrn6")]
+
+[node name="Timer" type="Timer" parent="FadeTransition" unique_id=1162270110]
+
+[node name="Reset_Test" type="Button" parent="." unique_id=803866598]
+offset_left = 122.0
+offset_top = 229.0
+offset_right = 208.0
+offset_bottom = 260.0
+text = "Soft Reset"
+script = SubResource("GDScript_5t0ms")
+
+[node name="ParedBack" type="StaticBody3D" parent="." unique_id=640056475]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.761826, 1.4257212, -0.8691883)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ParedBack" unique_id=151059881]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3004277, 0.90197754)
+shape = SubResource("BoxShape3D_f5t13")
+
+[connection signal="animation_finished" from="RoundTransitionManager/AnimationPlayer" to="RoundTransitionManager" method="_on_animation_player_animation_finished"]
+[connection signal="pressed" from="Reset_Test" to="Reset_Test" method="_on_pressed"]

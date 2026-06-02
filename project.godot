@@ -11,21 +11,30 @@ config_version=5
 [application]
 
 config/name="Bochazo"
+run/main_scene="uid://d1xjsj86bd7ch"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameManager="*uid://dhkuavhm3fuvk"
+Audio="*uid://cd2hv2t8atvtu"
 
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/mode=3
+window/size/resizable=false
+window/stretch/mode="viewport"
 
 [filesystem]
 
 import/blender/enabled=false
+
+[global_group]
+
+brain=""
 
 [input]
 
@@ -59,3 +68,5 @@ choose={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

@@ -7,6 +7,10 @@ var button_type = null
 ## private vars
 ## onready vars
 @onready var choose_opp: ColorRect = $ChooseOpp
+@onready var sub_v1: SubViewportContainer = $SubViewportContainer
+@onready var sub_v2: SubViewportContainer = $SubViewportContainer2
+
+
 #@onready var fade_transition: ColorRect = $fade_transition
 #@onready var creditos_png: TextureRect = $creditosPNG
 
@@ -15,8 +19,10 @@ var button_type = null
 
 func _ready() -> void:
 	choose_opp.hide()
+	sub_v1.visible = false
+	sub_v2.visible = false
 	#creditos_png.hide()
-	#Audio.menu.play()
+	Audio.menu_theme()
 	$FadeTransition/ColorRect/FadeRect.play("fade_out")
 	pass
 	
@@ -37,6 +43,8 @@ func _on_exit_pressed() -> void:
 
 func _on_play_pressed() -> void:
 	choose_opp.show()
+	sub_v1.visible = true
+	sub_v2.visible = true
 	##Audio.click()
 	pass
 
@@ -49,26 +57,27 @@ func _on_salir_creditos_pressed() -> void:
 	pass
 
 func _on_vs_player_pressed() -> void:
-	#button_type = "start"
-	#fade_transition.show()
+	button_type = "start"
+	$FadeTransition.show()
 	##Audio.menu_out()
-	##$fade_transition/Fade_timer.start()
-	##$fade_transition/AnimationPlayer.play("fade_in")
-	pass
+	$FadeTransition/Timer.start()
+	$FadeTransition/ColorRect/FadeRect.play("fade_in")
 	
 func _on_vs_cpu_pressed() -> void:
 	GameManager.vsAI = true
-	#button_type = "start"
-	#fade_transition.show()
+	button_type = "start"
+	$FadeTransition.show()
 	##Audio.menu_out()
-	##$fade_transition/Fade_timer.start()
-	##$fade_transition/AnimationPlayer.play("fade_in")
+	$FadeTransition/Timer.start()
+	$FadeTransition/ColorRect/FadeRect.play("fade_in")
 
 func _on_back_pressed() -> void:
 	choose_opp.hide()
+	sub_v1.visible = false
+	sub_v2.visible = false
 
 func _on_timer_timeout() -> void:
 	match button_type:
 		"start": 
-			#get_tree().change_scene_to_file("res://Main/main.tscn")
-			print("Cargando escena principal")
+			get_tree().change_scene_to_file("res://scenes/03_character_select/character_select.tscn")
+			print("Cargando selección de personajes")

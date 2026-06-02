@@ -60,19 +60,33 @@ const COURT_FRICTIONS: Array[float] = [1.0, 0.8, 0.9, 1.1, 0.6]
 const MIN_POWER: float = 0.4
 
 var court_type: int = 0
+var courts_array : Dictionary
 var curve_preference: float = 0.5
 var noise_radius: float = 0.0
 var difficulty_sigma: float = 0.0
 
 @export var stats: PlayerThrowStats
-@export var flight: ThrowFlight
-@export var ball: RigidBody3D
+var flight: ThrowFlight
+var ball: RigidBody3D
 
 func _ready():
+	courts_array = {
+		"Flat" : 0,
+		"Dirty" : 1,
+		"Grass" : 2,
+		"Pro" : 3,
+		"Sand" : 4,
+	}
+	GameManager.connect("bocha_spawned", update_bocha)
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
 	model = AIInverseModel.new()
 	load_data()
+	court_type = courts_array[GameManager.court] # 0=Flat,1=Dirty,2=Grass,3=Pro,4=Sand
+	print("LA IA ESTA EN LA CANCHA: ", court_type)
+	## Temporal:
+	set_difficulty(4)       # 0=facil, 4=dificil
+	curve_preference = 1.0
 
 ## Carga los archivos JSON de datos de simulación.
 ## data_path: carpeta donde están los throws_*.json
@@ -127,6 +141,7 @@ func decide(ball_pos: Vector3, bochin_pos: Vector3) -> AIThrowParams:
 func execute_throw(ball_pos: Vector3, bochin_pos: Vector3):
 	var p = decide(ball_pos, bochin_pos)
 	if not flight or not ball:
+		print("returned")
 		return
 	_setup_flight()
 	if p.is_straight or p.waypoints.size() < 2:
@@ -143,6 +158,9 @@ func setup_for_throw(stats_res: PlayerThrowStats, ball_ref: RigidBody3D, flight_
 	stats = stats_res
 	ball = ball_ref
 	flight = flight_ref
+	if not flight:
+		print("no flight")
+	execute_throw(Vector3(-27.54,1.184,0), GameManager.bochin.global_position)
 
 ## Configura la dificultad de la IA (ruido en los parámetros).
 ## level: 0=muy fácil (mucho error), 4=muy difícil (casi perfecto)
@@ -179,10 +197,15 @@ func _fallback_throw(ball_pos: Vector3, bochin_pos: Vector3) -> AIThrowParams:
 	p.compute_direction(ball_pos, bochin_pos)
 	return p
 
+func update_bocha(bocha : RigidBody3D) -> void:
+	ball = bocha
+	if !GameManager.p1_turn and GameManager.vsAI:
+		await get_tree().create_timer(3).timeout
+		setup_for_throw(stats, ball, flight)
+		print("playing vs ai ... computer throwing")
+	else:
+		print("not playing against ai")
 
 func _on_button_pressed() -> void:
-	self.court_type = 2
-	self.set_difficulty(4)       # 0=facil, 4=dificil
-	self.curve_preference = 1.0  # 0=sin preferencia, 2=max curva
-	self.setup_for_throw(stats, ball, flight)
-	self.execute_throw(Vector3(-27.54,1.184,0), GameManager.bochin.global_position + Vector3(randf_range(-2,2),0,randf_range(-2,2)))
+	setup_for_throw(stats, ball, flight)
+	

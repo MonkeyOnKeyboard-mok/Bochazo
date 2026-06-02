@@ -5,10 +5,10 @@
 [node name="GestureTracker" type="Node" unique_id=638050222]
 script = ExtResource("1_rlwoi")
 
-[node name="ChargeLine" type="Line2D" parent="." unique_name_in_owner=true]
+[node name="ChargeLine" type="Line2D" parent="." unique_id=1712195379]
 width = 5.0
 default_color = Color(1, 0.6, 0, 1)
 
-[node name="AimLine" type="Line2D" parent="." unique_name_in_owner=true]
+[node name="AimLine" type="Line2D" parent="." unique_id=93954413]
 width = 5.0
 default_color = Color(0, 0.9, 1, 1)

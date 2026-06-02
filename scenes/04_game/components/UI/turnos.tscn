@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cfa4vs0vlvdus"]
+
+[ext_resource type="Script" uid="uid://bg5soyudb80bw" path="res://scenes/04_game/components/UI/turnos.gd" id="1_b0bss"]
+
+[node name="Turnos" type="Control" unique_id=1137314364]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_b0bss")
+
+[node name="HBoxPlayer1" type="HBoxContainer" parent="." unique_id=234729482]
+layout_mode = 0
+offset_top = 19.0
+offset_right = 40.0
+offset_bottom = 59.0
+
+[node name="HBoxPlayer2" type="HBoxContainer" parent="." unique_id=5855308]
+layout_mode = 0
+offset_top = 121.0
+offset_right = 40.0
+offset_bottom = 161.0

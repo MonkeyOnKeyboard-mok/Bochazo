@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://cia10v6ul850a"]
+
+[ext_resource type="PackedScene" uid="uid://cve1f04tdwm3m" path="res://scenes/04_game/components/UI/bocha_UI_azul.tscn" id="1_f7g70"]
+
+[sub_resource type="Animation" id="Animation_f7g70"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BocceBall:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_d67yk"]
+resource_name = "spin"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BocceBall:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.2831855, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fvkf3"]
+_data = {
+&"RESET": SubResource("Animation_f7g70"),
+&"spin": SubResource("Animation_d67yk")
+}
+
+[node name="BochaAzul" type="SubViewportContainer" unique_id=488987866]
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=469690214]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(100, 100)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=351787752]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 501)
+
+[node name="BocceBall" parent="." unique_id=357459484 instance=ExtResource("1_f7g70")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 500)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1943328510]
+transform = Transform3D(1, 0, 0, 0, 0.87895864, 0.476898, 0, -0.476898, 0.87895864, -1.0991212, 3.4556315, 505.18723)
+light_energy = 10.0
+spot_range = 536.595
+spot_angle = 15.05
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=852545532]
+libraries/ = SubResource("AnimationLibrary_fvkf3")
+autoplay = &"spin"
+
+[editable path="BocceBall"]

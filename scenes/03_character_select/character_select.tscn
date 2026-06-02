@@ -1,14 +1,22 @@
 [gd_scene format=3 uid="uid://barypadvayqwp"]
 
 [ext_resource type="Script" uid="uid://dcmyrb6u2xmc0" path="res://scenes/03_character_select/character_select.gd" id="1_d67qk"]
-[ext_resource type="PackedScene" uid="uid://db5blw52kmb24" path="res://scenes/03_character_select/raul.tscn" id="2_h5lt7"]
+[ext_resource type="Script" uid="uid://dvufbnlkdpnfa" path="res://scenes/03_character_select/players_container.gd" id="2_haxf1"]
+[ext_resource type="Texture2D" uid="uid://tvmnnkaj71mu" path="res://assets/models/court/ProCourt_MaderaPro.png" id="2_psqbc"]
+[ext_resource type="Texture2D" uid="uid://c2n84xrm0tnrh" path="res://assets/models/court/GrassCourt_Tablon.png" id="3_77j8t"]
 [ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="3_khmfb"]
+[ext_resource type="PackedScene" uid="uid://u7mfkd0qeypc" path="res://scenes/03_character_select/raul_char_select.tscn" id="3_r1baj"]
+[ext_resource type="PackedScene" uid="uid://8li1vjxqgthv" path="res://scenes/03_character_select/jorge_char_select.tscn" id="4_r1baj"]
+[ext_resource type="PackedScene" uid="uid://vm7xhcn14t0u" path="res://scenes/03_character_select/beto_char_select.tscn" id="5_8yjhp"]
+[ext_resource type="Texture2D" uid="uid://bj1wuachgwsah" path="res://scenes/01_main_menu/titulo.png" id="7_cv6m7"]
 
-[sub_resource type="Gradient" id="Gradient_d67qk"]
-colors = PackedColorArray(0, 0, 0, 1, 0.23537052, 0.23537052, 0.23537052, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_77j8t"]
+albedo_texture = ExtResource("2_psqbc")
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_h5lt7"]
-gradient = SubResource("Gradient_d67qk")
+[sub_resource type="PlaneMesh" id="PlaneMesh_cv6m7"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ku3qk"]
+albedo_texture = ExtResource("3_77j8t")
 
 [sub_resource type="Gradient" id="Gradient_h5lt7"]
 colors = PackedColorArray(0.94028825, 0.0006804966, 0.00037272455, 1, 1, 0, 0.13725491, 1)
@@ -24,39 +32,73 @@ script = ExtResource("1_d67qk")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64526874, 1.390383)
 current = true
 
-[node name="Background" type="Sprite3D" parent="." unique_id=565741794]
-transform = Transform3D(28.46582, 0, 0, 0, 16.875578, 0, 0, 0, 6.359927, 0, 0, -4.1128116)
-texture = SubResource("GradientTexture2D_h5lt7")
+[node name="Background" type="MeshInstance3D" parent="." unique_id=1310679893]
+transform = Transform3D(28.46582, 0, 0, 0, -7.3765494e-07, -6.359927, 0, 16.875578, -2.7800124e-07, 0, 0, -4.1128116)
+material_override = SubResource("StandardMaterial3D_77j8t")
+mesh = SubResource("PlaneMesh_cv6m7")
+
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=1903868956]
+transform = Transform3D(28.46582, 0, 0, 0, 16.875578, 0, 0, 0, 6.359927, 0, -1.0603676, -4.1128116)
+material_override = SubResource("StandardMaterial3D_ku3qk")
+mesh = SubResource("PlaneMesh_cv6m7")
 
 [node name="Players" type="Node3D" parent="." unique_id=1881728522]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.0755513)
+script = ExtResource("2_haxf1")
 
-[node name="Raul" parent="Players" unique_id=2082799831 instance=ExtResource("2_h5lt7")]
-transform = Transform3D(-0.5, 0, -7.54979e-08, 0, 0.5, 0, 7.54979e-08, 0, -0.5, 0, -1, -0.088)
+[node name="RaulCharSelect" parent="Players" unique_id=1981057026 instance=ExtResource("3_r1baj")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -1, 0)
 
-[node name="Raul2" parent="Players" unique_id=1319635846 instance=ExtResource("2_h5lt7")]
-transform = Transform3D(-0.5, 0, -7.54979e-08, 0, 0.5, 0, 7.54979e-08, 0, -0.5, 2, -1, -0.088)
+[node name="JorgeCharSelect" parent="Players" unique_id=1320814174 instance=ExtResource("4_r1baj")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 2, -1, 0)
 
-[node name="Raul3" parent="Players" unique_id=1871043710 instance=ExtResource("2_h5lt7")]
-transform = Transform3D(-0.5, 0, -7.54979e-08, 0, 0.5, 0, 7.54979e-08, 0, -0.5, 4, -1, -0.088)
+[node name="BetoCharSelect" parent="Players" unique_id=1611621103 instance=ExtResource("5_8yjhp")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 4, -1, 0)
 
 [node name="Hud" type="Node3D" parent="." unique_id=650910728]
 
 [node name="Flecha" type="Sprite3D" parent="Hud" unique_id=520986656]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5593281, -3.1423821)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.020407677, 1.6162858, -3.1423821)
 texture = SubResource("GradientTexture2D_khmfb")
 
 [node name="Label3D" type="Label3D" parent="Hud/Flecha" unique_id=1141533837]
 text = "Jugador"
 
 [node name="Nombre" type="Label3D" parent="Hud" unique_id=240457869]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3715466, -3.1074228)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8668277, -2.0038679)
 text = "Nombre"
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=580441235]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.370491, -0.2227335)
-light_color = Color(0, 1, 1, 1)
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("3_khmfb")]
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=1454924949]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=77717298]
+
+[node name="Arriba" type="SpotLight3D" parent="." unique_id=1139828828]
+transform = Transform3D(1, 0, 0, 0, 0.16676867, 0.98599607, 0, -0.98599607, 0.16676867, 0, 7.1146955, -3.052011)
+light_color = Color(1, 1, 0.54901963, 1)
+light_energy = 15.236
+spot_range = 4096.0
+spot_attenuation = -0.16
+spot_angle = 16.39
+spot_angle_attenuation = 1.0352648
+
+[node name="PressSpaceToSelect" type="Label3D" parent="." unique_id=1483303682]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099277735, 1.3917619, 0)
+text = "Presiona Espacio para elegir"
+
+[node name="Frente" type="SpotLight3D" parent="." unique_id=2004620865]
+transform = Transform3D(1, 0, 0, 0, 0.9508784, 0.3095647, 0, -0.3095647, 0.9508784, 0, 0.55555946, -1.818434)
+spot_angle = 40.84
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=1671587940]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 1.9236655, -4.092393)
+modulate = Color(1, 1, 1, 0.25490198)
+texture_filter = 0
+texture = ExtResource("7_cv6m7")
+
+[node name="General" type="SpotLight3D" parent="." unique_id=1243739599]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5905623, 8.44696)
+spot_range = 18.34
+
+[connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]

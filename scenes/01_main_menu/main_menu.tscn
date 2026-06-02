@@ -1,13 +1,25 @@
 [gd_scene format=3 uid="uid://cfvars3nwg0x2"]
 
 [ext_resource type="Script" uid="uid://bc8qyx45be5cn" path="res://scenes/01_main_menu/main_menu.gd" id="1_lkjtg"]
-[ext_resource type="Texture2D" uid="uid://d121vkqev0l21" path="res://TestSceneSanti/placeholders/jugar.png" id="2_q0j04"]
-[ext_resource type="Texture2D" uid="uid://bfqvqcolhkdap" path="res://TestSceneSanti/placeholders/jugar_select.png" id="3_e1m5t"]
+[ext_resource type="Texture2D" uid="uid://ch2ps6cylvl77" path="res://scenes/01_main_menu/jugar_default.png" id="2_5a63e"]
+[ext_resource type="Texture2D" uid="uid://cv62oxojayt06" path="res://scenes/01_main_menu/jugar_press.png" id="3_ys87j"]
 [ext_resource type="Texture2D" uid="uid://dfa1q8ixs7wwn" path="res://TestSceneSanti/placeholders/creditos.png" id="4_6prxp"]
-[ext_resource type="Texture2D" uid="uid://bucrqu41l6xo2" path="res://TestSceneSanti/placeholders/salir.png" id="4_rqlqo"]
-[ext_resource type="Texture2D" uid="uid://1hhmdqw864mi" path="res://TestSceneSanti/placeholders/salir_select.png" id="5_6e25n"]
+[ext_resource type="Texture2D" uid="uid://dws1pw35623v5" path="res://scenes/01_main_menu/jugar_highlight.png" id="4_tg5ni"]
 [ext_resource type="Texture2D" uid="uid://noea0g8kj5tj" path="res://TestSceneSanti/placeholders/creditos_select.png" id="5_xomuy"]
+[ext_resource type="Texture2D" uid="uid://b3riy8fe8fhyc" path="res://scenes/01_main_menu/salir_default.png" id="7_rdy7n"]
 [ext_resource type="PackedScene" uid="uid://di7g8u4cl4u3s" path="res://scenes/07_fade_transition/fade_transition.tscn" id="8_6prxp"]
+[ext_resource type="Texture2D" uid="uid://c1fw0aej75acw" path="res://scenes/01_main_menu/salir_press.png" id="8_li5gh"]
+[ext_resource type="Texture2D" uid="uid://c2k0lcrs2sv7x" path="res://scenes/01_main_menu/salir_highlight.png" id="9_qkd7h"]
+[ext_resource type="Texture2D" uid="uid://bj1wuachgwsah" path="res://scenes/01_main_menu/titulo.png" id="11_w4mt7"]
+[ext_resource type="Texture2D" uid="uid://3qsvh8iy3ttp" path="res://scenes/01_main_menu/boton_2p_default.png" id="11_ys87j"]
+[ext_resource type="Texture2D" uid="uid://hrmsohstwvfo" path="res://scenes/01_main_menu/boton_cpu_default.png" id="12_tg5ni"]
+[ext_resource type="Texture2D" uid="uid://uw7jaeqfu2sx" path="res://scenes/01_main_menu/boton_2p_press.png" id="12_w4mt7"]
+[ext_resource type="Texture2D" uid="uid://dyb21e2rgg8e7" path="res://scenes/01_main_menu/boton_2p_highlight.png" id="13_gi7kl"]
+[ext_resource type="Texture2D" uid="uid://bweuudwi1tlah" path="res://scenes/01_main_menu/boton_cpu_press.png" id="15_ssy2f"]
+[ext_resource type="Texture2D" uid="uid://b87pcgwh07dfl" path="res://scenes/01_main_menu/boton_cpu_highlight.png" id="16_qtf3s"]
+[ext_resource type="PackedScene" uid="uid://cbav1836sl41w" path="res://assets/models/player/robotto.glb" id="18_gi7kl"]
+[ext_resource type="PackedScene" uid="uid://foi2dahuh4rr" path="res://scenes/04_game/components/players/raul_posta.tscn" id="19_ssy2f"]
+[ext_resource type="Texture2D" uid="uid://beh5j6rc3srhg" path="res://scenes/01_main_menu/seleccion de modo.png" id="20_qtf3s"]
 
 [sub_resource type="GDScript" id="GDScript_11rdk"]
 resource_name = "PlayButton"
@@ -69,28 +81,35 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.93982077, 0.9975416, 0.9695396, 1)
+color = Color(0, 0, 0, 1)
+
+[node name="Titulo" type="Sprite2D" parent="CanvasLayer" unique_id=842984609]
+texture_filter = 1
+position = Vector2(992, 286)
+scale = Vector2(4, 4)
+texture = ExtResource("11_w4mt7")
 
 [node name="Play" type="TextureButton" parent="." unique_id=1941315225]
+texture_filter = 1
 layout_mode = 0
-offset_left = 917.0
-offset_top = 220.0
-offset_right = 1017.0
-offset_bottom = 320.0
-scale = Vector2(2, 2)
-texture_normal = ExtResource("2_q0j04")
-texture_pressed = ExtResource("3_e1m5t")
-texture_hover = ExtResource("3_e1m5t")
+offset_left = 796.0
+offset_top = 613.0
+offset_right = 910.0
+offset_bottom = 658.0
+scale = Vector2(3.5, 3.5)
+texture_normal = ExtResource("2_5a63e")
+texture_pressed = ExtResource("3_ys87j")
+texture_hover = ExtResource("4_tg5ni")
 ignore_texture_size = true
 stretch_mode = 5
 script = SubResource("GDScript_11rdk")
 
 [node name="Creditos" type="TextureButton" parent="." unique_id=51707731]
 layout_mode = 0
-offset_left = 589.0
-offset_top = 491.0
-offset_right = 689.0
-offset_bottom = 591.0
+offset_left = 1480.0
+offset_top = 776.0
+offset_right = 1580.0
+offset_bottom = 876.0
 scale = Vector2(2, 2)
 texture_normal = ExtResource("4_6prxp")
 texture_pressed = ExtResource("5_xomuy")
@@ -100,58 +119,141 @@ stretch_mode = 5
 script = SubResource("GDScript_eefsq")
 
 [node name="Exit" type="TextureButton" parent="." unique_id=1623928210]
+texture_filter = 1
 layout_mode = 0
-offset_left = 917.0
-offset_top = 491.0
-offset_right = 1017.0
-offset_bottom = 591.0
-scale = Vector2(2, 2)
-texture_normal = ExtResource("4_rqlqo")
-texture_pressed = ExtResource("5_6e25n")
-texture_hover = ExtResource("5_6e25n")
-ignore_texture_size = true
-stretch_mode = 5
+offset_left = 778.0
+offset_top = 796.0
+offset_right = 897.0
+offset_bottom = 836.0
+scale = Vector2(3.965, 3.965)
+texture_normal = ExtResource("7_rdy7n")
+texture_pressed = ExtResource("8_li5gh")
+texture_hover = ExtResource("9_qkd7h")
+stretch_mode = 0
 script = SubResource("GDScript_lkjtg")
 
 [node name="ChooseOpp" type="ColorRect" parent="." unique_id=220067101]
+texture_filter = 1
 layout_mode = 0
-offset_left = 586.0
-offset_top = 158.0
-offset_right = 626.0
-offset_bottom = 198.0
-scale = Vector2(13.063452, 13.063452)
-color = Color(0.97928435, 0.407731, 0.452151, 1)
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 1)
 
-[node name="VsPlayer" type="Button" parent="ChooseOpp" unique_id=1885140188]
+[node name="VsPlayer" type="TextureButton" parent="ChooseOpp" unique_id=468685631]
+z_index = 1
 layout_mode = 0
-offset_left = 14.467844
-offset_top = 5.2819114
-offset_right = 44.467842
-offset_bottom = 36.28191
-scale = Vector2(0.10551454, 0.10551454)
-text = "Contra Jugador"
+offset_left = 387.0
+offset_top = 234.0
+offset_right = 559.0
+offset_bottom = 416.0
+scale = Vector2(3, 3)
+texture_normal = ExtResource("11_ys87j")
+texture_pressed = ExtResource("12_w4mt7")
+texture_hover = ExtResource("13_gi7kl")
 
-[node name="VsCPU" type="Button" parent="ChooseOpp" unique_id=1172236759]
+[node name="VsCPU" type="TextureButton" parent="ChooseOpp" unique_id=1188958406]
+z_index = 1
+texture_filter = 1
 layout_mode = 0
-offset_left = 14.467844
-offset_top = 16.61123
-offset_right = 139.46785
-offset_bottom = 47.61123
-scale = Vector2(0.10551454, 0.10551454)
-text = "Contra CPU"
+offset_left = 1040.0
+offset_top = 236.0
+offset_right = 1212.0
+offset_bottom = 417.0
+scale = Vector2(3, 3)
+texture_normal = ExtResource("12_tg5ni")
+texture_pressed = ExtResource("15_ssy2f")
+texture_hover = ExtResource("16_qtf3s")
 
 [node name="Back" type="Button" parent="ChooseOpp" unique_id=859897053]
+texture_filter = 1
 layout_mode = 0
-offset_left = 28.706043
-offset_top = 28.399841
-offset_right = 85.70604
-offset_bottom = 59.39984
-scale = Vector2(0.13928252, 0.10826816)
+offset_left = 1341.0
+offset_top = 877.0
+offset_right = 1398.0
+offset_bottom = 908.0
+scale = Vector2(3, 3)
+theme_override_font_sizes/font_size = 25
 text = "Volver"
+
+[node name="SeleccionDeModo" type="Sprite2D" parent="ChooseOpp" unique_id=338101220]
+texture_filter = 1
+position = Vector2(978, 129)
+scale = Vector2(3, 3)
+texture = ExtResource("20_qtf3s")
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("8_6prxp")]
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=32502218]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=654026193]
+layout_mode = 0
+offset_left = 1142.0
+offset_top = 278.0
+offset_right = 1392.0
+offset_bottom = 528.0
+scale = Vector2(1.2428453, 1.1926568)
+mouse_filter = 2
+
+[node name="SubViewportCPU" type="SubViewport" parent="SubViewportContainer" unique_id=1570680514]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(250, 250)
+render_target_update_mode = 4
+
+[node name="robotto" parent="SubViewportContainer/SubViewportCPU" unique_id=226378677 instance=ExtResource("18_gi7kl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.12067032, 0)
+
+[node name="Skeleton3D" parent="SubViewportContainer/SubViewportCPU/robotto/Armature_001" parent_id_path=PackedInt32Array(226378677, 1148025704) index="0" unique_id=1222199051]
+bones/0/position = Vector3(0.6008426, 2.4484808, 0.0029723272)
+bones/0/rotation = Quaternion(0.71132106, 0.4359628, 0.048271447, 0.5492073)
+bones/0/scale = Vector3(1, 1.0000002, 1.0000001)
+bones/1/rotation = Quaternion(-0.14656527, 0.59929603, -0.49837756, 0.60908353)
+bones/2/position = Vector3(0.03323814, 0.93617964, -0.014487102)
+bones/2/rotation = Quaternion(-0.037793167, 0.3216843, 0.110309504, 0.9396397)
+bones/3/rotation = Quaternion(0.07118552, -0.005165191, -0.07482425, 0.99463934)
+bones/3/scale = Vector3(1, 1, 1)
+bones/4/rotation = Quaternion(0.007938055, 0.6993721, 0.15551578, 0.69758916)
+bones/5/position = Vector3(0.34799644, 1.0110952, 0.037825435)
+bones/5/rotation = Quaternion(-0.1560324, -0.26298073, 0.9398222, -0.15241212)
+bones/6/position = Vector3(-0.9654019, 2.4111745, 0.0124361515)
+bones/6/rotation = Quaternion(0.7787513, -0.6264543, -0.024876762, 0.02197118)
+bones/6/scale = Vector3(0.9999999, 1, 1.0000001)
+bones/7/rotation = Quaternion(-0.20199138, 0.10966513, -0.64194477, 0.7314916)
+bones/8/position = Vector3(-0.34536552, 0.8494264, 0.047866832)
+bones/8/rotation = Quaternion(-0.09925028, 0.009252564, 0.9939076, 0.047028102)
+
+[node name="AnimationPlayer" parent="SubViewportContainer/SubViewportCPU/robotto" index="2" unique_id=299669293]
+autoplay = &"idle"
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewportCPU" unique_id=120908282]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02237232, 3.095, 3.9653883)
+fov = 44.1
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewportCPU" unique_id=283791409]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 4, 4)
+
+[node name="SubViewportContainer2" type="SubViewportContainer" parent="." unique_id=1094884092]
+layout_mode = 0
+offset_left = 494.0
+offset_top = 285.0
+offset_right = 744.0
+offset_bottom = 535.0
+scale = Vector2(1.2251219, 1.1740384)
+mouse_filter = 2
+
+[node name="SubViewport2Players" type="SubViewport" parent="SubViewportContainer2" unique_id=130242885]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(250, 250)
+render_target_update_mode = 4
+
+[node name="RaulPosta" parent="SubViewportContainer2/SubViewport2Players" unique_id=2047245217 instance=ExtResource("19_ssy2f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.0636377, 0, 0)
+script = null
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer2/SubViewport2Players" unique_id=1796332663]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.067, 3.095, 3.665)
+fov = 44.1
 
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Creditos" to="." method="_on_creditos_pressed"]
@@ -160,3 +262,5 @@ text = "Volver"
 [connection signal="pressed" from="ChooseOpp/VsCPU" to="." method="_on_vs_cpu_pressed"]
 [connection signal="pressed" from="ChooseOpp/Back" to="." method="_on_back_pressed"]
 [connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]
+
+[editable path="SubViewportContainer/SubViewportCPU/robotto"]
