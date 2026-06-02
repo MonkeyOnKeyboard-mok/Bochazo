@@ -76,7 +76,7 @@ func _physics_process(_delta):
 	if vel_horiz.length() < 0.2: return
 
 	var forward = Vector3.RIGHT
-	var right = forward.cross(Vector3.UP).normalized()
+	var right = Vector3.BACK
 	var desired = to_target.normalized()
 	var lateral = desired.dot(right)
 	ball.apply_central_force(right * lateral * efecto * _steer_factor)
