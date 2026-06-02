@@ -31,11 +31,6 @@ func _ready():
 	_define_settings()
 
 func _physics_process(delta):
-	
-	if !is_thrown:
-		if GameManager.current_player:
-			global_position = GameManager.current_player.marker.global_position
-	if _is_stopped: return
 
 	if training_mode:
 		_sim_time += delta
@@ -51,6 +46,11 @@ func _physics_process(delta):
 			freeze = true
 			stopped_moving.emit(self)
 		return
+
+	if !is_thrown:
+		if GameManager.current_player:
+			global_position = GameManager.current_player.marker.global_position
+	if _is_stopped: return
 
 	if GameManager and GameManager.bochin:
 		calc_distance_to_bochin()

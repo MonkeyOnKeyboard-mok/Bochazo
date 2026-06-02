@@ -15,6 +15,8 @@ sky = SubResource("Sky_sim")
 [node name="SimulationAI" type="Node3D" unique_id=449864279]
 script = ExtResource("1_ctrl")
 ball_scene = ExtResource("2_ball")
+iterations = 10
+balls_per_iter = 1000
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1550269360]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -1.8048286, 35.34, 0)
@@ -54,3 +56,6 @@ offset_left = 20.0
 offset_top = 85.0
 offset_right = 800.0
 offset_bottom = 105.0
+
+[node name="BochaPos" type="Marker3D" parent="." unique_id=318893646]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.225138, 0.43813962, -0.063742846)

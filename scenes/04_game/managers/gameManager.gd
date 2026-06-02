@@ -48,6 +48,8 @@ signal soft_reset_end
 @warning_ignore("unused_signal")
 signal return_camera(ball: RigidBody3D)
 
+## training flag
+var is_training : bool = false
 
 ## Vs AI flag
 var vsAI : bool = false
