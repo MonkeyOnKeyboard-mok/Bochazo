@@ -177,13 +177,13 @@ func who_won() -> void:
 				if bocha < bochas_2.min():
 					score+=1
 			p1_score += score
-			emit_signal("update_scoreboard", score, player1_char)
+			emit_signal("update_scoreboard", score, "player1")
 		else: 
 			for bocha in bochas_2:
 				if bocha < bochas_1.min():
 					score+=1
 			p2_score += score
-			emit_signal("update_scoreboard", score, player2_char)
+			emit_signal("update_scoreboard", score, "player2")
 	check_if_game_is_over()
 
 func check_if_game_is_over() -> void:

@@ -108,6 +108,24 @@ func _process(_delta: float) -> void:
 	)
 "
 
+[sub_resource type="GDScript" id="GDScript_jt8ei"]
+script/source = "extends Button
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta: float) -> void:
+	pass
+
+
+func _on_pressed() -> void:
+	GameManager.emit_signal(\"update_scoreboard\", 1, \"player1\")
+"
+
 [sub_resource type="ViewportTexture" id="ViewportTex"]
 viewport_path = NodePath("SubViewport")
 
@@ -165,7 +183,7 @@ script = ExtResource("5_1v2qn")
 transform = Transform3D(-2.1855694e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.1855694e-08, -34.83084, 3.0927436, 3.3887596)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="score" unique_id=1899761395]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 9.536743e-07, 1.3769331, 1.6464081)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.536743e-07, 1.3769331, 1.6464081)
 light_energy = 2.349
 spot_angle = 68.02
 
@@ -211,6 +229,14 @@ offset_bottom = 501.0
 script = SubResource("GDScript_f5t13")
 
 [node name="Turnos" parent="CanvasLayer" unique_id=1137314364 instance=ExtResource("8_8p2ir")]
+
+[node name="Test_Scoring" type="Button" parent="CanvasLayer" unique_id=1664149787]
+offset_left = 116.0
+offset_top = 368.0
+offset_right = 267.0
+offset_bottom = 399.0
+text = "Add score player 1"
+script = SubResource("GDScript_jt8ei")
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=731301028]
 transparent_bg = true
@@ -263,4 +289,5 @@ material_override = SubResource("StandardMaterial3D_jt8ei")
 mesh = SubResource("PlaneMesh_jt8ei")
 
 [connection signal="animation_finished" from="RoundTransitionManager/AnimationPlayer" to="RoundTransitionManager" method="_on_animation_player_animation_finished"]
+[connection signal="pressed" from="CanvasLayer/Test_Scoring" to="CanvasLayer/Test_Scoring" method="_on_pressed"]
 [connection signal="pressed" from="Reset_Test" to="Reset_Test" method="_on_pressed"]

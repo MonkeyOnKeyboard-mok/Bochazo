@@ -41,6 +41,9 @@ _data = {
 }
 
 [node name="BochaAzul" type="SubViewportContainer" unique_id=488987866]
+offset_left = 4.0
+offset_right = 104.0
+offset_bottom = 100.0
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=469690214]
 transparent_bg = true

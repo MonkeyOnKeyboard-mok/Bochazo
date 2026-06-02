@@ -47,7 +47,4 @@ texture = ExtResource("4_8nwdo")
 stretch_mode = 5
 
 [node name="J2Cabeza" type="TextureRect" parent="HBoxPlayer2" unique_id=1923798437]
-texture_filter = 1
-custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-stretch_mode = 5

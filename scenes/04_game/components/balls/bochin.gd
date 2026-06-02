@@ -6,7 +6,6 @@ func _physics_process(_delta):
 		if GameManager.current_player:
 			global_position = GameManager.current_player.marker.global_position
 	if _is_stopped: return
-	print("Posicion bochin: ",self.global_position.x)
 	if linear_velocity.length() < stop_velocity_threshold:
 		if !is_thrown: return
 		_is_stopped = true
