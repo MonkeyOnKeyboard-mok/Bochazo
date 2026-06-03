@@ -47,7 +47,8 @@ signal victory
 signal soft_reset_end
 @warning_ignore("unused_signal")
 signal return_camera(ball: RigidBody3D)
-
+@warning_ignore("unused_signal")
+signal invalid
 
 ## Vs AI flag
 var vsAI : bool = false

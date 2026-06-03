@@ -13,6 +13,7 @@ func _physics_process(_delta):
 		stopped_moving.emit(self)
 		if !bochin_valid_check():
 			GameManager.emit_signal("return_camera")
+			GameManager.emit_signal("invalid")
 			queue_free()
 			GameManager.spawn_bocha.emit()
 			GameManager.idle.emit()
