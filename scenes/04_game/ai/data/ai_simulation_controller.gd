@@ -4,10 +4,11 @@ extends Node3D
 @export var ball_scene: PackedScene
 @export var iterations: int = 50
 @export var balls_per_iter: int = 100
-@export var max_force: float = 35.0
-@export var efecto_val: float = 0.6
-@export var precision_val: float = 0.95
-@export var control_val: float = 0.85
+## Stats propios de la IA — independientes de cualquier personaje
+@export var max_force: float = 45.0
+@export var efecto_val: float = 1.0
+@export var precision_val: float = 1.0
+@export var control_val: float = 1.0
 @export var bounds_min_x: float = -1.0
 @export var bounds_max_x: float = 36.0
 @export var bounds_min_z: float = -7.0
@@ -154,9 +155,9 @@ func _run_iteration(_court_idx: int, court_friction: float):
 
 		var power = _rng.randf_range(0.2, 1.0)
 		var angle_offset = _rng.randf_range(-0.5, 0.5)
-		var curve_intensity = _rng.randf_range(10, 100)
+		var is_straight = _rng.randf() < 0.15  # 15% rectos, 85% curvos vistosos
+		var curve_intensity = 0.0 if is_straight else _rng.randf_range(0.3, 1.0)
 		var curve_side = _rng.randf_range(-1.0, 1.0)
-		var is_straight = curve_intensity < 0.05
 
 		var p = AIThrowParams.new()
 		p.power = power
@@ -169,6 +170,7 @@ func _run_iteration(_court_idx: int, court_friction: float):
 
 		_throw_params[i] = {
 			"sx": start_pos.x, "sz": start_pos.z,
+			"tx": target_pos.x, "tz": target_pos.z,
 			"pw": power, "ang": angle_offset,
 			"ci": curve_intensity, "cs": curve_side, "str": is_straight,
 			"mf": max_force, "ef": efecto_val
@@ -199,6 +201,7 @@ func _run_iteration(_court_idx: int, court_friction: float):
 		if final_pos.x >= bounds_min_x and final_pos.x <= bounds_max_x and final_pos.z >= bounds_min_z and final_pos.z <= bounds_max_z:
 			_results.append({
 				"sx": tp["sx"], "sz": tp["sz"],
+				"tx": tp["tx"], "tz": tp["tz"],
 				"pw": tp["pw"], "ang": tp["ang"],
 				"ci": tp["ci"], "cs": tp["cs"], "str": tp["str"],
 				"mf": tp["mf"], "ef": tp["ef"],

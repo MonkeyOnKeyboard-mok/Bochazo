@@ -58,4 +58,4 @@ offset_right = 800.0
 offset_bottom = 105.0
 
 [node name="BochaPos" type="Marker3D" parent="." unique_id=318893646]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.225138, 0.43813962, -0.063742846)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.54, 1.184, 0)
