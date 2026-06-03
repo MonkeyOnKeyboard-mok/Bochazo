@@ -47,6 +47,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("1_ha6kp")
 
 [node name="image" type="TextureRect" parent="." unique_id=1271547710]
@@ -64,6 +65,7 @@ offset_bottom = 525.076
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(3, 3)
+mouse_filter = 2
 texture = ExtResource("2_cibrp")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1815148284]

@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://gbgfq1egr8m4" path="res://Camera/camera.gd" id="8_jt8ei"]
 [ext_resource type="PackedScene" uid="uid://dr6qdfllwspd4" path="res://scenes/04_game/components/victoryScene/victory_scene.tscn" id="11_1v2qn"]
 [ext_resource type="PackedScene" uid="uid://bwfyp8ij16ceh" path="res://scenes/04_game/components/UI/otra_vez.tscn" id="11_8at0d"]
+[ext_resource type="Script" uid="uid://cfyl6p6vlvq2f" path="res://scenes/04_game/components/GameCourt/oveview_camera.gd" id="12_4tvcl"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5t0ms"]
 transparency = 1
@@ -232,6 +233,7 @@ script = SubResource("GDScript_f5t13")
 [node name="Turnos" parent="CanvasLayer" unique_id=1137314364 instance=ExtResource("8_8p2ir")]
 
 [node name="Test_Scoring" type="Button" parent="CanvasLayer" unique_id=1664149787]
+visible = false
 offset_left = 116.0
 offset_top = 368.0
 offset_right = 267.0
@@ -249,6 +251,7 @@ render_target_update_mode = 3
 [node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=689176119]
 transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, 26.705826, 12.090761, 0)
 current = true
+script = ExtResource("12_4tvcl")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1251439467]
 offset_left = 1511.0

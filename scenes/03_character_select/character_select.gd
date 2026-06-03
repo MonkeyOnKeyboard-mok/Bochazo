@@ -7,10 +7,13 @@ var p2_chose : bool = false
 var current_character = null
 var index : int = 0
 
+const JUGADOR_1 = preload("uid://dq6jc4avxafho")
+const JUGADOR_2 = preload("uid://c4us14of6ghtg")
+const CPU = preload("uid://3uumt0ch54on")
+
 @onready var players: Node3D = $Players
 @onready var hud: Node3D = $Hud
 @onready var flecha: Sprite3D = $Hud/Flecha
-@onready var label_player: Label3D = $Hud/Flecha/Label3D
 @onready var nombre: Label3D = $Hud/Nombre
 
 # Called when the node enters the scene tree for the first time.
@@ -18,7 +21,6 @@ func _ready() -> void:
 	for character in players.get_children():
 		player_list.append(character)
 	current_character = player_list [index]
-	label_player.text = "Player 1"
 	$FadeTransition/ColorRect/FadeRect.play("fade_out")
 	#player_list[0].play("idle") // Jugador 1 hace su animación idle
 	
@@ -52,11 +54,10 @@ func choose() -> void:
 			p1_chose = true
 			current_character.player_num = "player1"
 			## Change Flecha to P2 instead of P1
-			flecha.modulate = Color(0.0, 0.0, 1.0, 1.0)
 			if !GameManager.vsAI:
-				label_player.text = "Player 2"
+				flecha.texture = JUGADOR_2
 			else: 
-				label_player.text = "CPU"
+				flecha.texture = CPU
 		else:
 			GameManager.player2_char = current_character.data.name
 			current_character.anim.play("Raul diva")

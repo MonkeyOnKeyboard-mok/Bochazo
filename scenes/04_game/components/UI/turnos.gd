@@ -5,10 +5,13 @@ const ROJA = preload("uid://wpqu8kkku4tv")
 
 @onready var j_1_cabeza: TextureRect = $HBoxPlayer1/J1Cabeza
 @onready var j_2_cabeza: TextureRect = $HBoxPlayer2/J2Cabeza
+@onready var j_2_texture: TextureRect = $HBoxPlayer2/J2Texture
 
 const RAUL = preload("uid://chyx3aoghv365")
 const JORGE = preload("uid://db3rcul8pmb5m")
 const BETO = preload("uid://csja3bmfvbthg")
+const CPU = preload("uid://3uumt0ch54on")
+const JUGADOR_2 = preload("uid://c4us14of6ghtg")
 
 var characters : Dictionary
 
@@ -28,6 +31,10 @@ func _ready() -> void:
 	add_ui_balls()
 	GameManager.connect("spawn_bocha", update_UI)
 	GameManager.connect("soft_reset_end", add_ui_balls)
+	if GameManager.vsAI:
+		j_2_texture.texture = CPU
+	else: 
+		j_2_texture.texture = JUGADOR_2
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

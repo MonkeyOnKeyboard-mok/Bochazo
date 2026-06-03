@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://8li1vjxqgthv" path="res://scenes/03_character_select/jorge_char_select.tscn" id="4_r1baj"]
 [ext_resource type="PackedScene" uid="uid://vm7xhcn14t0u" path="res://scenes/03_character_select/beto_char_select.tscn" id="5_8yjhp"]
 [ext_resource type="Texture2D" uid="uid://bj1wuachgwsah" path="res://scenes/01_main_menu/titulo.png" id="7_cv6m7"]
+[ext_resource type="Texture2D" uid="uid://dq6jc4avxafho" path="res://scenes/04_game/components/UI/jugador_1.png" id="8_77j8t"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_77j8t"]
 albedo_texture = ExtResource("2_psqbc")
@@ -18,12 +19,10 @@ albedo_texture = ExtResource("2_psqbc")
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ku3qk"]
 albedo_texture = ExtResource("3_77j8t")
 
-[sub_resource type="Gradient" id="Gradient_h5lt7"]
-colors = PackedColorArray(0.94028825, 0.0006804966, 0.00037272455, 1, 1, 0, 0.13725491, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_khmfb"]
-gradient = SubResource("Gradient_h5lt7")
-fill_from = Vector2(0.39529914, 0.4764957)
+[sub_resource type="SystemFont" id="SystemFont_psqbc"]
+font_names = PackedStringArray("Javanese Text")
+font_weight = 999
+font_stretch = 200
 
 [node name="CharacterSelect" type="Node3D" unique_id=108657606]
 script = ExtResource("1_d67qk")
@@ -58,14 +57,12 @@ transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 4, -1, 0)
 [node name="Hud" type="Node3D" parent="." unique_id=650910728]
 
 [node name="Flecha" type="Sprite3D" parent="Hud" unique_id=520986656]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.020407677, 1.6162858, -3.1423821)
-texture = SubResource("GradientTexture2D_khmfb")
-
-[node name="Label3D" type="Label3D" parent="Hud/Flecha" unique_id=1141533837]
-text = "Jugador"
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0.020407677, 1.6162858, -3.1423821)
+texture_filter = 0
+texture = ExtResource("8_77j8t")
 
 [node name="Nombre" type="Label3D" parent="Hud" unique_id=240457869]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8668277, -2.0038679)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9902852, -2.0038679)
 text = "Nombre"
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("3_khmfb")]
@@ -83,10 +80,6 @@ spot_attenuation = -0.16
 spot_angle = 16.39
 spot_angle_attenuation = 1.0352648
 
-[node name="PressSpaceToSelect" type="Label3D" parent="." unique_id=1483303682]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099277735, 1.3917619, 0)
-text = "Presiona Espacio para elegir"
-
 [node name="Frente" type="SpotLight3D" parent="." unique_id=2004620865]
 transform = Transform3D(1, 0, 0, 0, 0.9508784, 0.3095647, 0, -0.3095647, 0.9508784, 0, 0.55555946, -1.818434)
 spot_angle = 40.84
@@ -100,5 +93,14 @@ texture = ExtResource("7_cv6m7")
 [node name="General" type="SpotLight3D" parent="." unique_id=1243739599]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5905623, 8.44696)
 spot_range = 18.34
+
+[node name="PressSpaceToSelect2" type="Label3D" parent="." unique_id=1060641060]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099277735, 1.2011763, 0)
+modulate = Color(0.20392157, 1, 1, 1)
+outline_modulate = Color(0.7076778, 0, 0, 1)
+text = "Presiona Espacio para elegir"
+font = SubResource("SystemFont_psqbc")
+font_size = 33
+outline_size = 18
 
 [connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]
