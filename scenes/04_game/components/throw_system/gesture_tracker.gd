@@ -14,18 +14,33 @@ signal aim_ended(points: PackedVector2Array)
 @export var max_aim_points: int = 60
 @export var min_charge_distance: float = 50.0
 @export var max_charge_distance: float = 300.0
+@export var charge_visual_scale: float = 1.5
+@export var aim_visual_scale: float = 2.0
+
+const VIEWPORT_CENTER := Vector2(540, 540)
 
 var phase: Phase = Phase.IDLE
 var charge_start: Vector2 = Vector2.ZERO
 var aim_points: PackedVector2Array = []
 var aim_start_y: float = 0.0
+var aim_origin: Vector2 = Vector2.ZERO
 
-@onready var charge_line: Line2D = $ChargeLine
-@onready var aim_line: Line2D = $AimLine
+@onready var charge_line: Line2D = $DrawViewport/ChargeLine
+@onready var charge_line_outline: Line2D = $DrawViewport/ChargeLineOutline
+@onready var aim_line: Line2D = $DrawViewport/AimLine
+@onready var aim_line_outline: Line2D = $DrawViewport/AimLineOutline
 @onready var power_bar: ProgressBar = %PowerBar
+@onready var draw_viewport: SubViewport = $DrawViewport
+@onready var plane_drawing: MeshInstance3D = $PlaneDrawing
 
 func _ready() -> void:
 	GameManager.connect("throw", reset)
+	_setup_plane_texture()
+
+func _setup_plane_texture() -> void:
+	var mat := plane_drawing.get_surface_override_material(0) as StandardMaterial3D
+	if mat:
+		mat.albedo_texture = draw_viewport.get_texture()
 
 func _input(event: InputEvent):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -52,8 +67,10 @@ func _start_charge(pos: Vector2):
 	phase = Phase.CHARGE
 	charge_start = pos
 	aim_points.clear()
-	if charge_line: charge_line.clear_points(); charge_line.add_point(pos)
+	if charge_line: charge_line.clear_points(); charge_line.add_point(VIEWPORT_CENTER)
+	if charge_line_outline: charge_line_outline.clear_points(); charge_line_outline.add_point(VIEWPORT_CENTER)
 	if aim_line: aim_line.clear_points()
+	if aim_line_outline: aim_line_outline.clear_points()
 	charge_started.emit(pos)
 
 func _end_charge(pos: Vector2):
@@ -70,8 +87,10 @@ func _end_charge(pos: Vector2):
 func _start_aim(pos: Vector2):
 	phase = Phase.AIM
 	aim_start_y = pos.y
+	aim_origin = pos
 	aim_points = [pos]
-	if aim_line: aim_line.clear_points(); aim_line.add_point(pos)
+	if aim_line: aim_line.clear_points(); aim_line.add_point(VIEWPORT_CENTER)
+	if aim_line_outline: aim_line_outline.clear_points(); aim_line_outline.add_point(VIEWPORT_CENTER)
 	aim_started.emit(pos)
 
 func _on_motion(event: InputEventMouseMotion):
@@ -81,18 +100,22 @@ func _on_motion(event: InputEventMouseMotion):
 		if charge_line:
 			var dist = absf(pos.y - charge_start.y)
 			var frac = clampf(dist / max_charge_distance, 0.0, 1.0)
+			var end_pt = VIEWPORT_CENTER - Vector2(0, frac * max_charge_distance * charge_visual_scale)
 			charge_line.clear_points()
-			charge_line.add_point(charge_start)
-		 	# Clamp the drawn point so it never goes beyond max distance
-			var clamped_y = charge_start.y - frac * max_charge_distance
-			charge_line.add_point(Vector2(charge_start.x, clamped_y))
+			charge_line.add_point(VIEWPORT_CENTER)
+			charge_line.add_point(end_pt)
 			charge_line.default_color = _power_color(frac)
+			charge_line_outline.clear_points()
+			charge_line_outline.add_point(VIEWPORT_CENTER)
+			charge_line_outline.add_point(end_pt)
 			charge_dragging.emit(pos, charge_start)
 	elif phase == Phase.AIM:
 		var clamped = Vector2(pos.x, minf(pos.y, aim_start_y))
 		if aim_points.size() < max_aim_points:
 			aim_points.append(clamped)
-			if debug_enabled and aim_line: aim_line.add_point(clamped)
+			var draw_pos = VIEWPORT_CENTER + (clamped - aim_origin) * aim_visual_scale
+			if debug_enabled and aim_line: aim_line.add_point(draw_pos)
+			if aim_line_outline: aim_line_outline.add_point(draw_pos)
 			aim_drawing.emit(aim_points)
 
 func _power_color(frac: float) -> Color:
@@ -111,4 +134,6 @@ func reset():
 	phase = Phase.IDLE
 	aim_points.clear()
 	if charge_line: charge_line.clear_points()
+	if charge_line_outline: charge_line_outline.clear_points()
 	if aim_line: aim_line.clear_points()
+	if aim_line_outline: aim_line_outline.clear_points()
