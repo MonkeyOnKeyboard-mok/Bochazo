@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://tvmnnkaj71mu" path="res://assets/models/court/ProCourt_MaderaPro.png" id="10_52yxm"]
 [ext_resource type="Texture2D" uid="uid://c2n84xrm0tnrh" path="res://assets/models/court/GrassCourt_Tablon.png" id="11_ww84i"]
 [ext_resource type="Texture2D" uid="uid://bj1wuachgwsah" path="res://scenes/01_main_menu/titulo.png" id="12_aa36g"]
+[ext_resource type="Texture2D" uid="uid://d1m3ihv66juhd" path="res://TestSceneSanti/placeholders/bocha.png" id="13_ww84i"]
 
 [sub_resource type="Gradient" id="Gradient_h5lt7"]
 colors = PackedColorArray(0.94028825, 0.0006804966, 0.00037272455, 1, 1, 0, 0.13725491, 1)
@@ -32,6 +33,12 @@ albedo_texture = ExtResource("10_52yxm")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sxd1i"]
 albedo_texture = ExtResource("11_ww84i")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_aa36g"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s0ibi"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2suuh"]
 
 [node name="CourtSelect" type="Node3D" unique_id=108657606]
 script = ExtResource("1_tt4ki")
@@ -125,4 +132,39 @@ modulate = Color(1, 1, 1, 0.25490198)
 texture_filter = 0
 texture = ExtResource("12_aa36g")
 
+[node name="Flechas" type="Node3D" parent="." unique_id=220202829]
+
+[node name="FlechaIzq" type="Sprite3D" parent="Flechas" unique_id=515855969]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4523745, -0.13758063, -0.31245202)
+texture = ExtResource("13_ww84i")
+
+[node name="AreaFlechaIzq" type="Area3D" parent="Flechas/FlechaIzq" unique_id=1687054020]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Flechas/FlechaIzq/AreaFlechaIzq" unique_id=2135141357]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0.9191273, 0, 0)
+shape = SubResource("BoxShape3D_aa36g")
+
+[node name="FlechaDer" type="Sprite3D" parent="Flechas" unique_id=1311919364]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46483096, -0.13758063, -0.31245202)
+texture = ExtResource("13_ww84i")
+
+[node name="AreaFlechaDer" type="Area3D" parent="Flechas/FlechaDer" unique_id=725090644]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Flechas/FlechaDer/AreaFlechaDer" unique_id=264075786]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, -0.9172765, 0, 0)
+shape = SubResource("BoxShape3D_s0ibi")
+
+[node name="Space" type="Sprite3D" parent="Flechas" unique_id=754715101]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.42815349, -0.3131293)
+texture = ExtResource("13_ww84i")
+
+[node name="AreaSpace" type="Area3D" parent="Flechas/Space" unique_id=2095896163]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Flechas/Space/AreaSpace" unique_id=1563395658]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 0, 0)
+shape = SubResource("BoxShape3D_2suuh")
+
 [connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]
+[connection signal="input_event" from="Flechas/FlechaIzq/AreaFlechaIzq" to="." method="_on_area_flecha_izq_input_event"]
+[connection signal="input_event" from="Flechas/FlechaDer/AreaFlechaDer" to="." method="_on_area_flecha_der_input_event"]
+[connection signal="input_event" from="Flechas/Space/AreaSpace" to="." method="_on_area_space_input_event"]

@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://vm7xhcn14t0u" path="res://scenes/03_character_select/beto_char_select.tscn" id="5_8yjhp"]
 [ext_resource type="Texture2D" uid="uid://bj1wuachgwsah" path="res://scenes/01_main_menu/titulo.png" id="7_cv6m7"]
 [ext_resource type="Texture2D" uid="uid://dq6jc4avxafho" path="res://scenes/04_game/components/UI/jugador_1.png" id="8_77j8t"]
+[ext_resource type="Texture2D" uid="uid://d1m3ihv66juhd" path="res://TestSceneSanti/placeholders/bocha.png" id="11_pbri6"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_77j8t"]
 albedo_texture = ExtResource("2_psqbc")
@@ -23,6 +24,12 @@ albedo_texture = ExtResource("3_77j8t")
 font_names = PackedStringArray("Javanese Text")
 font_weight = 999
 font_stretch = 200
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pbri6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ku3qk"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kfv5l"]
 
 [node name="CharacterSelect" type="Node3D" unique_id=108657606]
 script = ExtResource("1_d67qk")
@@ -104,4 +111,39 @@ font = SubResource("SystemFont_psqbc")
 font_size = 33
 outline_size = 18
 
+[node name="Flechas" type="Node3D" parent="." unique_id=1266526678]
+
+[node name="FlechaIzq" type="Sprite3D" parent="Flechas" unique_id=1566473148]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4523745, -0.13758063, -0.31245202)
+texture = ExtResource("11_pbri6")
+
+[node name="AreaFlechaIzq" type="Area3D" parent="Flechas/FlechaIzq" unique_id=766555695]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Flechas/FlechaIzq/AreaFlechaIzq" unique_id=806862074]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0.9191273, 0, 0)
+shape = SubResource("BoxShape3D_pbri6")
+
+[node name="FlechaDer" type="Sprite3D" parent="Flechas" unique_id=1263946352]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46483096, -0.13758063, -0.31245202)
+texture = ExtResource("11_pbri6")
+
+[node name="AreaFlechaDer" type="Area3D" parent="Flechas/FlechaDer" unique_id=1280589230]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Flechas/FlechaDer/AreaFlechaDer" unique_id=865844342]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, -0.9172765, 0, 0)
+shape = SubResource("BoxShape3D_ku3qk")
+
+[node name="Space" type="Sprite3D" parent="Flechas" unique_id=504115867]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.42815349, -0.3131293)
+texture = ExtResource("11_pbri6")
+
+[node name="AreaSpace" type="Area3D" parent="Flechas/Space" unique_id=658657077]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Flechas/Space/AreaSpace" unique_id=365136612]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 0, 0)
+shape = SubResource("BoxShape3D_kfv5l")
+
 [connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]
+[connection signal="input_event" from="Flechas/FlechaIzq/AreaFlechaIzq" to="." method="_on_area_flecha_izq_input_event"]
+[connection signal="input_event" from="Flechas/FlechaDer/AreaFlechaDer" to="." method="_on_area_flecha_der_input_event"]
+[connection signal="input_event" from="Flechas/Space/AreaSpace" to="." method="_on_area_space_input_event"]

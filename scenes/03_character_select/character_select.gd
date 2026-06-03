@@ -18,51 +18,56 @@ const CPU = preload("uid://3uumt0ch54on")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	for character in players.get_children():
 		player_list.append(character)
 	current_character = player_list [index]
 	$FadeTransition/ColorRect/FadeRect.play("fade_out")
 	#player_list[0].play("idle") // Jugador 1 hace su animación idle
-	
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if !moving:
-		move_left()
-		move_right()
-		choose()
+		handle_input()
 	if current_character.data:
 		nombre.text = current_character.data.name
 
-func move_left() -> void:
+func handle_input() -> void:
 	if Input.is_action_just_pressed("move_right"):
-		if index+1 >= player_list.size(): return
-		if moving == true: return
-		_handle_movement(Vector3(-2,0,0),Vector3(0, deg_to_rad(-450), 0),"left")
+		move_left()
+	if Input.is_action_just_pressed("move_left"):
+		move_right()
+	if Input.is_action_just_pressed("choose"):
+		choose()
+
+func move_left() -> void:
+	if index+1 >= player_list.size(): return
+	if moving == true: return
+	_handle_movement(Vector3(-2,0,0),Vector3(0, deg_to_rad(-450), 0),"left")
 
 func move_right() -> void:
-	if Input.is_action_just_pressed("move_left"):
-		if index-1 <= -1: return
-		if moving == true: return
-		_handle_movement(Vector3(2,0,0),Vector3(0, deg_to_rad(450), 0),"right")
+	if index-1 <= -1: return
+	if moving == true: return
+	_handle_movement(Vector3(2,0,0),Vector3(0, deg_to_rad(450), 0),"right")
 
 func choose() -> void:
-	if Input.is_action_just_pressed("choose"):
-		if p1_chose and p2_chose: return
-		if !p1_chose:
-			GameManager.player1_char = current_character.data.name
-			current_character.anim.play("Raul diva")
-			p1_chose = true
-			current_character.player_num = "player1"
-			## Change Flecha to P2 instead of P1
-			if !GameManager.vsAI:
-				flecha.texture = JUGADOR_2
-			else: 
-				flecha.texture = CPU
-		else:
-			GameManager.player2_char = current_character.data.name
-			current_character.anim.play("Raul diva")
-			p2_chose = true
-			trans()
+	if moving == true: return
+	if p1_chose and p2_chose: return
+	if !p1_chose:
+		GameManager.player1_char = current_character.data.name
+		current_character.anim.play("Raul diva")
+		p1_chose = true
+		current_character.player_num = "player1"
+		## Change Flecha to P2 instead of P1
+		if !GameManager.vsAI:
+			flecha.texture = JUGADOR_2
+		else: 
+			flecha.texture = CPU
+	else:
+		GameManager.player2_char = current_character.data.name
+		current_character.anim.play("Raul diva")
+		p2_chose = true
+		trans()
 
 func _handle_movement(mov: Vector3, rot: Vector3, side: String) ->void:
 	hud.visible = false
@@ -99,3 +104,21 @@ func trans() -> void:
 func _on_timer_timeout() -> void:
 	get_tree().change_scene_to_file("res://scenes/03_character_select/court_select.tscn")
 	print("Cargando selección de cancha")
+
+func _on_area_flecha_izq_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			print("Sprite clicked!")
+			move_left()
+
+func _on_area_flecha_der_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			print("Sprite clicked!")
+			move_right()
+
+func _on_area_space_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			print("Sprite clicked!")
+			choose()
