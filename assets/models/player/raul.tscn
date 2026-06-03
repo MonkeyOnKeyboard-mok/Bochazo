@@ -37,4 +37,8 @@ transform = Transform3D(0.7772947, -0.62913185, 0.0024321475, -0.6286332, -0.776
 [node name="AnimationPlayer" parent="." index="1" unique_id=1397029292]
 autoplay = &"idle"
 
+[node name="SpotLight3D" type="SpotLight3D" parent="." index="2" unique_id=1892880815]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4236927, 3.7260761)
+light_color = Color(0, 1, 1, 1)
+
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
