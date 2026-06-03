@@ -101,6 +101,7 @@ spot_angle = 15.17
 
 [node name="PressSpaceToSelect" type="Label3D" parent="." unique_id=57241988]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099277735, 1.436731, 0)
+texture_filter = 0
 modulate = Color(0.20392157, 1, 1, 1)
 outline_modulate = Color(0.7076778, 0, 0, 1)
 text = "Presiona Espacio para elegir"

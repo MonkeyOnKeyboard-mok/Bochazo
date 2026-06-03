@@ -6,9 +6,15 @@ extends Node
 const LOSE = preload("uid://blnuv0cnxlras")
 const WIN = preload("uid://cr7flxb1il8ls")
 
+#var preloaded_audios : Dictionary
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	#preloaded_audios = {
+		#"Lose" = LOSE, 
+		#"Win" = WIN, 
+	#} 
+	pass
 
 func menu_theme() -> void:
 	menu.play()

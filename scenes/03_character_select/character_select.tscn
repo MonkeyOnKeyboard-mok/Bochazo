@@ -62,7 +62,7 @@ texture_filter = 0
 texture = ExtResource("8_77j8t")
 
 [node name="Nombre" type="Label3D" parent="Hud" unique_id=240457869]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9902852, -2.0038679)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9445528, -2.0038679)
 text = "Nombre"
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("3_khmfb")]
@@ -96,6 +96,7 @@ spot_range = 18.34
 
 [node name="PressSpaceToSelect2" type="Label3D" parent="." unique_id=1060641060]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099277735, 1.2011763, 0)
+texture_filter = 0
 modulate = Color(0.20392157, 1, 1, 1)
 outline_modulate = Color(0.7076778, 0, 0, 1)
 text = "Presiona Espacio para elegir"
