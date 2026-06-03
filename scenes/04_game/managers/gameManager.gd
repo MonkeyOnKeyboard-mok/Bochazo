@@ -74,7 +74,7 @@ var first_bocha_thrown : bool = false
 var p1_turn = true  ## If false, it's P2 or CPU turn
 
 var amount_of_turns : int = 4
-var score_to_win : int = 6
+var score_to_win : int = 1
 
 var p1_turns : int = amount_of_turns
 var p2_turns : int = amount_of_turns
