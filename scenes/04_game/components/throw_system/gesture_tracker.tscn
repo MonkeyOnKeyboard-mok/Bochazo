@@ -39,7 +39,7 @@ end_cap_mode = 2
 
 [node name="AimLine" type="Line2D" parent="DrawViewport" unique_id=93954413]
 width = 20.0
-default_color = Color(0.7680214, 8.759796e-06, 0.5154742, 1)
+default_color = Color(4.813075e-06, 0.7098074, 0.78864855, 1)
 joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
