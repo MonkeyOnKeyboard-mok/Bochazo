@@ -18,7 +18,7 @@ func _ready() -> void:
 		"Grass" : GRASS_COURT,
 		"Pro" : PRO_COURT,
 		"Sand" : SAND_COURT,
-	}
+	} 
 	settings()
 	if GameManager.vsAI:
 		await get_tree().process_frame

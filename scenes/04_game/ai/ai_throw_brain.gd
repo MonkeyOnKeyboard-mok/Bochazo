@@ -1,4 +1,4 @@
-## AIThrowBrain — IA de Tiro para Bochazo v2 (Data-Driven)
+## AIThrowBrain — IA de Tiro para Bochazo v3 (Data-Driven, Multi-Candidato)
 ##
 ## COMO USAR:
 ##   1. Agregar este nodo como hijo de cualquier nodo de la escena
@@ -9,7 +9,7 @@
 ##        brain.set_difficulty(2)       # 0=facil, 4=dificil
 ##        brain.curve_preference = 0.5  # 0=sin preferencia, 2=max curva
 ##   4. Para que la IA tire:
-##        brain.setup_for_throw(stats, ball, flight)
+##        brain.setup_for_throw(ball, flight)
 ##        brain.execute_throw(ball_pos, bochin_pos)
 ##      O bien, solo obtener parametros sin ejecutar:
 ##        var params = brain.decide(ball_pos, bochin_pos)
@@ -41,10 +41,9 @@
 ##   Generarlos con la escena tests/simulation_AI.tscn
 ##
 ## MÉTODO DE BÚSQUEDA:
-##   find_function() — Busca los 5 tiros más cercanos al objetivo y promedia
-##                     sus parámetros con peso inverso a la distancia² × curva.
-##                     Prioriza tiros vistosos según curve_preference.
-##   find_nearest()  — Busca el tiro más cercano directamente (sin promediar).
+##   Busca los K=8 tiros más cercanos al objetivo y elige uno aleatoriamente
+##   con peso inversamente proporcional a la distancia al target.
+##   Esto da variedad natural sin promediar parámetros contradictorios.
 ##
 
 class_name AIThrowBrain
@@ -58,6 +57,14 @@ var _loaded: bool = false
 
 const COURT_FRICTIONS: Array[float] = [1.0, 0.8, 0.9, 1.1, 0.6]
 const MIN_POWER: float = 0.4
+const K_CANDIDATES: int = 8
+
+## Stats propios de la IA — independientes de cualquier personaje
+const AI_MAX_FORCE: float = 45.0
+const AI_EFECTO: float = 1.0
+const AI_PRECISION: float = 1.0
+const AI_CONTROL: float = 1.0
+const AI_MIN_POWER: float = 0.05
 
 var court_type: int = 0
 var courts_array : Dictionary
@@ -65,9 +72,10 @@ var curve_preference: float = 0.5
 var noise_radius: float = 0.0
 var difficulty_sigma: float = 0.0
 
-@export var stats: PlayerThrowStats
 var flight: ThrowFlight
 var ball: RigidBody3D
+
+var _selected_throw: Dictionary = {}
 
 func _ready():
 	courts_array = {
@@ -113,26 +121,33 @@ func decide(ball_pos: Vector3, bochin_pos: Vector3) -> AIThrowParams:
 	var target_z = bochin_pos.z + rng.randf_range(-noise_radius, noise_radius)
 	model.curve_preference = curve_preference
 
-	var params_dict = model.find_function(target_x, target_z, court_type)
-	if params_dict.is_empty():
-		params_dict = model.find_nearest(target_x, target_z, court_type)
-	if params_dict.is_empty():
+	## Buscar los K candidatos más cercanos y elegir uno (ponderado por distancia)
+	var candidates = model.find_nearest_k(target_x, target_z, court_type, K_CANDIDATES)
+	if candidates.is_empty():
 		return _fallback_throw(ball_pos, bochin_pos)
 
+	var params_dict = _weighted_random_pick(candidates, target_x, target_z)
+
+	## DEBUG: Imprimir tiro elegido y proximidad al objetivo
+	_debug_print_selection(params_dict, bochin_pos, candidates)
+
+	_selected_throw = params_dict
+
 	var p = AIThrowParams.new()
-	p.power = MIN_POWER + clampf(float(params_dict.get("pw", 0.5)), 0.0, 1.0) * (1.0 - MIN_POWER)
-	p.angle_offset = clampf(float(params_dict.get("ang", 0.0)), -0.3, 0.3)
+	p.power = clampf(float(params_dict.get("pw", 0.5)), 0.0, 1.0)
+	p.angle_offset = float(params_dict.get("ang", 0.0))
 	p.curve_intensity = clampf(float(params_dict.get("ci", 0.0)), 0.0, 1.0)
 	p.curve_side = clampf(float(params_dict.get("cs", 1.0)), -1.0, 1.0)
-	p.is_straight = p.curve_intensity < 0.05
+	p.is_straight = bool(params_dict.get("str", false))
 
 	if difficulty_sigma > 0.001:
 		p.power = clampf(p.power + rng.randfn(0, difficulty_sigma * 0.1), MIN_POWER, 1.0)
 		p.angle_offset = clampf(p.angle_offset + rng.randfn(0, difficulty_sigma * 0.1), -0.5, 0.5)
 		p.curve_intensity = clampf(p.curve_intensity + rng.randfn(0, difficulty_sigma * 0.05), 0.0, 1.0)
 
-	p.compute_direction(ball_pos, bochin_pos)
-	p.compute_waypoints(ball_pos, bochin_pos)
+	var sim_target_pos = Vector3(float(params_dict.get("tx", bochin_pos.x)), ball_pos.y, float(params_dict.get("tz", bochin_pos.z)))
+	p.compute_direction(ball_pos, sim_target_pos)
+	p.compute_waypoints(ball_pos, sim_target_pos)
 	return p
 
 ## Ejecuta un tiro completo: decide parámetros y lanza la bocha.
@@ -150,17 +165,17 @@ func execute_throw(ball_pos: Vector3, bochin_pos: Vector3):
 		flight.launch(p.power, p.direction, p.waypoints)
 	throw_ready.emit(p)
 
-## Configura referencias antes de tirar.
-## stats_res: PlayerThrowStats del jugador (potencia, efecto, etc.)
+## Configura referencias antes de tirar (sin stats de personaje).
 ## ball_ref: RigidBody3D de la bocha que se va a lanzar
 ## flight_ref: ThrowFlight que maneja el vuelo de la bocha
-func setup_for_throw(stats_res: PlayerThrowStats, ball_ref: RigidBody3D, flight_ref: ThrowFlight):
-	stats = stats_res
+func setup_for_throw(ball_ref: RigidBody3D, flight_ref: ThrowFlight):
 	ball = ball_ref
 	flight = flight_ref
 	if not flight:
 		print("no flight")
-	execute_throw(Vector3(-27.54,1.184,0), GameManager.bochin.global_position)
+	var start_pos = GameManager.global_ball_pos
+	var bochin_pos = GameManager.bochin.global_position if GameManager.bochin else Vector3(15, 0.438, 0)
+	execute_throw(start_pos, bochin_pos)
 
 ## Configura la dificultad de la IA (ruido en los parámetros).
 ## level: 0=muy fácil (mucho error), 4=muy difícil (casi perfecto)
@@ -170,18 +185,21 @@ func set_difficulty(level: int):
 		1: difficulty_sigma = 0.25
 		2: difficulty_sigma = 0.15
 		3: difficulty_sigma = 0.08
-		4: difficulty_sigma = 0.02
+		4: difficulty_sigma = 0.00
 		_: difficulty_sigma = 0.15
 
-## Configura ThrowFlight con los stats del jugador y la fricción de la cancha.
+## Configura ThrowFlight con stats propios de la IA y la fricción de la cancha.
+## Usa mf/ef del tiro seleccionado si están disponibles, sino defaults de IA.
 func _setup_flight():
-	if not flight or not stats:
+	if not flight:
 		return
-	flight.efecto = stats.efecto * COURT_FRICTIONS[clampi(court_type, 0, 4)]
-	flight.precision = stats.precision
-	flight.control = stats.control
-	flight.max_force = stats.potencia
-	flight.min_power = stats.min_power
+	var mf = float(_selected_throw.get("mf", AI_MAX_FORCE))
+	var ef = float(_selected_throw.get("ef", AI_EFECTO))
+	flight.efecto = ef * COURT_FRICTIONS[clampi(court_type, 0, 4)]
+	flight.precision = AI_PRECISION
+	flight.control = AI_CONTROL
+	flight.max_force = mf
+	flight.min_power = AI_MIN_POWER
 	flight.ball = ball
 
 ## Tiro de emergencia cuando no hay datos cargados.
@@ -197,15 +215,60 @@ func _fallback_throw(ball_pos: Vector3, bochin_pos: Vector3) -> AIThrowParams:
 	p.compute_direction(ball_pos, bochin_pos)
 	return p
 
+## Selección aleatoria ponderada: elige un tiro de los candidatos
+## con probabilidad inversamente proporcional a su distancia al target.
+func _weighted_random_pick(candidates: Array, tx: float, tz: float) -> Dictionary:
+	var weights: Array[float] = []
+	var total: float = 0.0
+	for t in candidates:
+		var dx = float(t["fx"]) - tx
+		var dz = float(t["fz"]) - tz
+		var d2 = dx * dx + dz * dz
+		var w = 1.0 / maxf(sqrt(d2), 0.01)
+		weights.append(w)
+		total += w
+
+	var roll = rng.randf() * total
+	var acc = 0.0
+	for i in range(candidates.size()):
+		acc += weights[i]
+		if roll <= acc:
+			return candidates[i]
+	return candidates[candidates.size() - 1]
+
+## DEBUG: Imprime en consola el tiro elegido, la posición objetivo, y las distancias.
+func _debug_print_selection(selected: Dictionary, bochin_pos: Vector3, all_candidates: Array):
+	var fx = float(selected.get("fx", 0))
+	var fz = float(selected.get("fz", 0))
+	var tx = float(selected.get("tx", 0))
+	var tz = float(selected.get("tz", 0))
+	var dist = sqrt(pow(fx - bochin_pos.x, 2) + pow(fz - bochin_pos.z, 2))
+	print("=== AI THROW DEBUG ===")
+	print("  Court: %s (idx=%d)" % [model.COURT_NAMES[clampi(court_type, 0, 4)], court_type])
+	print("  Target (bochin): x=%.2f z=%.2f" % [bochin_pos.x, bochin_pos.z])
+	print("  Sim aim target (tx/tz): x=%.2f z=%.2f" % [tx, tz])
+	print("  Selected throw lands at: x=%.2f z=%.2f" % [fx, fz])
+	print("  Distance to target: %.2f m" % dist)
+	print("  Params: pw=%.3f ang=%.3f ci=%.3f cs=%.3f str=%s" % [
+		float(selected.get("pw", 0)), float(selected.get("ang", 0)),
+		float(selected.get("ci", 0)), float(selected.get("cs", 0)),
+		str(selected.get("str", false))
+	])
+	print("  All %d candidates distances:" % all_candidates.size())
+	for i in range(all_candidates.size()):
+		var c = all_candidates[i]
+		var cd = sqrt(pow(float(c["fx"]) - bochin_pos.x, 2) + pow(float(c["fz"]) - bochin_pos.z, 2))
+		print("    [%d] lands=(%.2f, %.2f) aim=(%.2f, %.2f) dist=%.2f ci=%.3f" % [i, float(c["fx"]), float(c["fz"]), float(c.get("tx", 0)), float(c.get("tz", 0)), cd, float(c["ci"])])
+	print("======================")
+
 func update_bocha(bocha : RigidBody3D) -> void:
 	ball = bocha
 	if !GameManager.p1_turn and GameManager.vsAI:
 		await get_tree().create_timer(3).timeout
-		setup_for_throw(stats, ball, flight)
+		setup_for_throw(ball, flight)
 		print("playing vs ai ... computer throwing")
 	else:
 		print("not playing against ai")
 
 func _on_button_pressed() -> void:
-	setup_for_throw(stats, ball, flight)
-	
+	setup_for_throw(ball, flight)

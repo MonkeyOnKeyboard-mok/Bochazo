@@ -50,6 +50,9 @@ signal return_camera(ball: RigidBody3D)
 @warning_ignore("unused_signal")
 signal invalid
 
+## training flag
+var is_training : bool = false
+
 ## Vs AI flag
 var vsAI : bool = false
 

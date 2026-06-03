@@ -28,6 +28,7 @@ func _physics_process(_delta):
 			if debug_verbose: print("[BocceBall] Se detuvo")
 			freeze = false
 
+
 func bochin_valid_check() -> bool:
 	if self.global_position.x < 0.0:
 		return false

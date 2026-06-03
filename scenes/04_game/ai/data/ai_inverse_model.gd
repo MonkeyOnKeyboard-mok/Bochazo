@@ -27,6 +27,7 @@ func load_all(data_path: String = "res://resources/ai_data/") -> bool:
 		for t in data["throws"]:
 			throws.append({
 				"sx": float(t["sx"]), "sz": float(t["sz"]),
+				"tx": float(t.get("tx", t["fx"])), "tz": float(t.get("tz", t["fz"])),
 				"pw": float(t["pw"]), "ang": float(t["ang"]),
 				"ci": float(t["ci"]), "cs": float(t["cs"]), "str": bool(t["str"]),
 				"mf": float(t["mf"]), "ef": float(t["ef"]),
@@ -108,5 +109,5 @@ func _dist2(target_x: float, target_z: float, t: Dictionary) -> float:
 
 func _score(target_x: float, target_z: float, t: Dictionary) -> float:
 	var d2 = _dist2(target_x, target_z, t)
-	var curve_bonus = t["ci"] * curve_preference
+	var curve_bonus = clampf(t["ci"], 0.0, 1.0) * curve_preference * 0.5
 	return d2 - curve_bonus

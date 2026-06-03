@@ -4,10 +4,11 @@ extends Node3D
 @export var ball_scene: PackedScene
 @export var iterations: int = 50
 @export var balls_per_iter: int = 100
-@export var max_force: float = 35.0
-@export var efecto_val: float = 0.6
-@export var precision_val: float = 0.95
-@export var control_val: float = 0.85
+## Stats propios de la IA — independientes de cualquier personaje
+@export var max_force: float = 45.0
+@export var efecto_val: float = 1.0
+@export var precision_val: float = 1.0
+@export var control_val: float = 1.0
 @export var bounds_min_x: float = -1.0
 @export var bounds_max_x: float = 36.0
 @export var bounds_min_z: float = -7.0
@@ -29,6 +30,7 @@ const COURT_SCENES: Array[String] = [
 @onready var cancel_btn: Button = $CanvasLayer/CancelBtn
 @onready var status_lbl: Label = $CanvasLayer/StatusLbl
 @onready var progress_lbl: Label = $CanvasLayer/ProgressLbl
+@onready var bocha_pos: Marker3D = $BochaPos
 
 var _ball_pool: Array[RigidBody3D] = []
 var _flight_pool: Array[ThrowFlight] = []
@@ -43,6 +45,9 @@ var _current_court_idx: int = -1
 var _rng: RandomNumberGenerator
 
 func _ready():
+	GameManager.throw_for_real = true
+	GameManager.permission_to_throw = true
+	GameManager.is_training = true
 	run_btn.pressed.connect(_on_run)
 	cancel_btn.pressed.connect(_on_cancel)
 	_rng = RandomNumberGenerator.new()
@@ -69,8 +74,9 @@ func _on_cancel():
 func _build_pool():
 	for i in range(balls_per_iter):
 		var ball = ball_scene.instantiate() as RigidBody3D
-		if "training_mode" in ball:
-			ball.training_mode = true
+		ball.training_mode = true
+		ball.collision_layer = 4  # Layer 3 (bochas)
+		ball.collision_mask = 1   # Solo colisiona con Layer 1 (cancha)
 		ball.visible = false
 		ball.freeze = true
 		add_child(ball)
@@ -106,6 +112,8 @@ func _swap_court(court_idx: int):
 			mat.friction = COURT_FRICTIONS[court_idx]
 			mat.bounce = 0.3
 			court_node.physics_material_override = mat
+			court_node.collision_layer = 1  # Layer 1 (cancha)
+			court_node.collision_mask = 4   # Colisiona con Layer 3 (bochas)
 	_current_court_idx = court_idx
 
 func _run_all_simulations():
@@ -137,8 +145,7 @@ func _run_iteration(_court_idx: int, court_friction: float):
 
 	for i in range(balls_per_iter):
 		var ball = _ball_pool[i]
-		var start_z = _rng.randf_range(-6.0 + 0.5, 6.0 - 0.5)
-		var start_pos = Vector3(SPAWN_X + _rng.randf_range(0, 3), BALL_Y, start_z)
+		var start_pos = bocha_pos.global_position
 		_reset_ball(ball, start_pos)
 		ball.stopped_moving.connect(_on_ball_stopped.bind(i), CONNECT_ONE_SHOT)
 
@@ -146,11 +153,11 @@ func _run_iteration(_court_idx: int, court_friction: float):
 		var target_z = _rng.randf_range(-6.0 + 0.5, 6.0 - 0.5)
 		var target_pos = Vector3(target_x, BALL_Y, target_z)
 
-		var power = _rng.randf_range(0.4, 1.0)
-		var angle_offset = _rng.randf_range(-0.3, 0.3)
-		var curve_intensity = _rng.randf_range(0.0, 0.8)
+		var power = _rng.randf_range(0.2, 1.0)
+		var angle_offset = _rng.randf_range(-0.5, 0.5)
+		var is_straight = _rng.randf() < 0.15  # 15% rectos, 85% curvos vistosos
+		var curve_intensity = 0.0 if is_straight else _rng.randf_range(0.3, 1.0)
 		var curve_side = _rng.randf_range(-1.0, 1.0)
-		var is_straight = curve_intensity < 0.05
 
 		var p = AIThrowParams.new()
 		p.power = power
@@ -163,6 +170,7 @@ func _run_iteration(_court_idx: int, court_friction: float):
 
 		_throw_params[i] = {
 			"sx": start_pos.x, "sz": start_pos.z,
+			"tx": target_pos.x, "tz": target_pos.z,
 			"pw": power, "ang": angle_offset,
 			"ci": curve_intensity, "cs": curve_side, "str": is_straight,
 			"mf": max_force, "ef": efecto_val
@@ -193,6 +201,7 @@ func _run_iteration(_court_idx: int, court_friction: float):
 		if final_pos.x >= bounds_min_x and final_pos.x <= bounds_max_x and final_pos.z >= bounds_min_z and final_pos.z <= bounds_max_z:
 			_results.append({
 				"sx": tp["sx"], "sz": tp["sz"],
+				"tx": tp["tx"], "tz": tp["tz"],
 				"pw": tp["pw"], "ang": tp["ang"],
 				"ci": tp["ci"], "cs": tp["cs"], "str": tp["str"],
 				"mf": tp["mf"], "ef": tp["ef"],
@@ -213,6 +222,7 @@ func _on_ball_stopped(ball_ref, idx: int):
 	_pending -= 1
 
 func _reset_ball(ball: RigidBody3D, pos: Vector3):
+	ball.is_thrown = true
 	ball.global_position = pos
 	ball.linear_velocity = Vector3.ZERO
 	ball.angular_velocity = Vector3.ZERO

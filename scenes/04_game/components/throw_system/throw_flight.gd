@@ -22,17 +22,21 @@ func launch(power: float, direction: Vector3, waypoints: PackedVector3Array):
 	if not ball: return
 	_waypoints = waypoints
 	_current_wp = 1 if waypoints.size() > 1 else 0
-	_active = true
 	var spread = (1.0 - precision) * 0.06
 	var dir = direction.rotated(Vector3.UP, randf_range(-spread, spread))
-	GameManager.emit_signal("throw")
-	while !GameManager.throw_for_real:
-		await get_tree().create_timer(0.05).timeout
-	animation_fix_and_etc()
-	ball.apply_central_impulse(dir * power * max_force)
-	ball.is_thrown = true ## Agregado Santi
-	GameManager.throw_for_real = false
-	GameManager.permission_to_throw = false
+	if GameManager.is_training:
+		ball.apply_central_impulse(dir * power * max_force)
+		_active = true
+	else:
+		GameManager.emit_signal("throw")
+		while !GameManager.throw_for_real:
+			await get_tree().create_timer(0.05).timeout
+		animation_fix_and_etc()
+		ball.apply_central_impulse(dir * power * max_force)
+		ball.is_thrown = true
+		GameManager.throw_for_real = false
+		GameManager.permission_to_throw = false
+		_active = true
 	if control < 1.0:
 		var wobble = (1.0 - control) * 0.1
 		ball.apply_central_impulse(Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)).normalized() * wobble)
@@ -40,23 +44,22 @@ func launch(power: float, direction: Vector3, waypoints: PackedVector3Array):
 func launch_straight(power: float, direction: Vector3):
 	if not ball: return
 	_waypoints.clear()
-	_active = false
 	var spread = (1.0 - precision) * 0.04
 	var dir = direction.rotated(Vector3.UP, randf_range(-spread, spread))
-	GameManager.emit_signal("throw")
-	while !GameManager.throw_for_real:
-		await get_tree().create_timer(0.05).timeout
-	animation_fix_and_etc() ## Fix this
-	ball.apply_central_impulse(dir * power * max_force)
-	ball.is_thrown = true ## Agregado Santi
-	GameManager.throw_for_real = false
-	GameManager.permission_to_throw = false
+	if GameManager.is_training:
+		ball.apply_central_impulse(dir * power * max_force)
+	else:
+		GameManager.emit_signal("throw")
+		while !GameManager.throw_for_real:
+			await get_tree().create_timer(0.05).timeout
+		animation_fix_and_etc()
+		ball.apply_central_impulse(dir * power * max_force)
+		ball.is_thrown = true
+		GameManager.throw_for_real = false
+		GameManager.permission_to_throw = false
 
 func _physics_process(_delta):
 	if not _active or not ball: return
-	if ball.linear_velocity.length() < 0.3:
-		_active = false
-		return
 	if _current_wp >= _waypoints.size():
 		_active = false
 		return
@@ -91,4 +94,6 @@ func animation_fix_and_etc() -> void:
 	camera_follow()
 
 func camera_follow() -> void:
+	if GameManager.is_training:
+		return
 	get_parent().camera_manager.start_follow(ball)

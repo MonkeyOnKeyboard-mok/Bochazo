@@ -280,7 +280,7 @@ text = "Soft Reset"
 script = SubResource("GDScript_5t0ms")
 
 [node name="ParedBack" type="StaticBody3D" parent="." unique_id=640056475]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.761826, 1.4257212, -0.8691883)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.100204, 1.4257212, -0.8691883)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ParedBack" unique_id=151059881]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3004277, 0.90197754)
