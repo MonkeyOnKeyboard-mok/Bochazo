@@ -28,10 +28,10 @@ tracks/0/path = NodePath("image:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.43333328, 0.93333334, 1.9666667, 2.4666667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.43333328, 1.6, 2.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(694, 1100), Vector2(694, 338), Vector2(694, 338), Vector2(694, 65.89404), Vector2(694, -470.00006)]
+"values": [Vector2(694, 1100), Vector2(694, 338), Vector2(694, 300), Vector2(694, -470.00006)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_qsk87"]
@@ -60,7 +60,7 @@ anchor_bottom = 0.63900006
 offset_left = -433.16016
 offset_top = 374.87994
 offset_right = -245.16016
-offset_bottom = 525.0047
+offset_bottom = 525.076
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(3, 3)
