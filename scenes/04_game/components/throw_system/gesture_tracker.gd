@@ -15,15 +15,13 @@ signal aim_ended(points: PackedVector2Array)
 @export var min_charge_distance: float = 50.0
 @export var max_charge_distance: float = 300.0
 @export var charge_visual_scale: float = 1.5
-@export var aim_visual_scale: float = 2.0
 
-const VIEWPORT_CENTER := Vector2(540, 540)
+const VIEWPORT_CENTER := Vector2(960, 540)
 
 var phase: Phase = Phase.IDLE
 var charge_start: Vector2 = Vector2.ZERO
 var aim_points: PackedVector2Array = []
 var aim_start_y: float = 0.0
-var aim_origin: Vector2 = Vector2.ZERO
 
 @onready var charge_line: Line2D = $DrawViewport/ChargeLine
 @onready var charge_line_outline: Line2D = $DrawViewport/ChargeLineOutline
@@ -36,6 +34,35 @@ var aim_origin: Vector2 = Vector2.ZERO
 func _ready() -> void:
 	GameManager.connect("throw", reset)
 	_setup_plane_texture()
+
+func _screen_to_draw_pos(screen_pos: Vector2) -> Variant:
+	var camera := get_viewport().get_camera_3d()
+	if not camera: return null
+	
+	var from := camera.project_ray_origin(screen_pos)
+	var dir := camera.project_ray_normal(screen_pos)
+	
+	var normal := plane_drawing.global_transform.basis.y.normalized()
+	var point := plane_drawing.global_transform.origin
+	
+	var denom := dir.dot(normal)
+	if absf(denom) < 0.001: return null
+	var t := (point - from).dot(normal) / denom
+	if t < 0: return null
+	
+	var hit_world: Vector3 = from + dir * t
+	var hit_local: Vector3 = plane_drawing.global_transform.affine_inverse() * hit_world
+	
+	var aabb := plane_drawing.mesh.get_aabb()
+	var uv := Vector2(
+		(hit_local.x - aabb.position.x) / aabb.size.x,
+		(hit_local.z - aabb.position.z) / aabb.size.z
+	)
+	
+	if uv.x < 0.0 or uv.x > 1.0 or uv.y < 0.0 or uv.y > 1.0:
+		return null
+	
+	return Vector2(uv.x * draw_viewport.size.x, uv.y * draw_viewport.size.y)
 
 func _setup_plane_texture() -> void:
 	var mat := plane_drawing.get_surface_override_material(0) as StandardMaterial3D
@@ -87,10 +114,10 @@ func _end_charge(pos: Vector2):
 func _start_aim(pos: Vector2):
 	phase = Phase.AIM
 	aim_start_y = pos.y
-	aim_origin = pos
 	aim_points = [pos]
-	if aim_line: aim_line.clear_points(); aim_line.add_point(VIEWPORT_CENTER)
-	if aim_line_outline: aim_line_outline.clear_points(); aim_line_outline.add_point(VIEWPORT_CENTER)
+	var draw_pos = _screen_to_draw_pos(pos)
+	if draw_pos and aim_line: aim_line.clear_points(); aim_line.add_point(draw_pos)
+	if draw_pos and aim_line_outline: aim_line_outline.clear_points(); aim_line_outline.add_point(draw_pos)
 	aim_started.emit(pos)
 
 func _on_motion(event: InputEventMouseMotion):
@@ -113,13 +140,13 @@ func _on_motion(event: InputEventMouseMotion):
 		var clamped = Vector2(pos.x, minf(pos.y, aim_start_y))
 		if aim_points.size() < max_aim_points:
 			aim_points.append(clamped)
-			var draw_pos = VIEWPORT_CENTER + (clamped - aim_origin) * aim_visual_scale
-			if debug_enabled and aim_line: aim_line.add_point(draw_pos)
-			if aim_line_outline: aim_line_outline.add_point(draw_pos)
+			var draw_pos = _screen_to_draw_pos(clamped)
+			if draw_pos:
+				if debug_enabled and aim_line: aim_line.add_point(draw_pos)
+				if aim_line_outline: aim_line_outline.add_point(draw_pos)
 			aim_drawing.emit(aim_points)
 
 func _power_color(frac: float) -> Color:
-	# Verde (débil) → Amarillo → Rojo (fuerte)
 	if frac < 0.5:
 		return Color.GREEN.lerp(Color.YELLOW, frac * 2.0)
 	else:
