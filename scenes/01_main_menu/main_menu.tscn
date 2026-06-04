@@ -170,11 +170,11 @@ texture_hover = ExtResource("16_qtf3s")
 [node name="Back" type="TextureButton" parent="ChooseOpp" unique_id=1145366759]
 texture_filter = 1
 layout_mode = 0
-offset_left = 1341.0
-offset_top = 877.0
-offset_right = 1425.0
-offset_bottom = 920.0
-scale = Vector2(3, 3)
+offset_left = 1388.0
+offset_top = 827.0
+offset_right = 1496.0
+offset_bottom = 870.0
+scale = Vector2(4, 4)
 texture_normal = ExtResource("17_3mhj0")
 texture_pressed = ExtResource("18_wvjiv")
 texture_hover = ExtResource("19_486u7")
