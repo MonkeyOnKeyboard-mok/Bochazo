@@ -26,6 +26,9 @@ albedo_texture = ExtResource("2_psqbc")
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ku3qk"]
 albedo_texture = ExtResource("3_77j8t")
 
+[sub_resource type="SystemFont" id="SystemFont_v1jky"]
+font_names = PackedStringArray("Javanese Text")
+
 [sub_resource type="SystemFont" id="SystemFont_psqbc"]
 font_names = PackedStringArray("Javanese Text")
 font_weight = 999
@@ -69,8 +72,10 @@ texture_filter = 0
 texture = ExtResource("8_77j8t")
 
 [node name="Nombre" type="Label3D" parent="Hud" unique_id=240457869]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9445528, -2.0038679)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.24879652, -0.45427716)
 text = "Nombre"
+font = SubResource("SystemFont_v1jky")
+font_size = 30
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("3_khmfb")]
 visible = false
@@ -105,12 +110,12 @@ spot_range = 18.34
 [node name="PressSpaceToSelect2" type="Label3D" parent="." unique_id=1060641060]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099277735, 1.2011763, 0)
 texture_filter = 0
-modulate = Color(0.20392157, 1, 1, 1)
-outline_modulate = Color(0.7076778, 0, 0, 1)
+modulate = Color(0.8433407, 0.3991563, 0.110500835, 1)
+outline_modulate = Color(0.63631314, 0.004529176, 0.0685893, 1)
 text = "Presiona Espacio para elegir"
 font = SubResource("SystemFont_psqbc")
 font_size = 33
-outline_size = 18
+outline_size = 2
 
 [node name="Flechas" type="Node3D" parent="." unique_id=1733418762]
 

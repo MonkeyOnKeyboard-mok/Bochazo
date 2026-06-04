@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dh1xt3fnx72xg"]
+
+[ext_resource type="Texture2D" uid="uid://3qsvh8iy3ttp" path="res://scenes/01_main_menu/boton_2p_default.png" id="1_8b5sx"]
+
+[node name="SubViewPortBorder" type="TextureRect" unique_id=1122129885]
+offset_left = 1476.0
+offset_top = 52.0
+offset_right = 1648.0
+offset_bottom = 234.0
+scale = Vector2(2, 2)
+texture = ExtResource("1_8b5sx")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=796624697]

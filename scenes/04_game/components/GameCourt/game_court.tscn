@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://dr6qdfllwspd4" path="res://scenes/04_game/components/victoryScene/victory_scene.tscn" id="11_1v2qn"]
 [ext_resource type="PackedScene" uid="uid://bwfyp8ij16ceh" path="res://scenes/04_game/components/UI/otra_vez.tscn" id="11_8at0d"]
 [ext_resource type="Script" uid="uid://cfyl6p6vlvq2f" path="res://scenes/04_game/components/GameCourt/oveview_camera.gd" id="12_4tvcl"]
+[ext_resource type="PackedScene" uid="uid://dh1xt3fnx72xg" path="res://scenes/04_game/components/UI/sub_view_port_border.tscn" id="12_t8okv"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5t0ms"]
 transparency = 1
@@ -242,6 +243,8 @@ text = "Add score player 1"
 script = SubResource("GDScript_jt8ei")
 
 [node name="otra_vez" parent="CanvasLayer" unique_id=1624181356 instance=ExtResource("11_8at0d")]
+
+[node name="SubViewPortBorder" parent="CanvasLayer" unique_id=1122129885 instance=ExtResource("12_t8okv")]
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=731301028]
 transparent_bg = true

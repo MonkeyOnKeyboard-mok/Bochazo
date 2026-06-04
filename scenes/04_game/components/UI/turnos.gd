@@ -15,7 +15,6 @@ const JUGADOR_2 = preload("uid://c4us14of6ghtg")
 
 var characters : Dictionary
 
-
 @onready var h_box1: HBoxContainer = $HBoxPlayer1
 @onready var h_box2: HBoxContainer = $HBoxPlayer2
 
@@ -30,6 +29,7 @@ func _ready() -> void:
 	j_2_cabeza.texture = characters[GameManager.player2_char]
 	add_ui_balls()
 	GameManager.connect("spawn_bocha", update_UI)
+	GameManager.connect("full_reset", update_UI)
 	GameManager.connect("soft_reset_end", add_ui_balls)
 	if GameManager.vsAI:
 		j_2_texture.texture = CPU

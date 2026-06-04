@@ -69,7 +69,6 @@ func did_player1_win() -> bool:
 		return true
 	else: return false
 
-
 func _on_menu_pressed() -> void:
 	emit_signal("rematch")
 	Audio.main_loop_out()

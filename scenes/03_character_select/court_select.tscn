@@ -27,6 +27,12 @@ colors = PackedColorArray(0.94028825, 0.0006804966, 0.00037272455, 1, 1, 0, 0.13
 gradient = SubResource("Gradient_h5lt7")
 fill_from = Vector2(0.39529914, 0.4764957)
 
+[sub_resource type="SystemFont" id="SystemFont_dkbfx"]
+font_names = PackedStringArray("Javanese Text")
+
+[sub_resource type="SystemFont" id="SystemFont_uoby1"]
+font_names = PackedStringArray("Javanese Text")
+
 [sub_resource type="SystemFont" id="SystemFont_52yxm"]
 font_names = PackedStringArray("Javanese Text")
 font_weight = 999
@@ -80,10 +86,12 @@ texture = SubResource("GradientTexture2D_khmfb")
 
 [node name="Label3D" type="Label3D" parent="Hud/Flecha" unique_id=1141533837]
 text = "Jugador"
+font = SubResource("SystemFont_dkbfx")
 
 [node name="Nombre" type="Label3D" parent="Hud" unique_id=240457869]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.083438635, -0.13015628)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13487601, -0.13015628)
 text = "Nombre"
+font = SubResource("SystemFont_uoby1")
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("6_koilm")]
 visible = false
@@ -110,12 +118,12 @@ spot_angle = 15.17
 [node name="PressSpaceToSelect" type="Label3D" parent="." unique_id=57241988]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099277735, 1.436731, 0)
 texture_filter = 0
-modulate = Color(0.20392157, 1, 1, 1)
-outline_modulate = Color(0.7076778, 0, 0, 1)
+modulate = Color(0.8433407, 0.3991563, 0.110500835, 1)
+outline_modulate = Color(0.63631314, 0.004529176, 0.0685893, 1)
 text = "Presiona Espacio para elegir"
 font = SubResource("SystemFont_52yxm")
 font_size = 33
-outline_size = 18
+outline_size = 2
 
 [node name="Background2" type="MeshInstance3D" parent="." unique_id=624753922]
 transform = Transform3D(28.46582, 0, 0, 0, -7.3765494e-07, -6.359927, 0, 16.875578, -2.7800124e-07, 0, 0, -4.1128116)
@@ -138,9 +146,9 @@ texture = ExtResource("12_aa36g")
 [node name="FlechaDer2" type="TextureButton" parent="Flechas" unique_id=1601815362]
 texture_filter = 1
 offset_left = 1129.0
-offset_top = 821.0
+offset_top = 841.0
 offset_right = 1169.0
-offset_bottom = 861.0
+offset_bottom = 881.0
 scale = Vector2(2, 2)
 texture_normal = ExtResource("14_sxd1i")
 texture_pressed = ExtResource("15_saynj")
@@ -150,9 +158,9 @@ texture_disabled = ExtResource("17_uoby1")
 [node name="FlechaIzq2" type="TextureButton" parent="Flechas" unique_id=1755123050]
 texture_filter = 1
 offset_left = 733.0
-offset_top = 825.0
+offset_top = 845.0
 offset_right = 773.0
-offset_bottom = 865.0
+offset_bottom = 885.0
 scale = Vector2(2, 2)
 texture_normal = ExtResource("14_sxd1i")
 texture_pressed = ExtResource("15_saynj")
@@ -162,9 +170,9 @@ flip_h = true
 
 [node name="Space2" type="TextureButton" parent="Flechas" unique_id=1135506775]
 texture_filter = 1
-offset_left = 908.0
+offset_left = 907.00006
 offset_top = 928.0
-offset_right = 942.0
+offset_right = 941.00006
 offset_bottom = 955.0
 scale = Vector2(3, 3)
 texture_normal = ExtResource("17_dkbfx")

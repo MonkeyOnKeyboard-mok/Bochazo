@@ -186,7 +186,6 @@ scale = Vector2(3, 3)
 texture = ExtResource("20_qtf3s")
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("8_6prxp")]
-visible = false
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=32502218]
 
