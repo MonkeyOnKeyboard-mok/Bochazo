@@ -17,7 +17,10 @@
 [ext_resource type="Texture2D" uid="uid://dyb21e2rgg8e7" path="res://scenes/01_main_menu/boton_2p_highlight.png" id="13_gi7kl"]
 [ext_resource type="Texture2D" uid="uid://bweuudwi1tlah" path="res://scenes/01_main_menu/boton_cpu_press.png" id="15_ssy2f"]
 [ext_resource type="Texture2D" uid="uid://b87pcgwh07dfl" path="res://scenes/01_main_menu/boton_cpu_highlight.png" id="16_qtf3s"]
+[ext_resource type="Texture2D" uid="uid://d3qn32utiy30k" path="res://scenes/04_game/components/UI/volver_default.png" id="17_3mhj0"]
 [ext_resource type="PackedScene" uid="uid://cbav1836sl41w" path="res://assets/models/player/robotto.glb" id="18_gi7kl"]
+[ext_resource type="Texture2D" uid="uid://dbc7crrjawtkq" path="res://scenes/04_game/components/UI/volver_pressed.png" id="18_wvjiv"]
+[ext_resource type="Texture2D" uid="uid://c28c2j3bmt0tf" path="res://scenes/04_game/components/UI/volver_hover.png" id="19_486u7"]
 [ext_resource type="PackedScene" uid="uid://foi2dahuh4rr" path="res://scenes/04_game/components/players/raul_posta.tscn" id="19_ssy2f"]
 [ext_resource type="Texture2D" uid="uid://beh5j6rc3srhg" path="res://scenes/01_main_menu/seleccion de modo.png" id="20_qtf3s"]
 
@@ -164,16 +167,17 @@ texture_normal = ExtResource("12_tg5ni")
 texture_pressed = ExtResource("15_ssy2f")
 texture_hover = ExtResource("16_qtf3s")
 
-[node name="Back" type="Button" parent="ChooseOpp" unique_id=859897053]
+[node name="Back" type="TextureButton" parent="ChooseOpp" unique_id=1145366759]
 texture_filter = 1
 layout_mode = 0
 offset_left = 1341.0
 offset_top = 877.0
-offset_right = 1398.0
-offset_bottom = 908.0
+offset_right = 1425.0
+offset_bottom = 920.0
 scale = Vector2(3, 3)
-theme_override_font_sizes/font_size = 25
-text = "Volver"
+texture_normal = ExtResource("17_3mhj0")
+texture_pressed = ExtResource("18_wvjiv")
+texture_hover = ExtResource("19_486u7")
 
 [node name="SeleccionDeModo" type="Sprite2D" parent="ChooseOpp" unique_id=338101220]
 texture_filter = 1
@@ -182,6 +186,7 @@ scale = Vector2(3, 3)
 texture = ExtResource("20_qtf3s")
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("8_6prxp")]
+visible = false
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=32502218]
 

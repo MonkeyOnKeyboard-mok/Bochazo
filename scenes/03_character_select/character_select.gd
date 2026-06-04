@@ -15,6 +15,8 @@ const CPU = preload("uid://3uumt0ch54on")
 @onready var hud: Node3D = $Hud
 @onready var flecha: Sprite3D = $Hud/Flecha
 @onready var nombre: Label3D = $Hud/Nombre
+@onready var flecha_der_2: TextureButton = $Flechas/FlechaDer2
+@onready var flecha_izq_2: TextureButton = $Flechas/FlechaIzq2
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -27,6 +29,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
+	disable_arrows()
 	if !moving:
 		handle_input()
 	if current_character.data:
@@ -39,6 +42,14 @@ func handle_input() -> void:
 		move_right()
 	if Input.is_action_just_pressed("choose"):
 		choose()
+
+func disable_arrows() -> void:
+	if index+1 >= player_list.size(): 
+		flecha_der_2.disabled = true
+	else: flecha_der_2.disabled = false
+	if index-1 <= -1:
+		flecha_izq_2.disabled = true
+	else: flecha_izq_2.disabled = false
 
 func move_left() -> void:
 	if index+1 >= player_list.size(): return
@@ -105,20 +116,14 @@ func _on_timer_timeout() -> void:
 	get_tree().change_scene_to_file("res://scenes/03_character_select/court_select.tscn")
 	print("Cargando selección de cancha")
 
-func _on_area_flecha_izq_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			print("Sprite clicked!")
-			move_left()
+func _on_flecha_der_pressed() -> void:
+	print("Sprite clicked!")
+	move_left()
 
-func _on_area_flecha_der_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			print("Sprite clicked!")
-			move_right()
+func _on_flecha_izq_pressed() -> void:
+	print("Sprite clicked!")
+	move_right()
 
-func _on_area_space_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			print("Sprite clicked!")
-			choose()
+func _on_space_2_pressed() -> void:
+	print("Sprite clicked!")
+	choose()

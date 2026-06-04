@@ -78,7 +78,7 @@ func _physics_process(_delta):
 	var vel_horiz = Vector3(vel.x, 0, vel.z)
 	if vel_horiz.length() < 0.2: return
 
-	var forward = Vector3.RIGHT
+	var _forward = Vector3.RIGHT
 	var right = Vector3.BACK
 	var desired = to_target.normalized()
 	var lateral = desired.dot(right)

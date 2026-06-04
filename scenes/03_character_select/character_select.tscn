@@ -10,7 +10,10 @@
 [ext_resource type="PackedScene" uid="uid://vm7xhcn14t0u" path="res://scenes/03_character_select/beto_char_select.tscn" id="5_8yjhp"]
 [ext_resource type="Texture2D" uid="uid://bj1wuachgwsah" path="res://scenes/01_main_menu/titulo.png" id="7_cv6m7"]
 [ext_resource type="Texture2D" uid="uid://dq6jc4avxafho" path="res://scenes/04_game/components/UI/jugador_1.png" id="8_77j8t"]
-[ext_resource type="Texture2D" uid="uid://d1m3ihv66juhd" path="res://TestSceneSanti/placeholders/bocha.png" id="11_pbri6"]
+[ext_resource type="Texture2D" uid="uid://bd4bboksimwpl" path="res://scenes/04_game/components/UI/flecha_default.png" id="11_oyjb0"]
+[ext_resource type="Texture2D" uid="uid://k3t6l48mc5dx" path="res://scenes/04_game/components/UI/flecha_pressed.png" id="12_j70hh"]
+[ext_resource type="Texture2D" uid="uid://b3tgfx8lgoxfi" path="res://scenes/04_game/components/UI/flecha_hover.png" id="13_6d8yc"]
+[ext_resource type="Texture2D" uid="uid://c888y7lul7h5n" path="res://scenes/04_game/components/UI/flecha_disabled.png" id="14_v1jky"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_77j8t"]
 albedo_texture = ExtResource("2_psqbc")
@@ -24,12 +27,6 @@ albedo_texture = ExtResource("3_77j8t")
 font_names = PackedStringArray("Javanese Text")
 font_weight = 999
 font_stretch = 200
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_pbri6"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_ku3qk"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_kfv5l"]
 
 [node name="CharacterSelect" type="Node3D" unique_id=108657606]
 script = ExtResource("1_d67qk")
@@ -111,39 +108,46 @@ font = SubResource("SystemFont_psqbc")
 font_size = 33
 outline_size = 18
 
-[node name="Flechas" type="Node3D" parent="." unique_id=1266526678]
+[node name="Flechas" type="Node3D" parent="." unique_id=1733418762]
 
-[node name="FlechaIzq" type="Sprite3D" parent="Flechas" unique_id=1566473148]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4523745, -0.13758063, -0.31245202)
-texture = ExtResource("11_pbri6")
+[node name="FlechaDer2" type="TextureButton" parent="Flechas" unique_id=1994394960]
+texture_filter = 1
+offset_left = 1129.0
+offset_top = 821.0
+offset_right = 1169.0
+offset_bottom = 861.0
+scale = Vector2(2, 2)
+texture_normal = ExtResource("11_oyjb0")
+texture_pressed = ExtResource("12_j70hh")
+texture_hover = ExtResource("13_6d8yc")
+texture_disabled = ExtResource("14_v1jky")
 
-[node name="AreaFlechaIzq" type="Area3D" parent="Flechas/FlechaIzq" unique_id=766555695]
+[node name="FlechaIzq2" type="TextureButton" parent="Flechas" unique_id=1151774493]
+texture_filter = 1
+offset_left = 733.0
+offset_top = 825.0
+offset_right = 773.0
+offset_bottom = 865.0
+scale = Vector2(2, 2)
+texture_normal = ExtResource("11_oyjb0")
+texture_pressed = ExtResource("12_j70hh")
+texture_hover = ExtResource("13_6d8yc")
+texture_disabled = ExtResource("14_v1jky")
+flip_h = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Flechas/FlechaIzq/AreaFlechaIzq" unique_id=806862074]
-transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0.9191273, 0, 0)
-shape = SubResource("BoxShape3D_pbri6")
-
-[node name="FlechaDer" type="Sprite3D" parent="Flechas" unique_id=1263946352]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46483096, -0.13758063, -0.31245202)
-texture = ExtResource("11_pbri6")
-
-[node name="AreaFlechaDer" type="Area3D" parent="Flechas/FlechaDer" unique_id=1280589230]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Flechas/FlechaDer/AreaFlechaDer" unique_id=865844342]
-transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, -0.9172765, 0, 0)
-shape = SubResource("BoxShape3D_ku3qk")
-
-[node name="Space" type="Sprite3D" parent="Flechas" unique_id=504115867]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.42815349, -0.3131293)
-texture = ExtResource("11_pbri6")
-
-[node name="AreaSpace" type="Area3D" parent="Flechas/Space" unique_id=658657077]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Flechas/Space/AreaSpace" unique_id=365136612]
-transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 0, 0)
-shape = SubResource("BoxShape3D_kfv5l")
+[node name="Space2" type="TextureButton" parent="Flechas" unique_id=142245433]
+texture_filter = 1
+offset_left = 1000.0
+offset_top = 956.0
+offset_right = 1040.0
+offset_bottom = 996.0
+rotation = 1.5707964
+scale = Vector2(2, 2)
+texture_normal = ExtResource("11_oyjb0")
+texture_pressed = ExtResource("12_j70hh")
+texture_hover = ExtResource("13_6d8yc")
 
 [connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]
-[connection signal="input_event" from="Flechas/FlechaIzq/AreaFlechaIzq" to="." method="_on_area_flecha_izq_input_event"]
-[connection signal="input_event" from="Flechas/FlechaDer/AreaFlechaDer" to="." method="_on_area_flecha_der_input_event"]
-[connection signal="input_event" from="Flechas/Space/AreaSpace" to="." method="_on_area_space_input_event"]
+[connection signal="pressed" from="Flechas/FlechaDer2" to="." method="_on_flecha_der_pressed"]
+[connection signal="pressed" from="Flechas/FlechaIzq2" to="." method="_on_flecha_izq_pressed"]
+[connection signal="pressed" from="Flechas/Space2" to="." method="_on_space_2_pressed"]
