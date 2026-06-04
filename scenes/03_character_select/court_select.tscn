@@ -15,7 +15,10 @@
 [ext_resource type="Texture2D" uid="uid://bd4bboksimwpl" path="res://scenes/04_game/components/UI/flecha_default.png" id="14_sxd1i"]
 [ext_resource type="Texture2D" uid="uid://k3t6l48mc5dx" path="res://scenes/04_game/components/UI/flecha_pressed.png" id="15_saynj"]
 [ext_resource type="Texture2D" uid="uid://b3tgfx8lgoxfi" path="res://scenes/04_game/components/UI/flecha_hover.png" id="16_dkbfx"]
+[ext_resource type="Texture2D" uid="uid://cuynqsrjajk5u" path="res://scenes/01_main_menu/ok_default.png" id="17_dkbfx"]
 [ext_resource type="Texture2D" uid="uid://c888y7lul7h5n" path="res://scenes/04_game/components/UI/flecha_disabled.png" id="17_uoby1"]
+[ext_resource type="Texture2D" uid="uid://d1hmy3mnsi55j" path="res://scenes/01_main_menu/ok_pressed.png" id="18_uoby1"]
+[ext_resource type="Texture2D" uid="uid://5j3m0f2rvhuy" path="res://scenes/01_main_menu/ok_hover.png" id="19_upbc8"]
 
 [sub_resource type="Gradient" id="Gradient_h5lt7"]
 colors = PackedColorArray(0.94028825, 0.0006804966, 0.00037272455, 1, 1, 0, 0.13725491, 1)
@@ -159,15 +162,14 @@ flip_h = true
 
 [node name="Space2" type="TextureButton" parent="Flechas" unique_id=1135506775]
 texture_filter = 1
-offset_left = 1000.0
-offset_top = 956.0
-offset_right = 1040.0
-offset_bottom = 996.0
-rotation = 1.5707964
-scale = Vector2(2, 2)
-texture_normal = ExtResource("14_sxd1i")
-texture_pressed = ExtResource("15_saynj")
-texture_hover = ExtResource("16_dkbfx")
+offset_left = 908.0
+offset_top = 928.0
+offset_right = 942.0
+offset_bottom = 955.0
+scale = Vector2(3, 3)
+texture_normal = ExtResource("17_dkbfx")
+texture_pressed = ExtResource("18_uoby1")
+texture_hover = ExtResource("19_upbc8")
 
 [connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]
 [connection signal="pressed" from="Flechas/FlechaDer2" to="." method="_on_flecha_der_pressed"]

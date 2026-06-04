@@ -1,6 +1,12 @@
 [gd_scene format=3 uid="uid://dr6qdfllwspd4"]
 
 [ext_resource type="Script" uid="uid://dk3q3okqrfnsc" path="res://scenes/04_game/components/victoryScene/victory_scene.gd" id="1_73vyi"]
+[ext_resource type="Texture2D" uid="uid://bo5u2it4ewyge" path="res://scenes/01_main_menu/menu_default.png" id="2_nfrne"]
+[ext_resource type="Texture2D" uid="uid://bqwmbmls5yirc" path="res://scenes/01_main_menu/menu_pressed.png" id="3_g564i"]
+[ext_resource type="Texture2D" uid="uid://1truh1kxj0eu" path="res://scenes/01_main_menu/menu_hover.png" id="4_6srt0"]
+[ext_resource type="Texture2D" uid="uid://dfvad0cxpc1y7" path="res://scenes/01_main_menu/rematch_default.png" id="5_iye10"]
+[ext_resource type="Texture2D" uid="uid://b6jtcqten0o0r" path="res://scenes/01_main_menu/rematch_pressed.png" id="6_j067k"]
+[ext_resource type="Texture2D" uid="uid://ben88q8bisil7" path="res://scenes/01_main_menu/rematch_hover.png" id="7_k23s5"]
 
 [node name="VictoryScene" type="Node3D" unique_id=1193199637]
 script = ExtResource("1_73vyi")
@@ -65,21 +71,29 @@ light_energy = 3.728
 spot_range = 1.736
 spot_angle = 71.86
 
-[node name="Menu" type="Button" parent="." unique_id=546416235]
-offset_left = 486.0
-offset_top = 797.0
-offset_right = 771.0
-offset_bottom = 942.0
-theme_override_font_sizes/font_size = 100
-text = "Menu"
+[node name="Menu" type="TextureButton" parent="." unique_id=1153217433]
+texture_filter = 1
+offset_left = 313.00003
+offset_top = 762.0
+offset_right = 438.00003
+offset_bottom = 834.0
+scale = Vector2(3, 3)
+texture_normal = ExtResource("2_nfrne")
+texture_pressed = ExtResource("3_g564i")
+texture_hover = ExtResource("4_6srt0")
+stretch_mode = 5
 
-[node name="Rematch" type="Button" parent="." unique_id=1510961681]
-offset_left = 1084.0
-offset_top = 797.0
-offset_right = 1537.0
-offset_bottom = 948.0
-theme_override_font_sizes/font_size = 104
-text = "Rematch"
+[node name="Rematch" type="TextureButton" parent="." unique_id=105549479]
+texture_filter = 1
+offset_left = 1169.0
+offset_top = 771.0
+offset_right = 1345.0
+offset_bottom = 836.0
+scale = Vector2(3, 3)
+texture_normal = ExtResource("5_iye10")
+texture_pressed = ExtResource("6_j067k")
+texture_hover = ExtResource("7_k23s5")
+stretch_mode = 5
 
 [connection signal="pressed" from="Menu" to="." method="_on_menu_pressed"]
 [connection signal="pressed" from="Rematch" to="." method="_on_rematch_pressed"]

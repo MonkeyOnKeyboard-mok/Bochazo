@@ -6,8 +6,8 @@ const BETO = preload("uid://dit3ym5ot60fp")
 
 @onready var marker_p_1: Marker3D = $p1/SubVP1/MarkerP1
 @onready var marker_p_2: Marker3D = $p2/SubVP2/MarkerP2
-@onready var menu_b: Button = $Menu
-@onready var rematch_b: Button = $Rematch
+@onready var menu_b: TextureButton = $Menu
+@onready var rematch_b: TextureButton = $Rematch
 
 signal rematch
 

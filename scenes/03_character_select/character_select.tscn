@@ -14,6 +14,9 @@
 [ext_resource type="Texture2D" uid="uid://k3t6l48mc5dx" path="res://scenes/04_game/components/UI/flecha_pressed.png" id="12_j70hh"]
 [ext_resource type="Texture2D" uid="uid://b3tgfx8lgoxfi" path="res://scenes/04_game/components/UI/flecha_hover.png" id="13_6d8yc"]
 [ext_resource type="Texture2D" uid="uid://c888y7lul7h5n" path="res://scenes/04_game/components/UI/flecha_disabled.png" id="14_v1jky"]
+[ext_resource type="Texture2D" uid="uid://cuynqsrjajk5u" path="res://scenes/01_main_menu/ok_default.png" id="15_v1jky"]
+[ext_resource type="Texture2D" uid="uid://d1hmy3mnsi55j" path="res://scenes/01_main_menu/ok_pressed.png" id="16_y3xyj"]
+[ext_resource type="Texture2D" uid="uid://5j3m0f2rvhuy" path="res://scenes/01_main_menu/ok_hover.png" id="17_snteo"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_77j8t"]
 albedo_texture = ExtResource("2_psqbc")
@@ -70,6 +73,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9445528, -2.0038679)
 text = "Nombre"
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("3_khmfb")]
+visible = false
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=1454924949]
 
@@ -137,15 +141,14 @@ flip_h = true
 
 [node name="Space2" type="TextureButton" parent="Flechas" unique_id=142245433]
 texture_filter = 1
-offset_left = 1000.0
-offset_top = 956.0
-offset_right = 1040.0
-offset_bottom = 996.0
-rotation = 1.5707964
-scale = Vector2(2, 2)
-texture_normal = ExtResource("11_oyjb0")
-texture_pressed = ExtResource("12_j70hh")
-texture_hover = ExtResource("13_6d8yc")
+offset_left = 908.0
+offset_top = 928.0
+offset_right = 942.0
+offset_bottom = 955.0
+scale = Vector2(3, 3)
+texture_normal = ExtResource("15_v1jky")
+texture_pressed = ExtResource("16_y3xyj")
+texture_hover = ExtResource("17_snteo")
 
 [connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]
 [connection signal="pressed" from="Flechas/FlechaDer2" to="." method="_on_flecha_der_pressed"]
