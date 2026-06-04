@@ -45,6 +45,6 @@ begin_cap_mode = 2
 end_cap_mode = 2
 
 [node name="PlaneDrawing" type="MeshInstance3D" parent="." unique_id=1365592112]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -32.199467, 1.7075715, -0.063742846)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.199467, 1.7075715, -0.063742846)
 mesh = SubResource("PlaneMesh_rlwoi")
 surface_material_override/0 = SubResource("StandardMaterial3D_dv00h")
