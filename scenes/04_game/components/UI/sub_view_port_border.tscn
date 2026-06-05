@@ -1,6 +1,19 @@
 [gd_scene format=3 uid="uid://dh1xt3fnx72xg"]
 
-[ext_resource type="Texture2D" uid="uid://3qsvh8iy3ttp" path="res://scenes/01_main_menu/boton_2p_default.png" id="1_8b5sx"]
+[ext_resource type="Texture2D" uid="uid://4yiani36oru4" path="res://scenes/04_game/components/GameCourt/marco_viewport.png" id="1_ov3w5"]
+[ext_resource type="Script" uid="uid://blfsg10bwh2y0" path="res://scenes/04_game/components/UI/sub_view_port_border.gd" id="2_ov3w5"]
+
+[sub_resource type="Animation" id="Animation_ov3w5"]
+resource_name = "fade_in"
+
+[sub_resource type="Animation" id="Animation_dwfww"]
+resource_name = "fade_out"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ejd6c"]
+_data = {
+&"fade_in": SubResource("Animation_ov3w5"),
+&"fade_out": SubResource("Animation_dwfww")
+}
 
 [node name="SubViewPortBorder" type="TextureRect" unique_id=1122129885]
 offset_left = 1476.0
@@ -8,6 +21,8 @@ offset_top = 52.0
 offset_right = 1648.0
 offset_bottom = 234.0
 scale = Vector2(2, 2)
-texture = ExtResource("1_8b5sx")
+texture = ExtResource("1_ov3w5")
+script = ExtResource("2_ov3w5")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=796624697]
+libraries/ = SubResource("AnimationLibrary_ejd6c")
