@@ -26,6 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://beh5j6rc3srhg" path="res://scenes/01_main_menu/seleccion de modo.png" id="20_qtf3s"]
 [ext_resource type="Texture2D" uid="uid://r3bbqn7ltsxa" path="res://scenes/01_main_menu/creditos_raul_aart.png" id="25_486u7"]
 [ext_resource type="Texture2D" uid="uid://bol8gb08jotvq" path="res://scenes/01_main_menu/creditos_rau_lmusik.png" id="26_8j7x8"]
+[ext_resource type="Texture2D" uid="uid://15yilnw4tdj4" path="res://scenes/01_main_menu/creditos_raul_code.png" id="27_ymr7r"]
 
 [sub_resource type="GDScript" id="GDScript_11rdk"]
 resource_name = "PlayButton"
@@ -72,6 +73,16 @@ func _process(_delta: float) -> void:
 	pass
 "
 
+[sub_resource type="Gradient" id="Gradient_ymr7r"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.8122807)
+colors = PackedColorArray(0, 0.34084952, 0.5101961, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_dug0d"]
+gradient = SubResource("Gradient_ymr7r")
+fill = 1
+fill_from = Vector2(0.5192308, 0.4722222)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_8j7x8"]
 atlas = ExtResource("25_486u7")
 region = Rect2(0, 0, 22, 16)
@@ -113,6 +124,50 @@ animations = [{
 }],
 "loop": true,
 "name": &"arte",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_dug0d")
+}, {
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_05uuf")
+}],
+"loop": true,
+"name": &"music",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dl6gs"]
+atlas = ExtResource("27_ymr7r")
+region = Rect2(0, 0, 17, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_limo1"]
+atlas = ExtResource("27_ymr7r")
+region = Rect2(17, 0, 17, 17)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_i5qar"]
+animations = [{
+"frames": [{
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_8j7x8")
+}, {
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_ymr7r")
+}],
+"loop": true,
+"name": &"arte",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_dl6gs")
+}, {
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_limo1")
+}],
+"loop": true,
+"name": &"code",
 "speed": 5.0
 }, {
 "frames": [{
@@ -248,7 +303,6 @@ scale = Vector2(3, 3)
 texture = ExtResource("20_qtf3s")
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("8_6prxp")]
-visible = false
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=32502218]
 
@@ -322,7 +376,7 @@ script = null
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.067, 3.095, 3.665)
 fov = 44.1
 
-[node name="CreditosRect" type="ColorRect" parent="." unique_id=346194828]
+[node name="CreditosRect" type="TextureRect" parent="." unique_id=433685561]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -335,33 +389,147 @@ offset_right = 1847.0
 offset_bottom = 1063.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.035630405, 0.022001745, 0.22988689, 1)
+texture = SubResource("GradientTexture2D_dug0d")
 
 [node name="RaulArte" type="AnimatedSprite2D" parent="CreditosRect" unique_id=1468746010]
 texture_filter = 1
-position = Vector2(470.99997, 169.00002)
+position = Vector2(322, 276)
 scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_dug0d")
-frame_progress = 0.5337209
+autoplay = "default"
+frame_progress = 0.8741371
 
 [node name="RaulMusic" type="AnimatedSprite2D" parent="CreditosRect" unique_id=1176388002]
 texture_filter = 1
-position = Vector2(470.99997, 458)
+position = Vector2(898, 272.00003)
 scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_dl6gs")
 animation = &"music"
 autoplay = "music"
-frame_progress = 0.7527208
+frame_progress = 0.09314583
+
+[node name="RaulMusic2" type="AnimatedSprite2D" parent="CreditosRect" unique_id=252363602]
+texture_filter = 1
+position = Vector2(1286.0001, 276.00003)
+scale = Vector2(10, 10)
+sprite_frames = SubResource("SpriteFrames_dl6gs")
+animation = &"music"
+autoplay = "music"
+frame_progress = 0.38803172
+flip_h = true
+
+[node name="RaulCode" type="AnimatedSprite2D" parent="CreditosRect" unique_id=523126082]
+texture_filter = 1
+position = Vector2(805, 809.00006)
+scale = Vector2(10, 10)
+sprite_frames = SubResource("SpriteFrames_i5qar")
+animation = &"code"
+autoplay = "code"
+frame_progress = 0.8964128
+flip_h = true
+
+[node name="RaulCode2" type="AnimatedSprite2D" parent="CreditosRect" unique_id=250128453]
+texture_filter = 1
+position = Vector2(280, 817)
+scale = Vector2(10, 10)
+sprite_frames = SubResource("SpriteFrames_i5qar")
+animation = &"code"
+autoplay = "code"
+frame_progress = 0.6705033
 
 [node name="LabelArte" type="Label" parent="CreditosRect" unique_id=1631048049]
 layout_mode = 0
-offset_left = 665.0
-offset_top = 126.0
-offset_right = 1263.0
-offset_bottom = 263.0
+offset_left = 126.0
+offset_top = 79.0
+offset_right = 487.0
+offset_bottom = 216.0
 theme_override_fonts/font = SubResource("SystemFont_486u7")
 theme_override_font_sizes/font_size = 60
-text = "Arte 2D y 3D: Rokitoki"
+text = "Arte 2D y 3D"
+
+[node name="LabelArte2" type="Label" parent="CreditosRect/LabelArte" unique_id=1543849450]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 287.0
+offset_right = 317.0
+offset_bottom = 424.0
+theme_override_fonts/font = SubResource("SystemFont_486u7")
+theme_override_font_sizes/font_size = 60
+text = "Rokitoki"
+
+[node name="LabelMusic" type="Label" parent="CreditosRect" unique_id=1767344032]
+layout_mode = 0
+offset_left = 932.0
+offset_top = 81.0
+offset_right = 1293.0
+offset_bottom = 218.0
+theme_override_fonts/font = SubResource("SystemFont_486u7")
+theme_override_font_sizes/font_size = 60
+text = "Música y SFX"
+
+[node name="LabelMusic" type="Label" parent="CreditosRect/LabelMusic" unique_id=1789443090]
+layout_mode = 0
+offset_left = -119.0
+offset_top = 306.0
+offset_right = 118.0
+offset_bottom = 443.0
+theme_override_fonts/font = SubResource("SystemFont_486u7")
+theme_override_font_sizes/font_size = 60
+text = "Joaco"
+
+[node name="LabelMusic2" type="Label" parent="CreditosRect/LabelMusic" unique_id=970177140]
+layout_mode = 0
+offset_left = 164.0
+offset_top = 306.0
+offset_right = 636.0
+offset_bottom = 443.0
+theme_override_fonts/font = SubResource("SystemFont_486u7")
+theme_override_font_sizes/font_size = 60
+text = "Chume, La Gacela"
+
+[node name="LabelCode" type="Label" parent="CreditosRect" unique_id=86639195]
+layout_mode = 0
+offset_left = 349.0
+offset_top = 587.0
+offset_right = 710.0
+offset_bottom = 724.0
+theme_override_fonts/font = SubResource("SystemFont_486u7")
+theme_override_font_sizes/font_size = 60
+text = "Programación"
+
+[node name="LabelMusic" type="Label" parent="CreditosRect/LabelCode" unique_id=1997898261]
+layout_mode = 0
+offset_left = -239.0
+offset_top = 308.0
+offset_right = 110.0
+offset_bottom = 445.0
+theme_override_fonts/font = SubResource("SystemFont_486u7")
+theme_override_font_sizes/font_size = 60
+text = "FiconRagnaX"
+
+[node name="LabelMusic2" type="Label" parent="CreditosRect/LabelCode" unique_id=1064327491]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 290.0
+offset_right = 747.0
+offset_bottom = 484.0
+theme_override_constants/line_spacing = -80
+theme_override_fonts/font = SubResource("SystemFont_486u7")
+theme_override_font_sizes/font_size = 60
+text = "           Santi
+MonkeyOnKeyboard"
+
+[node name="Exit2" type="TextureButton" parent="CreditosRect" unique_id=327635191]
+texture_filter = 1
+layout_mode = 0
+offset_left = 1430.0
+offset_top = 896.0
+offset_right = 1538.0
+offset_bottom = 936.0
+scale = Vector2(3, 3)
+texture_normal = ExtResource("17_3mhj0")
+texture_pressed = ExtResource("18_wvjiv")
+texture_hover = ExtResource("19_486u7")
 
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Creditos" to="." method="_on_creditos_pressed"]
@@ -370,5 +538,6 @@ text = "Arte 2D y 3D: Rokitoki"
 [connection signal="pressed" from="ChooseOpp/VsCPU" to="." method="_on_vs_cpu_pressed"]
 [connection signal="pressed" from="ChooseOpp/Back" to="." method="_on_back_pressed"]
 [connection signal="timeout" from="FadeTransition/Timer" to="." method="_on_timer_timeout"]
+[connection signal="pressed" from="CreditosRect/Exit2" to="." method="_on_exit_2_pressed"]
 
 [editable path="SubViewportContainer/SubViewportCPU/robotto"]

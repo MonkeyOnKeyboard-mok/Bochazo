@@ -251,7 +251,6 @@ script = SubResource("GDScript_jt8ei")
 [node name="otra_vez" parent="CanvasLayer" unique_id=1624181356 instance=ExtResource("11_8at0d")]
 
 [node name="SubViewPortBorder" parent="CanvasLayer" unique_id=1122129885 instance=ExtResource("12_t8okv")]
-texture_filter = 1
 offset_left = 1475.59
 offset_top = 30.000002
 offset_right = 1644.59

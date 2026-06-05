@@ -10,7 +10,7 @@ script = ExtResource("1_gpi1t")
 
 [node name="main_loop" type="AudioStreamPlayer" parent="." unique_id=1861159546]
 stream = ExtResource("2_enopx")
-volume_db = -50.0
+volume_db = -13.0
 
 [node name="menu" type="AudioStreamPlayer" parent="." unique_id=1521056175]
 stream = ExtResource("3_3rsp6")

@@ -9,7 +9,7 @@ var button_type = null
 @onready var choose_opp: ColorRect = $ChooseOpp
 @onready var sub_v1: SubViewportContainer = $SubViewportContainer
 @onready var sub_v2: SubViewportContainer = $SubViewportContainer2
-
+@onready var creditos: TextureRect = $CreditosRect
 
 #@onready var fade_transition: ColorRect = $fade_transition
 #@onready var creditos_png: TextureRect = $creditosPNG
@@ -21,7 +21,7 @@ func _ready() -> void:
 	choose_opp.hide()
 	sub_v1.visible = false
 	sub_v2.visible = false
-	#creditos_png.hide()
+	creditos.hide()
 	Audio.menu_theme()
 	$FadeTransition/ColorRect/FadeRect.play("fade_out")
 	pass
@@ -36,7 +36,7 @@ func _process(_delta: float) -> void:
 func _on_creditos_pressed() -> void:
 	#Audio.click()
 	button_type = "credits"
-	creditos()
+	creditos_show()
 
 func _on_exit_pressed() -> void:
 	get_tree().quit()
@@ -48,13 +48,8 @@ func _on_play_pressed() -> void:
 	##Audio.click()
 	pass
 
-func creditos() -> void:
-	#creditos_png.show()
-	pass
-
-func _on_salir_creditos_pressed() -> void:
-	#creditos_png.hide()
-	pass
+func creditos_show() -> void:
+	creditos.show()
 
 func _on_vs_player_pressed() -> void:
 	button_type = "start"
@@ -81,3 +76,6 @@ func _on_timer_timeout() -> void:
 		"start": 
 			get_tree().change_scene_to_file("res://scenes/03_character_select/character_select.tscn")
 			print("Cargando selección de personajes")
+
+func _on_exit_2_pressed() -> void:
+	creditos.hide()

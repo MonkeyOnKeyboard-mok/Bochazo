@@ -3,19 +3,60 @@
 [ext_resource type="Texture2D" uid="uid://4yiani36oru4" path="res://scenes/04_game/components/GameCourt/marco_viewport.png" id="1_ov3w5"]
 [ext_resource type="Script" uid="uid://blfsg10bwh2y0" path="res://scenes/04_game/components/UI/sub_view_port_border.gd" id="2_ov3w5"]
 
+[sub_resource type="Animation" id="Animation_ejd6c"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
 [sub_resource type="Animation" id="Animation_ov3w5"]
 resource_name = "fade_in"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_dwfww"]
 resource_name = "fade_out"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ejd6c"]
 _data = {
+&"RESET": SubResource("Animation_ejd6c"),
 &"fade_in": SubResource("Animation_ov3w5"),
 &"fade_out": SubResource("Animation_dwfww")
 }
 
 [node name="SubViewPortBorder" type="TextureRect" unique_id=1122129885]
+texture_filter = 1
 offset_left = 1476.0
 offset_top = 52.0
 offset_right = 1648.0
