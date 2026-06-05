@@ -4,22 +4,38 @@ extends Node
 @onready var menu: AudioStreamPlayer = $menu
 @onready var rodado: AudioStreamPlayer = $rodado
 
-const LOSE = preload("uid://blnuv0cnxlras")
-const WIN = preload("uid://cr7flxb1il8ls")
+
 const LANZAMIENTO = preload("uid://6vohjpusqnxp")
 const THUMP = preload("uid://dlsmmd3k7u5b")
 const BOCHA_IMPACTO_BOCHA = preload("uid://lgg8emeyomum")
 const BOCHA_IMPACTO_BOCHIN = preload("uid://c7xoxp8odfh7h")
 
+const LOSE = preload("uid://blnuv0cnxlras")
+const WIN = preload("uid://cr7flxb1il8ls")
+const BETO = preload("uid://covti0o35gqjp")
+const JORGE = preload("uid://b2upxyk5imiaa")
+const RAUL = preload("uid://bhb5kukew4v7w")
+const PASO_SELECT = preload("uid://c1p74evubqh41")
+const SELECT = preload("uid://b68xkqgmxp6s8")
+const BOCHAZO_GAME = preload("uid://sha7bvxi4ur2")
+const BOCHAZO_MENU = preload("uid://bqiko5jh7gcdy")
+
 const MAX_SPEED = 8.0  # tune this to your typical max ball speed
-#var preloaded_audios : Dictionary
+var preloaded_audios : Dictionary
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	#preloaded_audios = {
-		#"Lose" = LOSE, 
-		#"Win" = WIN, 
-	#} 
+	preloaded_audios = {
+		"Lose" = LOSE, 
+		"Win" = WIN, 
+		"Beto" = BETO,
+		"Jorge" = JORGE,
+		"Raul" = RAUL,
+		"Paso_Select" = PASO_SELECT,
+		"Select" = SELECT,
+		"Bochazo_Menu" = BOCHAZO_MENU,
+		"Bochazo_Game" = BOCHAZO_GAME,
+	} 
 	pass
 
 func menu_theme() -> void:
@@ -41,6 +57,14 @@ func main_loop_out() -> void:
 	tween.tween_callback(func ll(): 
 		main_loop.stop() 
 		main_loop.volume_db = -13)
+
+func preloaded_sound(sound: String, volume : float) -> void:
+	var player = AudioStreamPlayer.new()
+	player.stream = preloaded_audios[sound]
+	add_child(player)
+	player.volume_db = volume
+	player.play()
+	player.finished.connect(player.queue_free)
 
 func win() -> void:
 	var player = AudioStreamPlayer.new()

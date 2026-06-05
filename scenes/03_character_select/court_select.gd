@@ -53,17 +53,20 @@ func disable_arrows() -> void:
 func move_left() -> void:
 	if index+1 >= player_list.size(): return
 	if moving == true: return
+	Audio.preloaded_sound("Paso_Select", -5)
 	_handle_movement(Vector3(-2,0,0),Vector3(0, deg_to_rad(-450), 0),"left")
 
 func move_right() -> void:
 	if index-1 <= -1: return
 	if moving == true: return
+	Audio.preloaded_sound("Paso_Select", -5)
 	_handle_movement(Vector3(2,0,0),Vector3(0, deg_to_rad(450), 0),"right")
 
 func choose() -> void:
 	if moving == true: return
 	if court_chose: return
 	if !court_chose:
+		Audio.preloaded_sound("Select", -5)
 		GameManager.court = current_character.my_name
 		court_chose = true
 		trans()

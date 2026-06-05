@@ -397,7 +397,7 @@ position = Vector2(322, 276)
 scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_dug0d")
 autoplay = "default"
-frame_progress = 0.8741371
+frame_progress = 0.7492487
 
 [node name="RaulMusic" type="AnimatedSprite2D" parent="CreditosRect" unique_id=1176388002]
 texture_filter = 1
@@ -406,7 +406,7 @@ scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_dl6gs")
 animation = &"music"
 autoplay = "music"
-frame_progress = 0.09314583
+frame_progress = 0.96825784
 
 [node name="RaulMusic2" type="AnimatedSprite2D" parent="CreditosRect" unique_id=252363602]
 texture_filter = 1
@@ -415,7 +415,7 @@ scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_dl6gs")
 animation = &"music"
 autoplay = "music"
-frame_progress = 0.38803172
+frame_progress = 0.26315358
 flip_h = true
 
 [node name="RaulCode" type="AnimatedSprite2D" parent="CreditosRect" unique_id=523126082]
@@ -425,7 +425,7 @@ scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_i5qar")
 animation = &"code"
 autoplay = "code"
-frame_progress = 0.8964128
+frame_progress = 0.77152497
 flip_h = true
 
 [node name="RaulCode2" type="AnimatedSprite2D" parent="CreditosRect" unique_id=250128453]
@@ -435,7 +435,7 @@ scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_i5qar")
 animation = &"code"
 autoplay = "code"
-frame_progress = 0.6705033
+frame_progress = 0.5456244
 
 [node name="LabelArte" type="Label" parent="CreditosRect" unique_id=1631048049]
 layout_mode = 0

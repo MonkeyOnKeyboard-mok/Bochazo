@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c1p74evubqh41"
+path="res://.godot/imported/Paso de PJ a PJ.wav-746d7c22dad524992fa7528d2bbe1be1.sample"
+
+[deps]
+
+source_file="res://assets/audio/UI-sonidos/UI/Paso de PJ a PJ.wav"
+dest_files=["res://.godot/imported/Paso de PJ a PJ.wav-746d7c22dad524992fa7528d2bbe1be1.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

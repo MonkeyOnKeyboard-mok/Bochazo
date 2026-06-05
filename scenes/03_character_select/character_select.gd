@@ -54,11 +54,13 @@ func disable_arrows() -> void:
 func move_left() -> void:
 	if index+1 >= player_list.size(): return
 	if moving == true: return
+	Audio.preloaded_sound("Paso_Select", -5)
 	_handle_movement(Vector3(-2,0,0),Vector3(0, deg_to_rad(-450), 0),"left")
 
 func move_right() -> void:
 	if index-1 <= -1: return
 	if moving == true: return
+	Audio.preloaded_sound("Paso_Select", -5)
 	_handle_movement(Vector3(2,0,0),Vector3(0, deg_to_rad(450), 0),"right")
 
 func choose() -> void:
@@ -66,6 +68,8 @@ func choose() -> void:
 	if p1_chose and p2_chose: return
 	if !p1_chose:
 		GameManager.player1_char = current_character.data.name
+		Audio.preloaded_sound("Select", -5)
+		Audio.preloaded_sound(current_character.data.name, -5)
 		current_character.anim.play("Raul diva")
 		p1_chose = true
 		current_character.player_num = "player1"
@@ -76,6 +80,8 @@ func choose() -> void:
 			flecha.texture = CPU
 	else:
 		GameManager.player2_char = current_character.data.name
+		Audio.preloaded_sound("Select", -5)
+		Audio.preloaded_sound(current_character.data.name, -5)
 		current_character.anim.play("Raul diva")
 		p2_chose = true
 		trans()

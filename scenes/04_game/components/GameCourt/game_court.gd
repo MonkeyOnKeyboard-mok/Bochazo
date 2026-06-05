@@ -15,6 +15,7 @@ func _ready() -> void:
 	rtm.sub_view = sub_view_balls
 	rtm.court = court_setter
 	Audio.main_theme()
+	Audio.preloaded_sound("Bochazo_Game" , -15)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

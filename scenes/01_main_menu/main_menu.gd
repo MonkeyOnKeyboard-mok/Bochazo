@@ -23,9 +23,10 @@ func _ready() -> void:
 	sub_v2.visible = false
 	creditos.hide()
 	Audio.menu_theme()
+	Audio.preloaded_sound("Bochazo_Menu" , -19)
 	$FadeTransition/ColorRect/FadeRect.play("fade_out")
 	pass
-	
+
 func _process(_delta: float) -> void:
 	pass
 
