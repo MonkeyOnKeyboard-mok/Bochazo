@@ -2,6 +2,7 @@ extends BocceBall
 class_name Bochin
 
 func _physics_process(_delta):
+	_check_velocity_for_rodado()
 	if !is_thrown:
 		if GameManager.current_player:
 			global_position = GameManager.current_player.marker.global_position
@@ -28,6 +29,13 @@ func _physics_process(_delta):
 			if debug_verbose: print("[BocceBall] Se detuvo")
 			freeze = false
 
+func _check_velocity_for_rodado() -> void:
+	if _is_stopped: return
+	if !is_thrown : return
+	var speed = linear_velocity.length()
+	Audio.update_rodando(speed)
+	if linear_velocity.length() < stop_velocity_threshold_rodado:
+		Audio.stop_rodando()
 
 func bochin_valid_check() -> bool:
 	if self.global_position.x < 0.0:

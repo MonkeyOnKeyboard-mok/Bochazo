@@ -13,11 +13,11 @@ func init(root: Node3D) -> void:
 	bocha = root
 
 func enter() -> void:
-	print("[ThrowingState] enter()")
+	#print("[ThrowingState] enter()")
 	throw_applied = false
 
 func exit() -> void:
-	print("[ThrowingState] exit()")
+	#print("[ThrowingState] exit()")
 	# Limpiar datos del gesto despues de usarlos
 	bocha.throw_controller.stop_aiming()
 
@@ -31,23 +31,23 @@ func physics_update(_delta: float) -> void:
 	if not throw_applied:
 		# Unfreezar PRIMERO
 		bocha.physics_body.freeze = false
-		print("[ThrowingState] PhysicsBody unfreezeado")
+		#print("[ThrowingState] PhysicsBody unfreezeado")
 
 		# Obtener datos del lanzamiento (ANTES de que se reseteen)
 		var throw_data = bocha.throw_controller.get_throw_data()
 		var impulse = throw_data.direction * throw_data.power
-		print("[ThrowingState] Aplicando impulso: ", impulse)
+		#print("[ThrowingState] Aplicando impulso: ", impulse)
 		bocha.physics_body.apply_central_impulse(impulse)
 
 		if apply_curve and abs(throw_data.curve) > 0.01:
 			bocha.physics_body.angular_velocity.y = throw_data.curve * curve_multiplier
-			print("[ThrowingState] Aplicando curva: ", throw_data.curve * curve_multiplier)
+			#print("[ThrowingState] Aplicando curva: ", throw_data.curve * curve_multiplier)
 
 		bocha.bocha_thrown.emit(throw_data.power, throw_data.direction)
 
 		throw_applied = true
 	else:
-		print("[ThrowingState] Transicion a ROLLING")
+		#print("[ThrowingState] Transicion a ROLLING")
 		bocha.state_machine.transition_to(
 			bocha.state_machine.BochaState.ROLLING
 		)

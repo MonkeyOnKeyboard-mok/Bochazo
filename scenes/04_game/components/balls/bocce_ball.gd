@@ -7,6 +7,7 @@ signal collision_occurred(impulse: Vector3)
 @export_group("Configuración")
 @export var physics_config: PhysicsConfig
 @export var stop_velocity_threshold: float = 0.5
+@export var stop_velocity_threshold_rodado: float = 0.6
 @export var debug_verbose: bool = true
 @export var training_mode: bool = false
 
@@ -27,11 +28,13 @@ var distance_to_bochin
 
 func _ready():
 	_apply_physics()
-	body_entered.connect(_on_body_entered)
+	contact_monitor = true
+	max_contacts_reported = 4
+	#body_entered.connect(_on_body_entered)
 	_define_settings()
 
 func _physics_process(delta):
-
+	_check_velocity_for_rodado()
 	if training_mode:
 		_sim_time += delta
 		_active_frames += 1
@@ -88,9 +91,19 @@ func _apply_physics():
 		push_warning("[BocceBall] physics_config no asignado.")
 
 func _on_body_entered(body: Node):
+	print("Colisioneeeee")
+	Audio.bocha_impact(self.linear_velocity.length(), body)
 	collision_occurred.emit(linear_velocity)
 	if debug_verbose and linear_velocity.length() > 0.5:
 		print("[BocceBall] Colisión con %s" % body.name)
+
+func _check_velocity_for_rodado() -> void:
+	if _is_stopped: return
+	if !is_thrown : return
+	var speed = linear_velocity.length()
+	Audio.update_rodando(speed)
+	if linear_velocity.length() < stop_velocity_threshold_rodado:
+		Audio.stop_rodando()
 
 func _define_settings() -> void:
 	if !$BochaMesh: return

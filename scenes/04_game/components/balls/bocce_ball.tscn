@@ -42,6 +42,8 @@ shadow_mesh = SubResource("ArrayMesh_5ys2v")
 [node name="BocceBall" type="RigidBody3D" unique_id=357459484]
 freeze_mode = 1
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 4
 script = ExtResource("1_qnnu0")
 physics_config = ExtResource("2_wm8ks")
 
@@ -52,3 +54,5 @@ shape = SubResource("SphereShape3D_67rmk")
 transform = Transform3D(33, 0, 0, 0, 33, 0, 0, 0, 33, -0.09630102, -0.5300509, -0.10585368)
 material_override = SubResource("StandardMaterial3D_wm8ks")
 mesh = SubResource("ArrayMesh_wm8ks")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

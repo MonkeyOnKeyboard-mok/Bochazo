@@ -25,3 +25,5 @@ mesh = SubResource("SphereMesh_5ugk0")
 
 [node name="BallCollision" type="CollisionShape3D" parent="." unique_id=169731938]
 shape = SubResource("SphereShape3D_hdhda")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

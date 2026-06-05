@@ -91,7 +91,7 @@ func update_aim() -> void:
 
 				# Detectar si el usuario empezo a volver hacia el punto de inicio
 				if max_pull_distance > min_drag_distance and _detect_direction_change():
-					print("[ThrowController] Cambio de direccion: PULL_BACK -> PUSH_FORWARD (max_pull: ", max_pull_distance, "m)")
+				#	print("[ThrowController] Cambio de direccion: PULL_BACK -> PUSH_FORWARD (max_pull: ", max_pull_distance, "m)")
 					gesture_phase = GesturePhase.PUSH_FORWARD
 					push_start_pos = current_world
 					push_offset = Vector3.ZERO
@@ -108,7 +108,7 @@ func handle_input(event: InputEvent) -> void:
 			# Verificar si el click fue sobre la bocha usando raycast
 			var hit_pos = _raycast_to_bocha(event.position)
 			if hit_pos != Vector3.INF:
-				print("[ThrowController] Click en bocha -> inicio arrastre en ", hit_pos)
+			#	print("[ThrowController] Click en bocha -> inicio arrastre en ", hit_pos)
 				gesture_phase = GesturePhase.PULL_BACK
 				drag_start_world_pos = hit_pos
 				drag_current_world_pos = hit_pos
@@ -132,21 +132,21 @@ func handle_input(event: InputEvent) -> void:
 				# Si el usuario no hizo pull-back real (se movio hacia adelante en vez de atras),
 				# ignorar el lanzamiento para evitar tiros hacia atras
 				if drag_offset.x > 0:
-					print("[ThrowController] Soltó sin pull-back real (movio hacia adelante). Ignorando lanzamiento.")
+				#	print("[ThrowController] Soltó sin pull-back real (movio hacia adelante). Ignorando lanzamiento.")
 					gesture_phase = GesturePhase.IDLE
 					drag_offset = Vector3.ZERO
 					drag_distance = 0.0
 					return
 
 				# Soltó durante el pull-back -> lanza con direccion opuesta al offset
-				print("[ThrowController] Soltó durante pull-back -> lanza inverso (distancia: ", drag_distance, "m)")
+				#print("[ThrowController] Soltó durante pull-back -> lanza inverso (distancia: ", drag_distance, "m)")
 				# Invertir el offset para que el lanzamiento sea en direccion opuesta
 				push_offset = -drag_offset
 				push_distance = drag_distance
 				gesture_phase = GesturePhase.RELEASED
 			elif gesture_phase == GesturePhase.PUSH_FORWARD:
 				# Soltó durante el push-forward -> lanzar normalmente
-				print("[ThrowController] Mouse UP -> RELEASED (push_distance: ", push_distance, "m)")
+			#	print("[ThrowController] Mouse UP -> RELEASED (push_distance: ", push_distance, "m)")
 				gesture_phase = GesturePhase.RELEASED
 
 func get_throw_data() -> Dictionary:

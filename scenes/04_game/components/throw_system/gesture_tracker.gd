@@ -72,10 +72,11 @@ func _setup_plane_texture() -> void:
 func _input(event: InputEvent):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if GameManager.permission_to_throw:
-			print("You have permission to throw")
+			#print("You have permission to throw")
 			_on_click(event)
 		else: 
-			print("You DON'T have permission to throw")
+			#print("You DON'T have permission to throw")
+			pass
 	elif event is InputEventMouseMotion and phase in [Phase.CHARGE, Phase.AIM]:
 		_on_motion(event)
 

@@ -90,6 +90,8 @@ func animation_fix_and_etc() -> void:
 	ball.linear_velocity = Vector3.ZERO
 	ball.angular_velocity = Vector3.ZERO
 	ball.freeze = false
+	Audio.start_rodando()
+	Audio.throw()
 	await get_tree().create_timer(1.5).timeout
 	camera_follow()
 

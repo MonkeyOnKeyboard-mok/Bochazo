@@ -35,6 +35,7 @@ import/blender/enabled=false
 [global_group]
 
 brain=""
+walls=""
 
 [input]
 

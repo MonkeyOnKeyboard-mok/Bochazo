@@ -14,7 +14,7 @@ func init(root: Node3D) -> void:
 	bocha = root
 
 func enter() -> void:
-	print("[RollingState] enter()")
+	#print("[RollingState] enter()")
 	time_below_threshold = 0.0
 	bocha.physics_body.freeze = false
 
@@ -33,7 +33,7 @@ func physics_update(delta: float) -> void:
 	if speed < stop_threshold:
 		time_below_threshold += delta
 		if time_below_threshold >= required_stop_time:
-			print("[RollingState] Bocha detenida -> transicion a POSITIONING")
+			#print("[RollingState] Bocha detenida -> transicion a POSITIONING")
 			bocha.physics_body.linear_velocity = Vector3.ZERO
 			bocha.physics_body.angular_velocity = Vector3.ZERO
 			bocha.bocha_stopped.emit()

@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://bwfyp8ij16ceh" path="res://scenes/04_game/components/UI/otra_vez.tscn" id="11_8at0d"]
 [ext_resource type="Script" uid="uid://cfyl6p6vlvq2f" path="res://scenes/04_game/components/GameCourt/oveview_camera.gd" id="12_4tvcl"]
 [ext_resource type="PackedScene" uid="uid://dh1xt3fnx72xg" path="res://scenes/04_game/components/UI/sub_view_port_border.tscn" id="12_t8okv"]
+[ext_resource type="Texture2D" uid="uid://4yiani36oru4" path="res://scenes/04_game/components/GameCourt/marco_viewport.png" id="13_45ban"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5t0ms"]
 transparency = 1
@@ -172,7 +173,13 @@ size = Vector3(1, 8.431274, 14.294678)
 albedo_color = Color(0, 0.19043913, 0.19313556, 0.38431373)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_jt8ei"]
-size = Vector2(1, 15)
+size = Vector2(1, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rjq4p"]
+size = Vector3(76.01282, 5.873108, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_45ban"]
+size = Vector3(2.4837418, 5.873108, 16.120605)
 
 [node name="GameCourt" type="Node3D" unique_id=1306207877]
 script = ExtResource("1_5t0ms")
@@ -245,6 +252,14 @@ script = SubResource("GDScript_jt8ei")
 [node name="otra_vez" parent="CanvasLayer" unique_id=1624181356 instance=ExtResource("11_8at0d")]
 
 [node name="SubViewPortBorder" parent="CanvasLayer" unique_id=1122129885 instance=ExtResource("12_t8okv")]
+texture_filter = 1
+offset_left = 1475.59
+offset_top = 30.000002
+offset_right = 1644.59
+offset_bottom = 165.0
+scale = Vector2(2.45, 2.45)
+texture = ExtResource("13_45ban")
+stretch_mode = 4
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=731301028]
 transparent_bg = true
@@ -258,9 +273,9 @@ script = ExtResource("12_4tvcl")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1251439467]
 offset_left = 1511.0
-offset_top = 18.0
+offset_top = 65.26
 offset_right = 1852.0
-offset_bottom = 233.0
+offset_bottom = 321.26
 texture = SubResource("ViewportTex")
 
 [node name="Reset" type="Node" parent="." unique_id=428890241]
@@ -293,9 +308,35 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3004277, 0.90197754)
 shape = SubResource("BoxShape3D_f5t13")
 
 [node name="Line" type="MeshInstance3D" parent="." unique_id=727223613]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 32.292164, 0)
 material_override = SubResource("StandardMaterial3D_jt8ei")
 mesh = SubResource("PlaneMesh_jt8ei")
+
+[node name="SoundWalls" type="Node3D" parent="." unique_id=1876869447]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="SoundWalls" unique_id=1413792960 groups=["walls"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.590869)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SoundWalls/StaticBody3D" unique_id=2115565096 groups=["walls"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.747456, 0)
+shape = SubResource("BoxShape3D_rjq4p")
+debug_color = Color(0.96583873, 0, 0.4871838, 0.41960785)
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="SoundWalls" unique_id=1266195702 groups=["walls"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.597478)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SoundWalls/StaticBody3D2" unique_id=2047326645 groups=["walls"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2713957, 0)
+shape = SubResource("BoxShape3D_rjq4p")
+debug_color = Color(0.96583873, 0, 0.4871838, 0.41960785)
+
+[node name="StaticBody3D3" type="StaticBody3D" parent="SoundWalls" unique_id=1381057296 groups=["walls"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.597478)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SoundWalls/StaticBody3D3" unique_id=1743629671 groups=["walls"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.67435, 3.2713957, -7.5603027)
+shape = SubResource("BoxShape3D_45ban")
+debug_color = Color(0.96583873, 0, 0.4871838, 0.41960785)
 
 [connection signal="animation_finished" from="RoundTransitionManager/AnimationPlayer" to="RoundTransitionManager" method="_on_animation_player_animation_finished"]
 [connection signal="pressed" from="CanvasLayer/Test_Scoring" to="CanvasLayer/Test_Scoring" method="_on_pressed"]

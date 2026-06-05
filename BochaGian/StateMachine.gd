@@ -18,7 +18,7 @@ var states: Dictionary = {}
 var initialized: bool = false
 
 func _ready() -> void:
-	print("[StateMachine] _ready() - programando init diferido")
+	#print("[StateMachine] _ready() - programando init diferido")
 	# Usar call_deferred para que se ejecute DESPUES de que Bocha._ready()
 	# haya cacheado todas las referencias (physics_body, etc.)
 	call_deferred("_init_states")
@@ -28,7 +28,7 @@ func _init_states() -> void:
 		return
 	initialized = true
 
-	print("[StateMachine] Inicializando estados...")
+	#print("[StateMachine] Inicializando estados...")
 
 	# Crear los estados directamente con .new()
 	states[BochaState.POSITIONING] = PositioningState.new()
@@ -36,17 +36,17 @@ func _init_states() -> void:
 	states[BochaState.THROWING] = ThrowingState.new()
 	states[BochaState.ROLLING] = RollingState.new()
 
-	print("[StateMachine] 4 estados creados")
+	#print("[StateMachine] 4 estados creados")
 
 	# Inicializar cada estado con referencia al padre
 	for state in states.values():
 		state.init(get_parent())
 
-	print("[StateMachine] Estados inicializados")
+#	print("[StateMachine] Estados inicializados")
 
 	# Entrar al estado inicial
 	states[current_state].enter()
-	print("[StateMachine] Estado inicial POSITIONING activado")
+	#print("[StateMachine] Estado inicial POSITIONING activado")
 
 func _process(delta: float) -> void:
 	if not initialized:
