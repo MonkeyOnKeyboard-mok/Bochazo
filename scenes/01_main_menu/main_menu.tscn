@@ -23,7 +23,7 @@
 [ext_resource type="Texture2D" uid="uid://dbc7crrjawtkq" path="res://scenes/04_game/components/UI/volver_pressed.png" id="18_wvjiv"]
 [ext_resource type="Texture2D" uid="uid://c28c2j3bmt0tf" path="res://scenes/04_game/components/UI/volver_hover.png" id="19_486u7"]
 [ext_resource type="PackedScene" uid="uid://foi2dahuh4rr" path="res://scenes/04_game/components/players/raul_posta.tscn" id="19_ssy2f"]
-[ext_resource type="Texture2D" uid="uid://beh5j6rc3srhg" path="res://scenes/01_main_menu/seleccion de modo.png" id="20_qtf3s"]
+[ext_resource type="Texture2D" uid="uid://dqsfxlvfnaa0c" path="res://scenes/01_main_menu/seleccion de modo-sheet_default (1).png" id="21_ymr7r"]
 [ext_resource type="Texture2D" uid="uid://r3bbqn7ltsxa" path="res://scenes/01_main_menu/creditos_raul_aart.png" id="25_486u7"]
 [ext_resource type="Texture2D" uid="uid://bol8gb08jotvq" path="res://scenes/01_main_menu/creditos_rau_lmusik.png" id="26_8j7x8"]
 [ext_resource type="Texture2D" uid="uid://15yilnw4tdj4" path="res://scenes/01_main_menu/creditos_raul_code.png" id="27_ymr7r"]
@@ -300,7 +300,7 @@ texture_hover = ExtResource("19_486u7")
 texture_filter = 1
 position = Vector2(978, 129)
 scale = Vector2(3, 3)
-texture = ExtResource("20_qtf3s")
+texture = ExtResource("21_ymr7r")
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("8_6prxp")]
 
@@ -397,7 +397,7 @@ position = Vector2(322, 276)
 scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_dug0d")
 autoplay = "default"
-frame_progress = 0.7492487
+frame_progress = 0.47224414
 
 [node name="RaulMusic" type="AnimatedSprite2D" parent="CreditosRect" unique_id=1176388002]
 texture_filter = 1
@@ -406,7 +406,7 @@ scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_dl6gs")
 animation = &"music"
 autoplay = "music"
-frame_progress = 0.96825784
+frame_progress = 0.6912568
 
 [node name="RaulMusic2" type="AnimatedSprite2D" parent="CreditosRect" unique_id=252363602]
 texture_filter = 1
@@ -415,7 +415,7 @@ scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_dl6gs")
 animation = &"music"
 autoplay = "music"
-frame_progress = 0.26315358
+frame_progress = 0.9861586
 flip_h = true
 
 [node name="RaulCode" type="AnimatedSprite2D" parent="CreditosRect" unique_id=523126082]
@@ -425,7 +425,7 @@ scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_i5qar")
 animation = &"code"
 autoplay = "code"
-frame_progress = 0.77152497
+frame_progress = 0.49452057
 flip_h = true
 
 [node name="RaulCode2" type="AnimatedSprite2D" parent="CreditosRect" unique_id=250128453]
@@ -435,7 +435,7 @@ scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_i5qar")
 animation = &"code"
 autoplay = "code"
-frame_progress = 0.5456244
+frame_progress = 0.2686251
 
 [node name="LabelArte" type="Label" parent="CreditosRect" unique_id=1631048049]
 layout_mode = 0
