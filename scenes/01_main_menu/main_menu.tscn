@@ -510,14 +510,25 @@ text = "FiconRagnaX"
 [node name="LabelMusic2" type="Label" parent="CreditosRect/LabelCode" unique_id=1064327491]
 layout_mode = 0
 offset_left = 208.0
-offset_top = 290.0
+offset_top = 350.0
 offset_right = 747.0
-offset_bottom = 484.0
+offset_bottom = 544.0
+theme_override_constants/line_spacing = -80
+theme_override_fonts/font = SubResource("SystemFont_486u7")
+theme_override_font_sizes/font_size = 60
+text = "MonkeyOnKeyboard"
+
+[node name="LabelMusic3" type="Label" parent="CreditosRect/LabelCode" unique_id=966764202]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 288.0
+offset_right = 747.0
+offset_bottom = 482.0
 theme_override_constants/line_spacing = -80
 theme_override_fonts/font = SubResource("SystemFont_486u7")
 theme_override_font_sizes/font_size = 60
 text = "           Santi
-MonkeyOnKeyboard"
+"
 
 [node name="Exit2" type="TextureButton" parent="CreditosRect" unique_id=327635191]
 texture_filter = 1

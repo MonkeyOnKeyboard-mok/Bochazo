@@ -78,7 +78,6 @@ font = SubResource("SystemFont_v1jky")
 font_size = 30
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("3_khmfb")]
-visible = false
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=1454924949]
 

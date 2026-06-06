@@ -94,7 +94,6 @@ text = "Nombre"
 font = SubResource("SystemFont_uoby1")
 
 [node name="FadeTransition" parent="." unique_id=242637826 instance=ExtResource("6_koilm")]
-visible = false
 
 [node name="Timer" type="Timer" parent="FadeTransition" unique_id=1454924949]
 wait_time = 2.0
@@ -171,9 +170,9 @@ flip_h = true
 [node name="Space2" type="TextureButton" parent="Flechas" unique_id=1135506775]
 texture_filter = 1
 offset_left = 907.00006
-offset_top = 928.0
+offset_top = 953.0
 offset_right = 941.00006
-offset_bottom = 955.0
+offset_bottom = 980.0
 scale = Vector2(3, 3)
 texture_normal = ExtResource("17_dkbfx")
 texture_pressed = ExtResource("18_uoby1")
